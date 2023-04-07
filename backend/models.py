@@ -16,9 +16,12 @@ class OrderStatus(Enum):
     Delivered = "delivered"
     Cancelled = "cancelled"
 
+    def __str__(self):
+        return str(self.value)
+
     @classmethod
     def db_model_choices(cls, *args):
-        return [str(x.value) for x in cls]
+        return [str(c.value) for c in cls]
 
 
 class User(db.Model):
@@ -30,6 +33,7 @@ class User(db.Model):
     cart_items = db.relationship(
         "CartItem", back_populates="user", cascade="all,delete-orphan"
     )
+    orders = db.relationship("Order", back_populates="user")
 
     def save(self):
         db.session.add(self)
@@ -52,9 +56,7 @@ class Category(db.Model):
         db.DateTime(), default=datetime.now(), onupdate=datetime.now()
     )
 
-    products = db.relationship(
-        "Product", back_populates="category", cascade="all,delete-orphan"
-    )
+    products = db.relationship("Product", back_populates="category")
 
     def save(self):
         db.session.add(self)
@@ -67,12 +69,24 @@ class Category(db.Model):
     def update(self):
         db.session.commit()
 
+    def update_from_dict(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
-            "notes": self.notes,
             "image_link": self.image_link,
+        }
+
+    def to_dict_long(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "image_link": self.image_link,
+            "notes": self.notes,
+            "products_count": len(self.products),
         }
 
 
@@ -82,6 +96,8 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
     notes = db.Column(db.String(255))
+    price = db.Column(db.Float(2), nullable=False)
+    discounted_price = db.Column(db.Float(2), default=None)
     image_link = db.Column(db.String(500))
     sku_code = db.Column(db.String(100), unique=True)
     created_at = db.Column(db.DateTime(), default=datetime.now())
@@ -89,16 +105,10 @@ class Product(db.Model):
         db.DateTime(), default=datetime.now(), onupdate=datetime.now()
     )
 
-    category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
-    category = db.relationship("Category", back_populates="products")
-
-    order_items = db.relationship(
-        "OrderProduct", back_populates="product", cascade="all,delete-orphan"
+    category_id = db.Column(
+        db.Integer, db.ForeignKey("category.id"), nullable=False
     )
-
-    # orders = db.relationship(
-    #    "Order", secondary="order_product", back_populates="products"
-    # )
+    category = db.relationship("Category", back_populates="products")
 
     def save(self):
         db.session.add(self)
@@ -111,11 +121,30 @@ class Product(db.Model):
     def update(self):
         db.session.commit()
 
+    def update_from_dict(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
+            "price": "{:,.2f}".format(self.price),
+            "discounted_price": None
+            if self.discounted_price is None
+            else "{:,.2f}".format(self.discounted_price),
+            "image_link": self.image_link,
+        }
+
+    def to_dict_long(self):
+        return {
+            "id": self.id,
+            "name": self.name,
             "notes": self.notes,
+            "price": "{:,.2f}".format(self.price),
+            "discounted_price": None
+            if self.discounted_price is None
+            else "{:,.2f}".format(self.discounted_price),
             "image_link": self.image_link,
             "sku_code": self.sku_code,
             "category_id": self.category_id,
@@ -127,31 +156,30 @@ class Order(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(30), unique=True)
-    total_amount = db.Column(db.Integer, nullable=False)
+    total_amount = db.Column(db.Integer)
+    items_count = db.Column(db.Integer)
 
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    email = db.Column(db.String(50))
-    phone = db.Column(db.String(50))
-    street_address_1 = db.Column(db.String(50))
+    # Delivery address
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    phone = db.Column(db.String(50), nullable=False)
+    street_address_1 = db.Column(db.String(50), nullable=False)
     street_address_2 = db.Column(db.String(50))
-    city = db.Column(db.String(50))
-    province = db.Column(db.String(50))
-    country = db.Column(db.String(50))
-    order_status = db.Column(
+    city = db.Column(db.String(50), nullable=False)
+    province = db.Column(db.String(50), nullable=False)
+    country = db.Column(db.String(50), nullable=False)
+
+    status = db.Column(
         db.Enum(OrderStatus, values_callable=OrderStatus.db_model_choices),
         default=OrderStatus.NotDefined,
     )
-
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship("User", back_populates="orders")
 
     order_items = db.relationship(
-        "OrderProduct", back_populates="order", cascade="all,delete-orphan"
+        "OrderItem", back_populates="order", cascade="all,delete-orphan"
     )
-
-    # products = db.relationship(
-    #    "Product", secondary="order_product", back_populates="orders"
-    # )
 
     def save(self):
         db.session.add(self)
@@ -164,17 +192,68 @@ class Order(db.Model):
     def update(self):
         db.session.commit()
 
+    def flush(self):
+        db.session.add(self)
+        db.session.flush()
 
-class OrderProduct(db.Model):
-    __tablename__ = "order_product"
+    def update_from_dict(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+
+    def to_dict(self):
+        return {
+            "order_id": self.id,
+            "order_number": self.order_number,
+            "total_amount": "{:,.2f}".format(self.total_amount),
+            "items_count": self.items_count,
+            "country": self.country,
+            "status": str(self.status),
+        }
+
+    def to_dict_long(self):
+        items = [
+            {
+                "id": i.id,
+                "quantity": i.quantity,
+                "product": i.product.to_dict(),
+            }
+            for i in self.order_items
+        ]
+
+        return {
+            "order_id": self.id,
+            "order_number": self.order_number,
+            "total_amount": "{:,.2f}".format(self.total_amount),
+            "items_count": self.items_count,
+            "country": self.country,
+            "status": str(self.status),
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "phone": self.phone,
+            "street_address_1": self.street_address_1,
+            "street_address_2": self.street_address_2,
+            "city": self.city,
+            "province": self.province,
+            "country": self.country,
+            "order_items": items,
+        }
+
+
+class OrderItem(db.Model):
+    __tablename__ = "order_item"
 
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
 
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
-    product = db.relationship("Product", back_populates="order_items")
+    product_id = db.Column(
+        db.Integer, db.ForeignKey("product.id", ondelete="CASCADE")
+    )
+    product = db.relationship("Product")
 
-    order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
+    order_id = db.Column(
+        db.Integer, db.ForeignKey("order.id", ondelete="CASCADE")
+    )
     order = db.relationship("Order", back_populates="order_items")
 
     def save(self):
@@ -188,6 +267,10 @@ class OrderProduct(db.Model):
     def update(self):
         db.session.commit()
 
+    def flush(self):
+        db.session.add(self)
+        db.session.flush()
+
 
 class CartItem(db.Model):
     __tablename__ = "cart_item"
@@ -195,10 +278,14 @@ class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("user.id", ondelete="CASCADE")
+    )
     user = db.relationship("User", back_populates="cart_items")
 
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
+    product_id = db.Column(
+        db.Integer, db.ForeignKey("product.id", ondelete="CASCADE")
+    )
     product = db.relationship("Product")
 
     def save(self):
@@ -210,4 +297,9 @@ class CartItem(db.Model):
         db.session.commit()
 
     def update(self):
+        db.session.commit()
+
+    @classmethod
+    def clear_user_cart(cls, user_id):
+        CartItem.query.filter(CartItem.user_id == user_id).delete()
         db.session.commit()

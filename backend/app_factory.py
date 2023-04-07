@@ -1,5 +1,6 @@
 import sys
 import json
+from datetime import datetime
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask import Flask, jsonify, request, abort
@@ -9,7 +10,7 @@ from models import (
     Product,
     User,
     Order,
-    OrderProduct,
+    OrderItem,
     CartItem,
     OrderStatus,
 )
@@ -64,17 +65,28 @@ def create_flask_app(name, config_obj):
             }
         )
 
+    # ----------------------------------------------------------------------
+    @app.get("/categories/<int:category_id>/")
+    def get_category_by_id(category_id):
+        category = Category.query.filter_by(id=category_id).one_or_none()
+        if category is None:
+            abort(404)
+
+        return jsonify({"success": True, "category": category.to_dict_long()})
+
     # Validate a new category
     # ----------------------------------------------------------------------
-    def validate_category(request):
+    def validate_category(request, patched=False):
         param_keys = ("name", "image_link", "notes")
         data = extract_request_params(request, param_keys)
 
-        if len(data) != len(param_keys):
+        if len(data) != len(param_keys) and not patched:
             return None
 
         if len(data["name"]) == 0:
             return None
+
+        data["name"] = data["name"].strip()
 
         return data
 
@@ -125,6 +137,42 @@ def create_flask_app(name, config_obj):
         else:
             return jsonify({"success": True, "category_id": category.id})
 
+    # Update an existing category
+    # ----------------------------------------------------------------------
+    @app.patch("/categories/<int:category_id>/")
+    def update_category(category_id):
+        error = False
+        category = Category.query.filter_by(id=category_id).one_or_none()
+        if category is None:
+            abort(404)
+
+        new_data = validate_category(request, patched=True)
+
+        if new_data is None:
+            abort(400)
+
+        if not confirm_category_unique(
+            new_data["name"], category.name, patched=True
+        ):
+            return format_err_response("Category name is not unique", 400)
+
+        try:
+            category.update_from_dict(new_data)
+            category.update()
+
+        except Exception as e:
+            error = True
+            db.session.rollback()
+            print(str(e))
+
+        if error:
+            return format_err_response(
+                f"Server error. Category id:{category.id} could not be updated.",
+                500,
+            )
+        else:
+            return jsonify({"success": True, "category_id": category.id})
+
     # Check if the category is empty
     # ----------------------------------------------------------------------
     def confirm_category_empty(category):
@@ -157,15 +205,6 @@ def create_flask_app(name, config_obj):
             return jsonify({"success": True, "category_id": category.id})
 
     # ----------------------------------------------------------------------
-    @app.get("/categories/<int:category_id>/")
-    def get_category_by_id(category_id):
-        category = Category.query.filter_by(id=category_id).one_or_none()
-        if category is None:
-            abort(404)
-
-        return jsonify({"success": True, "category": category.to_dict()})
-
-    # ----------------------------------------------------------------------
     @app.get("/products/")
     def get_products():
         products = Product.query.all()
@@ -181,12 +220,20 @@ def create_flask_app(name, config_obj):
         if product is None:
             abort(404)
 
-        return jsonify({"success": True, "product": product.to_dict()})
+        return jsonify({"success": True, "product": product.to_dict_long()})
 
     # Validate a new product
     # ----------------------------------------------------------------------
     def validate_product(request):
-        param_keys = ("name", "image_link", "notes", "sku_code", "category_id")
+        param_keys = (
+            "name",
+            "image_link",
+            "notes",
+            "sku_code",
+            "category_id",
+            "price",
+            "discounted_price",
+        )
         data = extract_request_params(request, param_keys)
 
         if len(data) != len(param_keys):
@@ -258,9 +305,7 @@ def create_flask_app(name, config_obj):
     # Check if a product was previously ordered
     # -----------------------------------------------------------------------
     def was_ordered(product):
-        item = OrderProduct.query.filter_by(
-            product_id=product.id
-        ).one_or_none()
+        item = OrderItem.query.filter_by(product_id=product.id).one_or_none()
 
         if item is not None:
             return True
@@ -268,7 +313,7 @@ def create_flask_app(name, config_obj):
         return False
 
     # -----------------------------------------------------------------------
-    @app.delete("/products/<int:product_id>")
+    @app.delete("/products/<int:product_id>/")
     def delete_product(product_id):
         error = False
         product = Product.query.filter_by(id=product_id).one_or_none()
@@ -360,6 +405,10 @@ def create_flask_app(name, config_obj):
         if data is None:
             abort(400)
 
+        product = Product.query.filter_by(id=data["product_id"]).one_or_none()
+        if product is None:
+            return format_err_response("Product not found", 404)
+
         user = get_user_from_auth_id(auth_user_id)
 
         try:
@@ -389,7 +438,7 @@ def create_flask_app(name, config_obj):
 
     # Delete a cart item
     # -----------------------------------------------------------------------
-    @app.delete("/cart/<int:cart_item_id>")
+    @app.delete("/cart/<int:cart_item_id>/")
     def delete_cart_item(cart_item_id):
         error = False
 
@@ -420,6 +469,154 @@ def create_flask_app(name, config_obj):
             )
         else:
             return jsonify({"success": True, "cart_item_id": cart_item.id})
+
+    def validate_order(request):
+        param_keys = (
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "street_address_1",
+            "street_address_2",
+            "city",
+            "province",
+            "country",
+        )
+        data = extract_request_params(request, param_keys)
+
+        if len(data) != len(param_keys):
+            return None
+
+        return data
+
+    # Get orders
+    # -----------------------------------------------------------------------
+    @app.get("/orders/")
+    def get_orders():
+        auth_user_id = get_auth_provider_user_id(request)
+        if auth_user_id is None:
+            return format_err_response("Unauthorized", 401)
+
+        user = get_user_from_auth_id(auth_user_id)
+
+        if user is None:
+            return jsonify({"success": True, "orders": []})
+
+        return jsonify(
+            {
+                "success": True,
+                "orders": [order.to_dict() for order in user.orders],
+            }
+        )
+
+    # -----------------------------------------------------------------------
+    @app.get("/orders/<int:order_id>/")
+    def get_order(order_id):
+        auth_user_id = get_auth_provider_user_id(request)
+        if auth_user_id is None:
+            return format_err_response("Unauthorized", 401)
+
+        user = get_user_from_auth_id(auth_user_id)
+
+        order = Order.query.filter(
+            Order.id == order_id, Order.user_id == user.id
+        ).one_or_none()
+        if order is None:
+            abort(404)
+
+        return jsonify({"success": True, "order": order.to_dict_long()})
+
+    # Submit a new order with current cart items
+    # -----------------------------------------------------------------------
+    @app.post("/orders/")
+    def submit_new_order():
+        error = False
+
+        auth_user_id = get_auth_provider_user_id(request)
+        if auth_user_id is None:
+            return format_err_response("Unauthorized", 401)
+
+        user = get_user_from_auth_id(auth_user_id)
+
+        if len(user.cart_items) == 0:
+            return format_err_response(
+                "Order could not be submitted. Cart is empty.", 400
+            )
+
+        data = validate_order(request)
+        if data is None:
+            abort(400)
+
+        try:
+            order = Order(**data)
+            order.status = OrderStatus.Submitted
+            order.user_id = user.id
+            order.flush()
+
+            total_amount = 0
+            items_count = 0
+            for item in user.cart_items:
+                if item.product.discounted_price is None:
+                    total_amount += item.product.price * item.quantity
+                    items_count += item.quantity
+                else:
+                    total_amount += (
+                        item.product.discounted_price * item.quantity
+                    )
+                    items_count += item.quantity
+
+                order_item = OrderItem()
+                order_item.order_id = order.id
+                order_item.product_id = item.product_id
+                order_item.quantity = item.quantity
+                order_item.flush()
+
+            current_date = datetime.today().strftime("%Y%m%d")
+            order_number = current_date + "." + str(order.id)
+            order.order_number = order_number
+            order.total_amount = total_amount
+            order.items_count = items_count
+            order.flush()
+            # Clear cart items
+            CartItem.query.filter(CartItem.user_id == user.id).delete()
+
+            db.session.commit()
+
+        except Exception as e:
+            error = True
+            db.session.rollback()
+            print(str(e))
+
+        if error:
+            return format_err_response(
+                "Server error. Order could not be created.", 500
+            )
+        else:
+            return jsonify({"success": True, "order_id": order.id})
+
+    # -----------------------------------------------------------------------
+    @app.delete("/orders/<int:order_id>/")
+    def delete_order(order_id):
+        error = False
+
+        order = Order.query.filter(Order.id == order_id).one_or_none()
+        if order is None:
+            abort(404)
+
+        try:
+            order.delete()
+
+        except Exception as e:
+            error = True
+            db.session.rollback()
+            print(str(e))
+
+        if error:
+            return format_err_response(
+                f"Server error. Order id:{order.id} could not be deleted.", 500
+            )
+        else:
+            return jsonify({"success": True, "order_id": order.id})
 
     # Error Handling
     # -----------------------------------------------------------------------
