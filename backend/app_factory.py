@@ -26,6 +26,16 @@ def create_flask_app(name, config_obj):
     db.init_app(app)
     migrate = Migrate(app, db)
 
+    @app.after_request
+    def after_request(response):
+        response.headers.add(
+            "Access-Control-Allow-Headers", "Content-Type, Authorization"
+        )
+        response.headers.add(
+            "Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"
+        )
+        return response
+
     # Response with a specific message if necessary
     # ----------------------------------------------------------------------
     def format_err_response(message, code):
@@ -131,9 +141,7 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response(
-                "New category could not be created.", 500
-            )
+            return format_err_response("New category could not be created.", 500)
         else:
             return jsonify({"success": True, "category_id": category.id})
 
@@ -151,9 +159,7 @@ def create_flask_app(name, config_obj):
         if new_data is None:
             abort(400)
 
-        if not confirm_category_unique(
-            new_data["name"], category.name, patched=True
-        ):
+        if not confirm_category_unique(new_data["name"], category.name, patched=True):
             return format_err_response("Category name is not unique", 400)
 
         try:
@@ -209,9 +215,7 @@ def create_flask_app(name, config_obj):
     def get_products():
         products = Product.query.all()
 
-        return jsonify(
-            {"success": True, "products": [pr.to_dict() for pr in products]}
-        )
+        return jsonify({"success": True, "products": [pr.to_dict() for pr in products]})
 
     # ----------------------------------------------------------------------
     @app.get("/products/<int:product_id>/")
@@ -278,9 +282,7 @@ def create_flask_app(name, config_obj):
         if new_data is None:
             abort(400)
 
-        if not Category.query.filter_by(
-            id=new_data["category_id"]
-        ).one_or_none():
+        if not Category.query.filter_by(id=new_data["category_id"]).one_or_none():
             return format_err_response("Category not found.", 404)
 
         if not confirm_product_unique(new_data["name"]):
@@ -296,9 +298,7 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response(
-                "New product could not be created.", 500
-            )
+            return format_err_response("New product could not be created.", 500)
         else:
             return jsonify({"success": True, "product_id": product.id})
 
@@ -348,25 +348,47 @@ def create_flask_app(name, config_obj):
         user = get_user_from_auth_id(auth_user_id)
 
         if user is None:
-            return jsonify({"success": True, "cart_items": []})
+            return jsonify({"success": True, "cart": {}})
 
-        cart_items = [
-            {
-                "id": i.id,
-                "quantity": i.quantity,
-                "product": i.product.to_dict(),
+        cart = {}
+        cart_items = []
+        total = 0.0
+        items_count = 0
+        for i in user.cart_items:
+            if i.product.discounted_price is None:
+                sub_total = i.product.price * i.quantity
+            else:
+                sub_total = i.product.discounted_price * i.quantity
+            total += sub_total
+            items_count += i.quantity
+            cart_items.append(
+                {
+                    "id": i.id,
+                    "quantity": i.quantity,
+                    "sub_total": "{:,.2f}".format(sub_total),
+                    "product": i.product.to_dict(),
+                }
+            )
+        if len(cart_items) != 0:
+            cart = {
+                "cart_items": cart_items,
+                "total": "{:,.2f}".format(total),
+                "items_count": items_count,
             }
-            for i in user.cart_items
-        ]
+        else:
+            cart = {}
 
-        return jsonify({"success": True, "cart_items": cart_items})
+        return jsonify({"success": True, "cart": cart})
 
     # -----------------------------------------------------------------------
-    def validate_cart_item(request):
+    def validate_cart_item(request, patched=False):
         param_keys = ("product_id", "quantity")
         data = extract_request_params(request, param_keys)
 
-        if len(data) != len(param_keys):
+        if len(data) == 0:
+            return None
+
+        if len(data) != len(param_keys) and not patched:
             return None
 
         return data
@@ -428,13 +450,9 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response(
-                "New cart item could not be added.", 500
-            )
+            return format_err_response("New cart item could not be added.", 500)
         else:
-            return jsonify(
-                {"success": True, "cart_product_id": cart_product.id}
-            )
+            return jsonify({"success": True, "cart_product_id": cart_product.id})
 
     # Delete a cart item
     # -----------------------------------------------------------------------
@@ -470,6 +488,46 @@ def create_flask_app(name, config_obj):
         else:
             return jsonify({"success": True, "cart_item_id": cart_item.id})
 
+    # Partch a cart item
+    # -----------------------------------------------------------------------
+    @app.patch("/cart/<int:cart_item_id>/")
+    def patch_cart_item(cart_item_id):
+        error = False
+
+        auth_user_id = get_auth_provider_user_id(request)
+        if auth_user_id is None:
+            return format_err_response("Unauthorized", 401)
+
+        data = validate_cart_item(request, patched=True)
+        if data is None:
+            abort(400)
+
+        user = get_user_from_auth_id(auth_user_id)
+
+        cart_item = CartItem.query.filter_by(
+            user_id=user.id, id=cart_item_id
+        ).one_or_none()
+
+        if cart_item is None:
+            abort(404)
+
+        try:
+            cart_item.quantity = data["quantity"]
+            cart_item.update()
+
+        except Exception as e:
+            error = True
+            db.session.rollback()
+            print(str(e))
+
+        if error:
+            return format_err_response(
+                f"Cart item id:{cart_item.id} could not be updated.", 500
+            )
+        else:
+            return jsonify({"success": True, "cart_item_id": cart_item.id})
+
+    # -----------------------------------------------------------------------
     def validate_order(request):
         param_keys = (
             "first_name",
@@ -560,9 +618,7 @@ def create_flask_app(name, config_obj):
                     total_amount += item.product.price * item.quantity
                     items_count += item.quantity
                 else:
-                    total_amount += (
-                        item.product.discounted_price * item.quantity
-                    )
+                    total_amount += item.product.discounted_price * item.quantity
                     items_count += item.quantity
 
                 order_item = OrderItem()
@@ -588,9 +644,7 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response(
-                "Server error. Order could not be created.", 500
-            )
+            return format_err_response("Server error. Order could not be created.", 500)
         else:
             return jsonify({"success": True, "order_id": order.id})
 

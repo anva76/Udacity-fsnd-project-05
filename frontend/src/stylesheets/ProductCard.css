@@ -1,0 +1,11 @@
+.card-image {
+    object-fit: cover;
+    object-position: center;
+    height: 200px;
+    width: 200px;
+    cursor: pointer;
+}
+
+.list-card {
+    width: 14rem;
+}
