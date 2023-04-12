@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import config from "../config"
-import "../stylesheets/CartView.css"
+import ItemsTable from "./ItemsTable"
 
 const CartView = () => {
+  const navigate = useNavigate()
+
   const [cart, setCart] = useState({})
 
   useEffect(() => {
@@ -74,77 +77,22 @@ const CartView = () => {
       <>
         <div className="container">
           <h4 className="mb-3 text-primary">Cart</h4>
-          <table className="table table">
-            <thead className="table-primary">
-              <tr>
-                <th>#</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th className="text-center">Quantity</th>
-                <th colSpan="2">Sub total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart.cart_items &&
-                cart.cart_items.map((item, index) => (
-                  <tr key={item.id}>
-                    <td className="align-middle">{index + 1}</td>
-                    <td className="align-middle">
-                      <img
-                        src={item.product.image_link}
-                        className="cart-item-image me-2"
-                        alt={item.product.name}
-                      />
-                      {item.product.name}
-                    </td>
-                    <td className="align-middle">${item.product.price}</td>
-                    <td className="text-center align-middle">
-                      <div className="d-flex justify-content-center">
-                        <button
-                          className="btn btn-info btn-sm me-2"
-                          onClick={() => {
-                            incCartItem(item.id, item.quantity)
-                          }}
-                        >
-                          <img src="plus-circle.svg" width="25" alt="add one" />
-                        </button>
-                        {item.quantity}
-                        <button
-                          className="btn btn-info btn-sm ms-2"
-                          onClick={() => {
-                            decCartItem(item.id, item.quantity)
-                          }}
-                        >
-                          <img
-                            src="dash-circle.svg"
-                            width="25"
-                            alt="remove one"
-                          />
-                        </button>
-                      </div>
-                    </td>
-                    <td className="align-middle">${item.sub_total}</td>
-                    <td className="align-middle">
-                      <button
-                        className="btn btn-info btn-sm"
-                        onClick={() => {
-                          deleteCartItem(item.id)
-                        }}
-                      >
-                        <img src="trash-can.svg" width="25" alt="delete" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-            <tfoot className="table-primary">
-              <tr>
-                <th colSpan="3">Total</th>
-                <th className="text-center">{cart.items_count}</th>
-                <th colSpan="2">${cart.total}</th>
-              </tr>
-            </tfoot>
-          </table>
+          <ItemsTable
+            entity={cart}
+            withButtons={true}
+            onItemIncrease={incCartItem}
+            onItemDecrease={decCartItem}
+            onItemDelete={deleteCartItem}
+          />
+          <div className="d-flex flex-row align-items-start justify-content-end">
+            <button
+              type="submit"
+              className="btn btn-info btn-lg "
+              onClick={() => navigate("/checkout")}
+            >
+              Checkout
+            </button>
+          </div>
         </div>
       </>
     )
@@ -152,7 +100,7 @@ const CartView = () => {
     return (
       <>
         <div className="container">
-          <h4 className="text-primary">Cart is empty</h4>
+          <h4 className="text-primary">No items in the cart</h4>
         </div>
       </>
     )

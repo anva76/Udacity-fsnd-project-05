@@ -1,5 +1,5 @@
 import React from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, NavLink } from "react-router-dom"
 
 const Header = () => {
   const navigate = useNavigate()
@@ -25,28 +25,38 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav me-auto mb-1 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                By Category
-              </a>
+              <NavLink to="" className="nav-link">
+                Catalog
+              </NavLink>
             </li>
           </ul>
-          <form className="d-flex me-auto mb-1">
+          <form className="d-flex me-auto mb-2 mb-lg-0">
             <input
               className="form-control me-2"
               type="search"
               placeholder="Search"
             />
             <button className="btn btn-info btn-sm" type="submit">
-              <img src="search.svg" width="25" alt="cart" />
+              <img src="/search.svg" width="25" alt="cart" />
             </button>
           </form>
           <button
-            className="btn btn-info btn-sm mb-1"
+            className="btn btn-info btn-sm mb-1 mb-lg-0 me-2"
+            title="Orders"
+            onClick={() => {
+              navigate("/orders")
+            }}
+          >
+            <img src="/orders-icon.svg" width="25" alt="cart" />
+          </button>
+          <button
+            className="btn btn-info btn-sm  mb-1 mb-lg-0"
+            title="Shopping cart"
             onClick={() => {
               navigate("/cart")
             }}
           >
-            <img src="cart.svg" width="25" alt="cart" />
+            <img src="/cart.svg" width="25" alt="cart" />
           </button>
         </div>
       </div>

@@ -16,23 +16,25 @@ function HomeView() {
   }, [])
 
   return (
-    <>
-      <div className="container">
-        <h4 className="mb-3 text-primary">Latest products</h4>
-        <div className="d-flex flex-row flex-wrap">
-          {productList &&
-            productList.map((p) => (
-              <ProductCard
-                key={p.id}
-                id={p.id}
-                name={p.name}
-                image_link={p.image_link}
-                price={p.price}
-              />
-            ))}
+    productList.length !== 0 && (
+      <>
+        <div className="container">
+          <h4 className="mb-3 text-primary">Latest products</h4>
+          <div className="d-flex flex-row flex-wrap">
+            {productList &&
+              productList.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  id={p.id}
+                  name={p.name}
+                  image_link={p.image_link}
+                  price={p.price}
+                />
+              ))}
+          </div>
         </div>
-      </div>
-    </>
+      </>
+    )
   )
 }
 

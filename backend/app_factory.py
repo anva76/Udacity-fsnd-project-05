@@ -3,6 +3,12 @@ import json
 from datetime import datetime
 from flask_cors import CORS
 from flask_migrate import Migrate
+from validators import (
+    CategoryValidator,
+    ProductValidator,
+    OrderValidator,
+    CartItemValidator,
+)
 from flask import Flask, jsonify, request, abort
 from models import (
     db,
@@ -84,22 +90,6 @@ def create_flask_app(name, config_obj):
 
         return jsonify({"success": True, "category": category.to_dict_long()})
 
-    # Validate a new category
-    # ----------------------------------------------------------------------
-    def validate_category(request, patched=False):
-        param_keys = ("name", "image_link", "notes")
-        data = extract_request_params(request, param_keys)
-
-        if len(data) != len(param_keys) and not patched:
-            return None
-
-        if len(data["name"]) == 0:
-            return None
-
-        data["name"] = data["name"].strip()
-
-        return data
-
     # Confirm category name is unique
     # ----------------------------------------------------------------------
     def confirm_category_unique(name, current_name=None, patched=False):
@@ -123,10 +113,11 @@ def create_flask_app(name, config_obj):
     @app.post("/categories/")
     def add_new_category():
         error = False
-        new_data = validate_category(request)
-
+        new_data = CategoryValidator.validate_post(request)
         if new_data is None:
-            abort(400)
+            return format_err_response(
+                "JSON schema or parameters are not valid.", 400
+            )
 
         if not confirm_category_unique(new_data["name"]):
             return format_err_response("Category name is not unique", 400)
@@ -141,7 +132,9 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response("New category could not be created.", 500)
+            return format_err_response(
+                "New category could not be created.", 500
+            )
         else:
             return jsonify({"success": True, "category_id": category.id})
 
@@ -154,12 +147,15 @@ def create_flask_app(name, config_obj):
         if category is None:
             abort(404)
 
-        new_data = validate_category(request, patched=True)
-
+        new_data = CategoryValidator.validate_patch(request)
         if new_data is None:
-            abort(400)
+            return format_err_response(
+                "JSON schema or parameters are not valid.", 400
+            )
 
-        if not confirm_category_unique(new_data["name"], category.name, patched=True):
+        if not confirm_category_unique(
+            new_data["name"], category.name, patched=True
+        ):
             return format_err_response("Category name is not unique", 400)
 
         try:
@@ -215,7 +211,9 @@ def create_flask_app(name, config_obj):
     def get_products():
         products = Product.query.all()
 
-        return jsonify({"success": True, "products": [pr.to_dict() for pr in products]})
+        return jsonify(
+            {"success": True, "products": [pr.to_dict() for pr in products]}
+        )
 
     # ----------------------------------------------------------------------
     @app.get("/products/<int:product_id>/")
@@ -225,34 +223,6 @@ def create_flask_app(name, config_obj):
             abort(404)
 
         return jsonify({"success": True, "product": product.to_dict_long()})
-
-    # Validate a new product
-    # ----------------------------------------------------------------------
-    def validate_product(request):
-        param_keys = (
-            "name",
-            "image_link",
-            "notes",
-            "sku_code",
-            "category_id",
-            "price",
-            "discounted_price",
-        )
-        data = extract_request_params(request, param_keys)
-
-        if len(data) != len(param_keys):
-            return None
-
-        if len(data["name"]) == 0:
-            return None
-
-        # Assert int value
-        try:
-            data["category_id"] = int(data["category_id"])
-        except ValueError:
-            return None
-
-        return data
 
     # Confirm product name is unique
     # ----------------------------------------------------------------------
@@ -277,13 +247,11 @@ def create_flask_app(name, config_obj):
     @app.post("/products/")
     def add_new_product():
         error = False
-        new_data = validate_product(request)
-
+        new_data = ProductValidator.validate_post(request)
         if new_data is None:
-            abort(400)
-
-        if not Category.query.filter_by(id=new_data["category_id"]).one_or_none():
-            return format_err_response("Category not found.", 404)
+            return format_err_response(
+                "JSON schema or parameters are not valid.", 400
+            )
 
         if not confirm_product_unique(new_data["name"]):
             return format_err_response("Product name is not unique.", 400)
@@ -298,7 +266,45 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response("New product could not be created.", 500)
+            return format_err_response(
+                "New product could not be created.", 500
+            )
+        else:
+            return jsonify({"success": True, "product_id": product.id})
+
+    # Update a new product
+    # ----------------------------------------------------------------------
+    @app.patch("/products/<int:product_id>/")
+    def update_product(product_id):
+        error = False
+        new_data = ProductValidator.validate_patch(request)
+        if new_data is None:
+            return format_err_response(
+                "JSON schema or parameters are not valid.", 400
+            )
+
+        product = Product.query.filter_by(id=product_id).one_or_none()
+        if product is None:
+            abort(404)
+
+        if not confirm_product_unique(
+            new_data["name"], product.name, patched=True
+        ):
+            return format_err_response("Product name is not unique.", 400)
+
+        try:
+            product.update_from_dict(new_data)
+            product.update()
+
+        except Exception as e:
+            error = True
+            db.session.rollback()
+            print(str(e))
+
+        if error:
+            return format_err_response(
+                "New product could not be created.", 500
+            )
         else:
             return jsonify({"success": True, "product_id": product.id})
 
@@ -371,27 +377,14 @@ def create_flask_app(name, config_obj):
             )
         if len(cart_items) != 0:
             cart = {
-                "cart_items": cart_items,
-                "total": "{:,.2f}".format(total),
+                "items": cart_items,
+                "total_amount": "{:,.2f}".format(total),
                 "items_count": items_count,
             }
         else:
             cart = {}
 
         return jsonify({"success": True, "cart": cart})
-
-    # -----------------------------------------------------------------------
-    def validate_cart_item(request, patched=False):
-        param_keys = ("product_id", "quantity")
-        data = extract_request_params(request, param_keys)
-
-        if len(data) == 0:
-            return None
-
-        if len(data) != len(param_keys) and not patched:
-            return None
-
-        return data
 
     # -----------------------------------------------------------------------
     def add_cart_item(user_id, product_id, quantity):
@@ -423,7 +416,7 @@ def create_flask_app(name, config_obj):
         if auth_user_id is None:
             return format_err_response("Unauthorized", 401)
 
-        data = validate_cart_item(request)
+        data = CartItemValidator.validate_post(request)
         if data is None:
             abort(400)
 
@@ -450,9 +443,13 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response("New cart item could not be added.", 500)
+            return format_err_response(
+                "New cart item could not be added.", 500
+            )
         else:
-            return jsonify({"success": True, "cart_product_id": cart_product.id})
+            return jsonify(
+                {"success": True, "cart_product_id": cart_product.id}
+            )
 
     # Delete a cart item
     # -----------------------------------------------------------------------
@@ -498,7 +495,7 @@ def create_flask_app(name, config_obj):
         if auth_user_id is None:
             return format_err_response("Unauthorized", 401)
 
-        data = validate_cart_item(request, patched=True)
+        data = CartItemValidator.validate_patch(request)
         if data is None:
             abort(400)
 
@@ -526,26 +523,6 @@ def create_flask_app(name, config_obj):
             )
         else:
             return jsonify({"success": True, "cart_item_id": cart_item.id})
-
-    # -----------------------------------------------------------------------
-    def validate_order(request):
-        param_keys = (
-            "first_name",
-            "last_name",
-            "email",
-            "phone",
-            "street_address_1",
-            "street_address_2",
-            "city",
-            "province",
-            "country",
-        )
-        data = extract_request_params(request, param_keys)
-
-        if len(data) != len(param_keys):
-            return None
-
-        return data
 
     # Get orders
     # -----------------------------------------------------------------------
@@ -601,9 +578,11 @@ def create_flask_app(name, config_obj):
                 "Order could not be submitted. Cart is empty.", 400
             )
 
-        data = validate_order(request)
+        data = OrderValidator.validate_post(request)
         if data is None:
-            abort(400)
+            return format_err_response(
+                "JSON schema or parameters are not valid.", 400
+            )
 
         try:
             order = Order(**data)
@@ -618,7 +597,9 @@ def create_flask_app(name, config_obj):
                     total_amount += item.product.price * item.quantity
                     items_count += item.quantity
                 else:
-                    total_amount += item.product.discounted_price * item.quantity
+                    total_amount += (
+                        item.product.discounted_price * item.quantity
+                    )
                     items_count += item.quantity
 
                 order_item = OrderItem()
@@ -644,7 +625,9 @@ def create_flask_app(name, config_obj):
             print(str(e))
 
         if error:
-            return format_err_response("Server error. Order could not be created.", 500)
+            return format_err_response(
+                "Server error. Order could not be created.", 500
+            )
         else:
             return jsonify({"success": True, "order_id": order.id})
 

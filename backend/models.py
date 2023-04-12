@@ -4,6 +4,23 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from aenum import Enum
 
+# Fix for sqlite3
+# -------------------------------------------------------
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+from sqlite3 import Connection as SQLite3Connection
+
+
+@event.listens_for(Engine, "connect")
+def _set_sqlite_pragma(dbapi_connection, connection_record):
+    if isinstance(dbapi_connection, SQLite3Connection):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON;")
+        cursor.close()
+
+
+# -------------------------------------------------------
+
 db = SQLAlchemy()
 
 
@@ -168,7 +185,12 @@ class Order(db.Model):
     street_address_2 = db.Column(db.String(50))
     city = db.Column(db.String(50), nullable=False)
     province = db.Column(db.String(50), nullable=False)
+    postal_code = db.Column(db.String(50))
     country = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime(), default=datetime.now())
+    updated_at = db.Column(
+        db.DateTime(), default=datetime.now(), onupdate=datetime.now()
+    )
 
     status = db.Column(
         db.Enum(OrderStatus, values_callable=OrderStatus.db_model_choices),
@@ -202,26 +224,36 @@ class Order(db.Model):
 
     def to_dict(self):
         return {
-            "order_id": self.id,
+            "id": self.id,
             "order_number": self.order_number,
             "total_amount": "{:,.2f}".format(self.total_amount),
             "items_count": self.items_count,
             "country": self.country,
             "status": str(self.status),
+            "recipient_name": f"{self.first_name} {self.last_name}",
+            "created_at": self.created_at.strftime("%d.%m.%Y %H:%M"),
+            "updated_at": self.updated_at.strftime("%d.%m.%Y %H:%M"),
         }
 
     def to_dict_long(self):
-        items = [
-            {
-                "id": i.id,
-                "quantity": i.quantity,
-                "product": i.product.to_dict(),
-            }
-            for i in self.order_items
-        ]
+        items = []
+        for i in self.order_items:
+            if i.product.discounted_price is None:
+                sub_total = i.product.price * i.quantity
+            else:
+                sub_total = i.product.discounted_price * i.quantity
+
+            items.append(
+                {
+                    "id": i.id,
+                    "quantity": i.quantity,
+                    "product": i.product.to_dict(),
+                    "sub_total": "{:,.2f}".format(sub_total),
+                }
+            )
 
         return {
-            "order_id": self.id,
+            "id": self.id,
             "order_number": self.order_number,
             "total_amount": "{:,.2f}".format(self.total_amount),
             "items_count": self.items_count,
@@ -235,8 +267,11 @@ class Order(db.Model):
             "street_address_2": self.street_address_2,
             "city": self.city,
             "province": self.province,
+            "postal_code": self.postal_code,
             "country": self.country,
-            "order_items": items,
+            "items": items,
+            "created_at": self.created_at.strftime("%d.%m.%Y %H:%M"),
+            "updated_at": self.updated_at.strftime("%d.%m.%Y %H:%M"),
         }
 
 
