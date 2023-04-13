@@ -90,6 +90,23 @@ def create_flask_app(name, config_obj):
 
         return jsonify({"success": True, "category": category.to_dict_long()})
 
+    # ----------------------------------------------------------------------
+    @app.get("/categories/<int:category_id>/products/")
+    def get_products_by_category(category_id):
+        category = Category.query.filter_by(id=category_id).one_or_none()
+        if category is None:
+            abort(404)
+
+        products = Product.query.filter_by(category_id=category.id).all()
+
+        return jsonify(
+            {
+                "success": True,
+                "products": [p.to_dict() for p in products],
+                "category_id": category.id,
+            }
+        )
+
     # Confirm category name is unique
     # ----------------------------------------------------------------------
     def confirm_category_unique(name, current_name=None, patched=False):

@@ -51,7 +51,7 @@ const OrderDetailView = () => {
           </div>
 
           <h5 className="mb-3">Order items:</h5>
-          <ItemsTable entity={order} />
+          <ItemsTable obj={order} />
 
           <h5 className="mb-3">Delivery address:</h5>
           <div className="col-md-6">

@@ -114,7 +114,7 @@ class Product(db.Model):
     name = db.Column(db.String(150), unique=True, nullable=False)
     notes = db.Column(db.String(255))
     price = db.Column(db.Float(2), nullable=False)
-    discounted_price = db.Column(db.Float(2), default=None)
+    discounted_price = db.Column(db.Float(2), default=0)
     image_link = db.Column(db.String(500))
     sku_code = db.Column(db.String(100), unique=True)
     created_at = db.Column(db.DateTime(), default=datetime.now())
@@ -146,10 +146,12 @@ class Product(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "price": "{:,.2f}".format(self.price),
-            "discounted_price": None
-            if self.discounted_price is None
-            else "{:,.2f}".format(self.discounted_price),
+            # "price": "{:,.2f}".format(self.price),
+            # "discounted_price": ""
+            # if self.discounted_price is None
+            # else "{:,.2f}".format(self.discounted_price),
+            "price": self.price,
+            "discounted_price": self.discounted_price,
             "image_link": self.image_link,
         }
 
@@ -158,10 +160,12 @@ class Product(db.Model):
             "id": self.id,
             "name": self.name,
             "notes": self.notes,
-            "price": "{:,.2f}".format(self.price),
-            "discounted_price": None
-            if self.discounted_price is None
-            else "{:,.2f}".format(self.discounted_price),
+            # "price": "{:,.2f}".format(self.price),
+            # "discounted_price": ""
+            # if self.discounted_price is None
+            # else "{:,.2f}".format(self.discounted_price),
+            "price": self.price,
+            "discounted_price": self.discounted_price,
             "image_link": self.image_link,
             "sku_code": self.sku_code,
             "category_id": self.category_id,

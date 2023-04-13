@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import "../stylesheets/ItemsTable.css"
 
 const ItemsTable = ({
-  entity,
+  obj,
   withButtons = false,
   onItemIncrease = null,
   onItemDecrease = null,
@@ -22,8 +22,8 @@ const ItemsTable = ({
           </tr>
         </thead>
         <tbody>
-          {entity.items &&
-            entity.items.map((item, index) => (
+          {obj.items &&
+            obj.items.map((item, index) => (
               <tr key={item.id}>
                 <td className="align-middle">{index + 1}</td>
                 <td className="align-middle">
@@ -90,8 +90,8 @@ const ItemsTable = ({
         <tfoot className="table-primary">
           <tr>
             <th colSpan="3">Total</th>
-            <th className="text-center">{entity.items_count}</th>
-            <th colSpan="2">${entity.total_amount}</th>
+            <th className="text-center">{obj.items_count}</th>
+            <th colSpan="2">${obj.total_amount}</th>
           </tr>
         </tfoot>
       </table>

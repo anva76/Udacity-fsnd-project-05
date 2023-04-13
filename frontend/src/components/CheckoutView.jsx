@@ -66,7 +66,10 @@ const CheckoutView = () => {
           alert(
             "Unable to submit the order. Please check the form fields and try again."
           )
-        } else navigate("/orders")
+        } else
+          navigate("/orders", {
+            state: { message: "Order was successfully submitted." },
+          })
       })
       .catch((err) => {
         console.log(err)
@@ -91,7 +94,7 @@ const CheckoutView = () => {
           <h4 className="mb-3 text-primary">Checkout</h4>
           <h5 className="mb-3">1) Please verify your order:</h5>
 
-          <ItemsTable entity={cart} />
+          <ItemsTable obj={cart} />
 
           <h5 className="mb-3">2) Please provide your delivery address:</h5>
           <form className="row" onSubmit={handleSubmit}>

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import config from "../config"
+import Alert from "./Alert"
 
 const OrderView = () => {
+  const { state } = useLocation()
   const [orders, setOrders] = useState([])
+  const [alertMessage, setAlertMessage] = useState(state ? state.message : null)
 
   useEffect(() => {
     fetchOrders()
@@ -29,6 +32,14 @@ const OrderView = () => {
     orders.length !== 0 && (
       <>
         <div className="container">
+          {alertMessage && (
+            <Alert
+              onClose={() => {
+                setAlertMessage(null)
+              }}
+              message={alertMessage}
+            />
+          )}
           <h4 className="mb-3 text-primary">My Orders</h4>
           <table className="table mb-3">
             <thead className="table-primary">

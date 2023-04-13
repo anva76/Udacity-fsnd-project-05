@@ -1,28 +1,50 @@
 import React, { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import config from "../config"
 import ProductCard from "../components/ProductCard"
+import Alert from "./Alert"
 
 function HomeView() {
-  const [productList, setProductList] = useState([])
+  const { state } = useLocation()
+  const [products, setProducts] = useState([])
+  const [alertMessage, setAlertMessage] = useState(state ? state.message : null)
 
-  useEffect(() => {
-    fetch(config.apiUrl + "/products")
+  const fetchProducts = () => {
+    fetch(config.apiUrl + "/products/")
       .then((response) => response.json())
       .then((data) => {
         console.log(data.products)
-        setProductList(data.products)
+
+        if (!data["success"]) {
+          alert("Server error. Unable to fetch products.")
+        } else setProducts(data.products)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        alert("Unable to fetch products. Please try again later.")
+      })
+  }
+
+  useEffect(() => {
+    fetchProducts()
   }, [])
 
   return (
-    productList.length !== 0 && (
+    products.length !== 0 && (
       <>
         <div className="container">
+          {alertMessage && (
+            <Alert
+              onClose={() => {
+                setAlertMessage(null)
+              }}
+              message={alertMessage}
+            />
+          )}
           <h4 className="mb-3 text-primary">Latest products</h4>
           <div className="d-flex flex-row flex-wrap">
-            {productList &&
-              productList.map((p) => (
+            {products &&
+              products.map((p) => (
                 <ProductCard
                   key={p.id}
                   id={p.id}

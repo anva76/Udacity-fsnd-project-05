@@ -1,5 +1,11 @@
 from jsonschema import validate
 
+NAME_FIELD_PATTERN = "^[^\s][\w\s.-]+[^\s]$"
+EMAIL_FIELD_PATTERN = "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+PHONE_FIELD_PATTERN = (
+    "^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$"
+)
+
 
 # JSON schema validator - base class
 class Validator:
@@ -36,7 +42,7 @@ class CategoryValidator(Validator):
             "name": {
                 "type": "string",
                 "minLength": 3,
-                "pattern": "^[^\s][\w\s.-]+[^\s]$",
+                "pattern": NAME_FIELD_PATTERN,
             },
             "image_link": {"type": "string"},
             "notes": {"type": "string"},
@@ -52,7 +58,7 @@ class CategoryValidator(Validator):
             "name": {
                 "type": "string",
                 "minLength": 3,
-                "pattern": "^[^\s][\w\s.-]+[^\s]$",
+                "pattern": NAME_FIELD_PATTERN,
             },
             "image_link": {"type": "string"},
             "notes": {"type": "string"},
@@ -69,7 +75,7 @@ class ProductValidator(Validator):
             "name": {
                 "type": "string",
                 "minLength": 3,
-                "pattern": "^[^\s][\w\s.-]+[^\s]$",
+                "pattern": NAME_FIELD_PATTERN,
             },
             "image_link": {"type": "string"},
             "notes": {"type": "string"},
@@ -93,7 +99,7 @@ class ProductValidator(Validator):
             "name": {
                 "type": "string",
                 "minLength": 3,
-                "pattern": "^[^\s][\w\s.-]+[^\s]$",
+                "pattern": NAME_FIELD_PATTERN,
             },
             "image_link": {"type": "string"},
             "notes": {"type": "string"},
@@ -115,11 +121,11 @@ class OrderValidator(Validator):
             "last_name": {"type": "string"},
             "email": {
                 "type": "string",
-                "pattern": "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$",
+                "pattern": EMAIL_FIELD_PATTERN,
             },
             "phone": {
                 "type": "string",
-                "pattern": "^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$",
+                "pattern": PHONE_FIELD_PATTERN,
             },
             "street_address_1": {"type": "string"},
             "street_address_2": {"type": "string"},
@@ -149,11 +155,11 @@ class OrderValidator(Validator):
             "last_name": {"type": "string"},
             "email": {
                 "type": "string",
-                "pattern": "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$",
+                "pattern": EMAIL_FIELD_PATTERN,
             },
             "phone": {
                 "type": "string",
-                "pattern": "^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$",
+                "pattern": PHONE_FIELD_PATTERN,
             },
             "street_address_1": {"type": "string"},
             "street_address_2": {"type": "string"},

@@ -8,6 +8,7 @@ import ProductDetailView from "./components/ProductDetailView"
 import CheckoutView from "./components/CheckoutView"
 import OrderView from "./components/OrderView"
 import OrderDetailView from "./components/OrderDetailView"
+import CatalogView from "./components/CatalogView"
 
 const App = () => {
   return (
@@ -21,6 +22,8 @@ const App = () => {
         <Route path="/checkout" element={<CheckoutView />} />
         <Route path="/orders" element={<OrderView />} />
         <Route path="/orders/:id" element={<OrderDetailView />} />
+        <Route path="/catalog" element={<CatalogView />} />
+        <Route path="/catalog/:categoryId" element={<CatalogView />} />
       </Routes>
     </>
   )

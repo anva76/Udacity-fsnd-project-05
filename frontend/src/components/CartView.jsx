@@ -78,7 +78,7 @@ const CartView = () => {
         <div className="container">
           <h4 className="mb-3 text-primary">Cart</h4>
           <ItemsTable
-            entity={cart}
+            obj={cart}
             withButtons={true}
             onItemIncrease={incCartItem}
             onItemDecrease={decCartItem}
