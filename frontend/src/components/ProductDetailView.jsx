@@ -2,147 +2,78 @@ import React, { useEffect, useState } from "react"
 import config from "../config"
 import { useParams, useNavigate } from "react-router-dom"
 import "../stylesheets/ProductDetailView.css"
-import Alert from "../components/Alert"
-import ProductEditModal from "./ProductEditModal"
+import { emitMessage } from "./FlashMessage"
+import EditModal from "./EditModal"
+import {
+  fetchOneProduct,
+  addProductToCart,
+  deleteProduct,
+  patchProduct,
+} from "../utils/QueryUtils"
 
 const ProductDetailView = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [product, setProduct] = useState(null)
-  const [alertMessage, setAlertMessage] = useState(null)
   const [editModalVisible, setEditModalVisibility] = useState(false)
 
+  const editMap = {
+    name: { control: "text", label: "Name" },
+    price: { control: "number", label: "Price" },
+    discounted_price: { control: "number", label: "Discounted Price" },
+    image_link: { control: "text", label: "Image Link" },
+    notes: { control: "textarea", label: "Notes" },
+  }
+
   useEffect(() => {
-    fetchProduct()
+    fetchOneProduct(id, (data) => setProduct(data))
   }, [])
 
-  const fetchProduct = () => {
-    fetch(config.apiUrl + `/products/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.product)
-        setProduct(data.product)
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Unable to fetch product data. Please try again later.")
+  const onProductDelete = () => {
+    if (window.confirm("Delete this product?"))
+      deleteProduct(product.id, () => {
+        navigate(-1)
       })
   }
 
-  const addProductToCart = (productId, quantity) => {
-    fetch(config.apiUrl + "/cart/", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ product_id: productId, quantity }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        if (!data["success"]) {
-          alert("Server error. Unable to add the product to the cart.")
-        } else setAlertMessage("Product was added to the cart.")
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Unable to add the product to the cart. Please try again later.")
-      })
-  }
-
-  const deleteProduct = () => {
-    if (window.confirm("Delete this product?")) {
-      fetch(config.apiUrl + `/products/${product.id}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${config.testToken}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          if (!data["success"]) {
-            alert("Server error. Unable to delete the product.")
-          } else
-            navigate("/home", {
-              state: {
-                message: "Product was successfully deleted.",
-              },
-            })
-        })
-        .catch((err) => {
-          console.log(err)
-          alert("Unable to delete the product. Please try again later.")
-        })
-    }
-  }
-
-  const patchProduct = (obj) => {
-    fetch(config.apiUrl + `/products/${product.id}/`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...obj }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        if (!data["success"]) {
-          alert(
-            "Unable to update the product. Please check the form fields and try again."
-          )
-        } else {
-          setEditModalVisibility(false)
-          fetchProduct()
-          setAlertMessage("Product was successfully updated.")
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Unable to update the product. Please try again later.")
-      })
-  }
-
-  const handleClick = () => {
+  const handleAddToCart = () => {
     if (product) addProductToCart(product.id, 1)
+  }
+
+  const onProductEditSubmit = (editObject) => {
+    delete editObject.id
+    patchProduct(product.id, editObject, () => {
+      setEditModalVisibility(false)
+      fetchOneProduct(id, (data) => setProduct(data))
+    })
   }
 
   return (
     product && (
       <>
         {editModalVisible && (
-          <ProductEditModal
+          <EditModal
             obj={product}
+            editMap={editMap}
             onClose={() => setEditModalVisibility(false)}
-            onSubmit={patchProduct}
+            onSubmit={onProductEditSubmit}
+            title="Edit Product"
           />
         )}
         <div className="container">
-          {alertMessage && (
-            <Alert
-              onClose={() => {
-                setAlertMessage(null)
-              }}
-              message={alertMessage}
-            />
-          )}
           <div className="d-flex d-row">
             <h4 className="mb-3 text-primary">{product.name}</h4>
             <button
-              className="btn btn-warning btn-sm ms-2 mb-3"
+              className="btn btn-light btn-sm ms-2 mb-3"
               title="Edit Product"
               onClick={() => setEditModalVisibility(true)}
             >
               <img src="/edit.svg" width="25" alt="cart" />
             </button>
             <button
-              className="btn btn-danger btn-sm ms-2 mb-3"
+              className="btn btn-light btn-sm ms-2 mb-3"
               title="Delete Product"
-              onClick={() => deleteProduct()}
+              onClick={onProductDelete}
             >
               <img src="/trash-can.svg" width="25" alt="cart" />
             </button>
@@ -158,7 +89,7 @@ const ProductDetailView = () => {
             </div>
             <div className="col-md-6 mb-5">
               <h5>${product.price}</h5>
-              <button className="btn btn-info btn-lg" onClick={handleClick}>
+              <button className="btn btn-info btn-lg" onClick={handleAddToCart}>
                 Add to cart
               </button>
             </div>

@@ -17,7 +17,8 @@ class Validator:
         data = request.get_json()
         try:
             validate(instance=data, schema=cls.PostSchema)
-        except Exception:
+        except Exception as e:
+            print(str(e))
             return None
 
         return data
@@ -27,7 +28,8 @@ class Validator:
         data = request.get_json()
         try:
             validate(instance=data, schema=cls.PatchSchema)
-        except Exception:
+        except Exception as e:
+            print(str(e))
             return None
 
         return data
@@ -44,8 +46,8 @@ class CategoryValidator(Validator):
                 "minLength": 3,
                 "pattern": NAME_FIELD_PATTERN,
             },
-            "image_link": {"type": "string"},
-            "notes": {"type": "string"},
+            "image_link": {"type": ["string", "null"]},
+            "notes": {"type": ["string", "null"]},
         },
         "required": ["name", "image_link", "notes"],
     }
@@ -60,8 +62,8 @@ class CategoryValidator(Validator):
                 "minLength": 3,
                 "pattern": NAME_FIELD_PATTERN,
             },
-            "image_link": {"type": "string"},
-            "notes": {"type": "string"},
+            "image_link": {"type": ["string", "null"]},
+            "notes": {"type": ["string", "null"]},
         },
     }
 
@@ -77,12 +79,12 @@ class ProductValidator(Validator):
                 "minLength": 3,
                 "pattern": NAME_FIELD_PATTERN,
             },
-            "image_link": {"type": "string"},
-            "notes": {"type": "string"},
-            "sku_code": {"type": "string"},
+            "image_link": {"type": ["string", "null"]},
+            "notes": {"type": ["string", "null"]},
+            "sku_code": {"type": ["string", "null"]},
             "category_id": {"type": "integer", "minumum": 0},
             "price": {"type": "number", "minumum": 0},
-            "discounted_price": {"type": "number", "minumum": 0},
+            "discounted_price": {"type": ["number", "null"], "minumum": 0},
         },
         "required": [
             "name",
@@ -101,12 +103,12 @@ class ProductValidator(Validator):
                 "minLength": 3,
                 "pattern": NAME_FIELD_PATTERN,
             },
-            "image_link": {"type": "string"},
-            "notes": {"type": "string"},
-            "sku_code": {"type": "string"},
+            "image_link": {"type": ["string", "null"]},
+            "notes": {"type": ["string", "null"]},
+            "sku_code": {"type": ["string", "null"]},
             "category_id": {"type": "integer", "minumum": 0},
             "price": {"type": "number", "minumum": 0},
-            "discounted_price": {"type": "number", "minumum": 0},
+            "discounted_price": {"type": ["number", "null"], "minumum": 0},
         },
     }
 
@@ -142,6 +144,7 @@ class OrderValidator(Validator):
             "street_address_1",
             "city",
             "province",
+            "postal_code",
             "country",
         ],
     }

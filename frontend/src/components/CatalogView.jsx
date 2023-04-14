@@ -3,6 +3,14 @@ import { useNavigate, useParams } from "react-router-dom"
 import config from "../config"
 import CategoryList from "./CategoryList"
 import ProductCard from "./ProductCard"
+import EditModal from "./EditModal"
+import {
+  fetchCategories,
+  fetchProducts,
+  fetchProductsByCategory,
+  deleteCategory,
+  patchCategory,
+} from "../utils/QueryUtils"
 
 const CatalogView = () => {
   const navigate = useNavigate()
@@ -10,57 +18,49 @@ const CatalogView = () => {
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [currentCategory, setCurrentCategory] = useState(categoryId)
+  const [editModalVisible, setEditModalVisibility] = useState(false)
+  const [changedCategory, setChangedCategory] = useState({})
 
-  const fetchCategories = () => {
-    fetch(config.apiUrl + "/categories/")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.categories)
-
-        if (!data["success"]) {
-          alert("Server error. Unable to fetch categories.")
-        } else setCategories(data.categories)
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Unable to fetch categories. Please try again later.")
-      })
+  const editMap = {
+    name: { control: "text", label: "Name" },
   }
 
-  const fetchProducts = () => {
-    const fetchUrl = currentCategory
-      ? `/categories/${currentCategory}/products/`
-      : "/products/"
-
-    console.log(fetchUrl)
-    fetch(config.apiUrl + fetchUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.products)
-
-        if (!data["success"]) {
-          alert("Server error. Unable to fetch products.")
-        } else setProducts(data.products)
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Unable to fetch products. Please try again later.")
-      })
-  }
-
-  const handleSelect = (catId) => {
+  const onCategorySelect = (catId) => {
     if (catId) navigate(`/catalog/${catId}`)
     else navigate("/catalog")
   }
 
+  const onCategoryDelete = (catId) => {
+    if (window.confirm(`Delete the '${categories[catId].name}' category?`)) {
+      deleteCategory(catId, () => {
+        navigate("/catalog")
+        fetchCategories((data) => setCategories(data))
+      })
+    }
+  }
+
+  const onCategoryEditSubmit = (editObject) => {
+    const catId = editObject.id
+    delete editObject.id
+    patchCategory(catId, editObject, () => {
+      setEditModalVisibility(false)
+      fetchCategories((data) => setCategories(data))
+    })
+  }
+
+  const onCategoryEdit = (catId) => {
+    setChangedCategory(categories[catId])
+    setEditModalVisibility(true)
+  }
+
   useEffect(() => {
-    console.log("currentCategory", currentCategory)
-    fetchCategories()
-    fetchProducts()
+    fetchCategories((data) => setCategories(data))
   }, [])
 
   useEffect(() => {
-    fetchProducts()
+    if (currentCategory)
+      fetchProductsByCategory(currentCategory, (data) => setProducts(data))
+    else fetchProducts((data) => setProducts(data))
   }, [currentCategory])
 
   useEffect(() => {
@@ -68,32 +68,45 @@ const CatalogView = () => {
   }, [categoryId])
 
   return (
-    <>
-      <div className="container">
-        <div className="row">
-          <h4 className="text-primary mb-3">Categories</h4>
-          <div className="col-md-2 mb-3">
-            <CategoryList
-              categories={categories}
-              currentCategory={currentCategory}
-              onSelect={handleSelect}
-            />
-          </div>
-          <div className="col-md-10 d-flex flex-row flex-wrap">
-            {products &&
-              products.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  id={p.id}
-                  name={p.name}
-                  image_link={p.image_link}
-                  price={p.price}
-                />
-              ))}
+    categories && (
+      <>
+        {editModalVisible && (
+          <EditModal
+            obj={changedCategory}
+            editMap={editMap}
+            onClose={() => setEditModalVisibility(false)}
+            onSubmit={onCategoryEditSubmit}
+            title="Edit Category"
+          />
+        )}
+        <div className="container">
+          <div className="row">
+            <h4 className="text-primary mb-3">Categories</h4>
+            <div className="col-md-3 mb-3">
+              <CategoryList
+                categories={categories}
+                currentCategory={currentCategory}
+                onSelect={onCategorySelect}
+                onEdit={onCategoryEdit}
+                onDelete={onCategoryDelete}
+              />
+            </div>
+            <div className="col-md-9 d-flex flex-row flex-wrap">
+              {products &&
+                products.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    id={p.id}
+                    name={p.name}
+                    image_link={p.image_link}
+                    price={p.price}
+                  />
+                ))}
+            </div>
           </div>
         </div>
-      </div>
-    </>
+      </>
+    )
   )
 }
 

@@ -2,77 +2,43 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import config from "../config"
 import ItemsTable from "./ItemsTable"
+import { fetchCart, patchCartItem, deleteCartItem } from "../utils/QueryUtils"
 
 const CartView = () => {
   const navigate = useNavigate()
 
-  const [cart, setCart] = useState({})
+  const [cart, setCart] = useState(null)
 
   useEffect(() => {
-    fetchCart()
+    fetchCart((data) => setCart(data))
   }, [])
-
-  const fetchCart = () => {
-    fetch(config.apiUrl + "/cart/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.cart)
-        setCart(data.cart)
-      })
-      .catch((err) => console.log(err))
-  }
-
-  const patchCartItem = (cartItemId, quantity) => {
-    fetch(config.apiUrl + `/cart/${cartItemId}/`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ quantity }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        fetchCart()
-      })
-      .catch((err) => console.log(err))
-  }
 
   const incCartItem = (cartItemId, quantity) => {
     quantity += 1
-    patchCartItem(cartItemId, quantity)
+    patchCartItem(cartItemId, quantity, () => {
+      fetchCart((data) => setCart(data))
+    })
   }
 
   const decCartItem = (cartItemId, quantity) => {
     quantity -= 1
-    if (quantity > 0) patchCartItem(cartItemId, quantity)
-    else deleteCartItem(cartItemId)
-  }
-
-  const deleteCartItem = (cartItemId) => {
-    fetch(config.apiUrl + `/cart/${cartItemId}/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        fetchCart()
+    if (quantity > 0)
+      patchCartItem(cartItemId, quantity, () => {
+        fetchCart((data) => setCart(data))
       })
-      .catch((err) => console.log(err))
+    else
+      deleteCartItem(cartItemId, () => {
+        fetchCart((data) => setCart(data))
+      })
   }
 
-  if (cart && Object.keys(cart).length !== 0) {
+  const handleDelCartItem = (id) => {
+    deleteCartItem(id, () => {
+      fetchCart((data) => setCart(data))
+    })
+  }
+
+  if (cart && Object.keys(cart).length !== 0)
     return (
       <>
         <div className="container">
@@ -82,7 +48,7 @@ const CartView = () => {
             withButtons={true}
             onItemIncrease={incCartItem}
             onItemDecrease={decCartItem}
-            onItemDelete={deleteCartItem}
+            onItemDelete={handleDelCartItem}
           />
           <div className="d-flex flex-row align-items-start justify-content-end">
             <button
@@ -96,7 +62,8 @@ const CartView = () => {
         </div>
       </>
     )
-  } else {
+
+  if (cart && Object.keys(cart).length === 0)
     return (
       <>
         <div className="container">
@@ -104,7 +71,6 @@ const CartView = () => {
         </div>
       </>
     )
-  }
 }
 
 export default CartView

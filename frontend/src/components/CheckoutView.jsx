@@ -2,80 +2,28 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import config from "../config"
 import ItemsTable from "./ItemsTable"
+import { emitMessage } from "./FlashMessage"
+import { submitOrder, fetchCart } from "../utils/QueryUtils"
 
 const CheckoutView = () => {
   const navigate = useNavigate()
   const [cart, setCart] = useState({})
   const [orderAddress, setOrderAddress] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     phone: "",
-    streetAddress1: "",
-    streetAddress2: "",
+    street_address_1: "",
+    street_address_2: "",
     city: "",
     province: "",
-    postalCode: "",
+    postal_code: "",
     country: "",
   })
 
   useEffect(() => {
-    fetchCart()
+    fetchCart((data) => setCart(data))
   }, [])
-
-  const fetchCart = () => {
-    fetch(config.apiUrl + "/cart/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.cart)
-        setCart(data.cart)
-      })
-      .catch((err) => console.log(err))
-  }
-
-  const submitOrder = () => {
-    fetch(config.apiUrl + "/orders/", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.testToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        first_name: orderAddress.firstName,
-        last_name: orderAddress.lastName,
-        email: orderAddress.email,
-        phone: orderAddress.phone,
-        street_address_1: orderAddress.streetAddress1,
-        street_address_2: orderAddress.streetAddress2,
-        province: orderAddress.province,
-        city: orderAddress.city,
-        postal_code: orderAddress.postalCode,
-        country: orderAddress.country,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        if (!data["success"]) {
-          alert(
-            "Unable to submit the order. Please check the form fields and try again."
-          )
-        } else
-          navigate("/orders", {
-            state: { message: "Order was successfully submitted." },
-          })
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Unable to submit the order. Please try again later.")
-      })
-  }
 
   const handleChange = (e) => {
     setOrderAddress({ ...orderAddress, [e.target.name]: e.target.value })
@@ -84,7 +32,7 @@ const CheckoutView = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(orderAddress)
-    submitOrder()
+    submitOrder(orderAddress, () => navigate("/orders"))
   }
 
   if (cart && Object.keys(cart).length !== 0) {
@@ -101,29 +49,31 @@ const CheckoutView = () => {
             <div className="col-md-6">
               <div className="mb-3 row">
                 <div className="col-md-6">
-                  <label className="form-label">First name</label>
+                  <label className="form-label text-secondary">
+                    First name
+                  </label>
                   <input
                     type="text"
                     className="form-control"
                     onChange={handleChange}
-                    name="firstName"
-                    value={orderAddress.firstName}
+                    name="first_name"
+                    value={orderAddress.first_name}
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Last name</label>
+                  <label className="form-label text-secondary">Last name</label>
                   <input
                     type="text"
                     className="form-control"
                     onChange={handleChange}
-                    name="lastName"
-                    value={orderAddress.lastName}
+                    name="last_name"
+                    value={orderAddress.last_name}
                   />
                 </div>
               </div>
               <div className="mb-3 row">
                 <div className="col-md-6">
-                  <label className="form-label">Email</label>
+                  <label className="form-label text-secondary">Email</label>
                   <input
                     type="email"
                     className="form-control"
@@ -133,7 +83,7 @@ const CheckoutView = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Phone</label>
+                  <label className="form-label text-secondary">Phone</label>
                   <input
                     type="tel"
                     className="form-control"
@@ -144,30 +94,32 @@ const CheckoutView = () => {
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label">Street address</label>
+                <label className="form-label text-secondary">
+                  Street address
+                </label>
                 <input
                   type="text"
                   className="form-control"
                   onChange={handleChange}
-                  name="streetAddress1"
-                  value={orderAddress.streetAddress1}
+                  name="street_address_1"
+                  value={orderAddress.street_address_1}
                 />
               </div>
               <div className="mb-3">
-                <label className="form-label">
+                <label className="form-label text-secondary">
                   Street address 2 (optional)
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   onChange={handleChange}
-                  name="streetAddress2"
-                  value={orderAddress.streetAddress2}
+                  name="street_address_2"
+                  value={orderAddress.street_address_2}
                 />
               </div>
               <div className="mb-3 row">
                 <div className="col-md-6">
-                  <label className="form-label">City</label>
+                  <label className="form-label text-secondary">City</label>
                   <input
                     type="text"
                     className="form-control"
@@ -177,7 +129,7 @@ const CheckoutView = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Province</label>
+                  <label className="form-label text-secondary">Province</label>
                   <input
                     type="text"
                     className="form-control"
@@ -189,17 +141,19 @@ const CheckoutView = () => {
               </div>
               <div className="mb-3 row">
                 <div className="col-md-6">
-                  <label className="form-label">Postal code</label>
+                  <label className="form-label text-secondary">
+                    Postal code
+                  </label>
                   <input
                     type="text"
                     className="form-control"
                     onChange={handleChange}
-                    name="postalCode"
-                    value={orderAddress.postalCode}
+                    name="postal_code"
+                    value={orderAddress.postal_code}
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Country</label>
+                  <label className="form-label text-secondary">Country</label>
                   <input
                     type="text"
                     className="form-control"

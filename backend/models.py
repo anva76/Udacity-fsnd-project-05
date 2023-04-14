@@ -1,8 +1,8 @@
 import json
-from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from aenum import Enum
+from sqlalchemy.sql import func
 
 # Fix for sqlite3
 # -------------------------------------------------------
@@ -45,7 +45,7 @@ class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     auth_user_id = db.Column(db.String(150), unique=True, nullable=False)
-    created_at = db.Column(db.DateTime(), default=datetime.now())
+    created_at = db.Column(db.DateTime(), server_default=func.now())
 
     cart_items = db.relationship(
         "CartItem", back_populates="user", cascade="all,delete-orphan"
@@ -68,9 +68,10 @@ class Category(db.Model):
     name = db.Column(db.String(150), unique=True, nullable=False)
     notes = db.Column(db.String(255))
     image_link = db.Column(db.String(500))
-    created_at = db.Column(db.DateTime(), default=datetime.now())
+
+    created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(
-        db.DateTime(), default=datetime.now(), onupdate=datetime.now()
+        db.DateTime(), server_default=func.now(), onupdate=func.now()
     )
 
     products = db.relationship("Product", back_populates="category")
@@ -114,12 +115,13 @@ class Product(db.Model):
     name = db.Column(db.String(150), unique=True, nullable=False)
     notes = db.Column(db.String(255))
     price = db.Column(db.Float(2), nullable=False)
-    discounted_price = db.Column(db.Float(2), default=0)
+    discounted_price = db.Column(db.Float(2))
     image_link = db.Column(db.String(500))
     sku_code = db.Column(db.String(100), unique=True)
-    created_at = db.Column(db.DateTime(), default=datetime.now())
+
+    created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(
-        db.DateTime(), default=datetime.now(), onupdate=datetime.now()
+        db.DateTime(), server_default=func.now(), onupdate=func.now()
     )
 
     category_id = db.Column(
@@ -146,10 +148,6 @@ class Product(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            # "price": "{:,.2f}".format(self.price),
-            # "discounted_price": ""
-            # if self.discounted_price is None
-            # else "{:,.2f}".format(self.discounted_price),
             "price": self.price,
             "discounted_price": self.discounted_price,
             "image_link": self.image_link,
@@ -160,10 +158,6 @@ class Product(db.Model):
             "id": self.id,
             "name": self.name,
             "notes": self.notes,
-            # "price": "{:,.2f}".format(self.price),
-            # "discounted_price": ""
-            # if self.discounted_price is None
-            # else "{:,.2f}".format(self.discounted_price),
             "price": self.price,
             "discounted_price": self.discounted_price,
             "image_link": self.image_link,
@@ -191,9 +185,10 @@ class Order(db.Model):
     province = db.Column(db.String(50), nullable=False)
     postal_code = db.Column(db.String(50))
     country = db.Column(db.String(50), nullable=False)
-    created_at = db.Column(db.DateTime(), default=datetime.now())
+
+    created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(
-        db.DateTime(), default=datetime.now(), onupdate=datetime.now()
+        db.DateTime(), server_default=func.now(), onupdate=func.now()
     )
 
     status = db.Column(

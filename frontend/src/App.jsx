@@ -9,10 +9,12 @@ import CheckoutView from "./components/CheckoutView"
 import OrderView from "./components/OrderView"
 import OrderDetailView from "./components/OrderDetailView"
 import CatalogView from "./components/CatalogView"
+import { FlashMessage } from "./components/FlashMessage"
 
 const App = () => {
   return (
     <>
+      <FlashMessage />
       <Header />
       <Routes>
         <Route path="/" element={<HomeView />} />

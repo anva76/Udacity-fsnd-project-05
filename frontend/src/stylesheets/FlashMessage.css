@@ -1,0 +1,6 @@
+.alert-window {
+    bottom: 15px;
+    right: 15px;
+    width: 35%;
+    z-index: 99;
+}

@@ -74,12 +74,26 @@ def create_flask_app(name, config_obj):
     def get_categories():
         categories = Category.query.all()
 
+        categories = {
+            cat.id: {
+                "id": cat.id,
+                "name": cat.name,
+                "image_link": cat.image_link,
+            }
+            for cat in categories
+        }
         return jsonify(
             {
                 "success": True,
-                "categories": [cat.to_dict() for cat in categories],
+                "categories": categories,
             }
         )
+        # return jsonify(
+        #     {
+        #         "success": True,
+        #         "categories": [cat.to_dict() for cat in categories],
+        #     }
+        # )
 
     # ----------------------------------------------------------------------
     @app.get("/categories/<int:category_id>/")
