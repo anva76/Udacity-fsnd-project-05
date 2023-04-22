@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import config from "../config"
 import ItemsTable from "./ItemsTable"
-import { fetchCart, patchCartItem, deleteCartItem } from "../utils/QueryUtils"
+import { fetchCart, patchCartItem, deleteCartItem } from "../utils/queryUtils"
 
 const CartView = () => {
   const navigate = useNavigate()

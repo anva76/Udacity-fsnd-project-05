@@ -180,6 +180,7 @@ cython_debug/
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node
 
 ### Node ###
+
 # Logs
 logs
 *.log

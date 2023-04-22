@@ -1,7 +1,12 @@
-import config from "../config"
+import config from "../reactConfig"
 import { emitMessage } from "../components/FlashMessage"
+import { useAuth0 } from "@auth0/auth0-react"
 
 // CRUD functions
+
+const defaultHeaders = {
+  "Content-Type": "application/json",
+}
 
 // ---------------------------------------------------------------------
 const fetchProducts = (onSuccess) => {
@@ -60,8 +65,8 @@ const addProductToCart = (productId, quantity, onSuccess = null) => {
   fetch(config.apiUrl + "/cart/", {
     method: "POST",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
     body: JSON.stringify({ product_id: productId, quantity }),
   })
@@ -86,8 +91,8 @@ const deleteProduct = (id, onSuccess = null) => {
   fetch(config.apiUrl + `/products/${id}/`, {
     method: "DELETE",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
@@ -111,8 +116,8 @@ const patchProduct = (id, obj, onSuccess = null) => {
   fetch(config.apiUrl + `/products/${id}/`, {
     method: "PATCH",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
     body: JSON.stringify({ ...obj }),
   })
@@ -139,8 +144,8 @@ const fetchOrders = (onSuccess) => {
   fetch(config.apiUrl + "/orders/", {
     method: "GET",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
@@ -162,8 +167,8 @@ const fetchOneOrder = (id, onSuccess) => {
   fetch(config.apiUrl + `/orders/${id}/`, {
     method: "GET",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
@@ -186,8 +191,8 @@ const fetchCart = (onSuccess) => {
   fetch(config.apiUrl + "/cart/", {
     method: "GET",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
@@ -211,8 +216,8 @@ const submitOrder = (orderData, onSuccess = null) => {
   fetch(config.apiUrl + "/orders/", {
     method: "POST",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
     body: JSON.stringify(orderData),
   })
@@ -256,8 +261,8 @@ const patchCartItem = (cartItemId, quantity, onSuccess = null) => {
   fetch(config.apiUrl + `/cart/${cartItemId}/`, {
     method: "PATCH",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
     body: JSON.stringify({ quantity }),
   })
@@ -281,8 +286,8 @@ const deleteCartItem = (cartItemId, onSuccess = null) => {
   fetch(config.apiUrl + `/cart/${cartItemId}/`, {
     method: "DELETE",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
@@ -305,8 +310,8 @@ const deleteCategory = (id, onSuccess = null) => {
   fetch(config.apiUrl + `/categories/${id}/`, {
     method: "DELETE",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
@@ -330,8 +335,8 @@ const patchCategory = (id, obj, onSuccess = null) => {
   fetch(config.apiUrl + `/categories/${id}/`, {
     method: "PATCH",
     headers: {
+      ...defaultHeaders,
       Authorization: `Bearer ${config.testToken}`,
-      "Content-Type": "application/json",
     },
     body: JSON.stringify({ ...obj }),
   })
@@ -353,6 +358,32 @@ const patchCategory = (id, obj, onSuccess = null) => {
     })
 }
 
+// -----------------------------------------------------------------------
+const searchProducts = (searchQuery, onSuccess) => {
+  fetch(config.apiUrl + "/search/", {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+    },
+    body: JSON.stringify({ search_query: searchQuery }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      if (!data["success"]) {
+        alert(
+          "Unable to process the search request. Please check the data and try again."
+        )
+      } else {
+        onSuccess && onSuccess(data.products)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Unable to process the search request. Please try again later.")
+    })
+}
+
 export {
   fetchProducts,
   fetchProductsByCategory,
@@ -369,4 +400,5 @@ export {
   deleteCartItem,
   deleteCategory,
   patchCategory,
+  searchProducts,
 }

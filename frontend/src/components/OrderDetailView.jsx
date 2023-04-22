@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import config from "../config"
 import { useParams } from "react-router-dom"
 import "../stylesheets/OrderDetailView.css"
 import ItemsTable from "./ItemsTable"
-import { fetchOneOrder } from "../utils/QueryUtils"
+import { fetchOneOrder } from "../utils/queryUtils"
 
 const OrderDetailView = () => {
   const { id } = useParams()

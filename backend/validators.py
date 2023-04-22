@@ -1,10 +1,11 @@
 from jsonschema import validate
 
-NAME_FIELD_PATTERN = "^[^\s][\w\s.-]+[^\s]$"
+NAME_FIELD_PATTERN = "^[\w][\w\s.-]+[\w]$"
 EMAIL_FIELD_PATTERN = "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
 PHONE_FIELD_PATTERN = (
     "^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$"
 )
+SEARCH_QUERY_PATTERN = "^[\w.-]+$"
 
 
 # JSON schema validator - base class
@@ -194,4 +195,15 @@ class CartItemValidator(Validator):
             "quantity": {"type": "integer", "minumum": 0},
         },
         "required": ["quantity"],
+    }
+
+
+# JSON schema validator for the product search query
+class SearchValidator(Validator):
+    PostSchema = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "search_query": {"type": "string", "pattern": SEARCH_QUERY_PATTERN}
+        },
     }

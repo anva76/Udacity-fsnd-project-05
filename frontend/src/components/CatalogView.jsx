@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import config from "../config"
 import CategoryList from "./CategoryList"
 import ProductCard from "./ProductCard"
 import EditModal from "./EditModal"
@@ -10,7 +9,7 @@ import {
   fetchProductsByCategory,
   deleteCategory,
   patchCategory,
-} from "../utils/QueryUtils"
+} from "../utils/queryUtils"
 
 const CatalogView = () => {
   const navigate = useNavigate()
@@ -25,13 +24,28 @@ const CatalogView = () => {
     name: { control: "text", label: "Name" },
   }
 
-  const onCategorySelect = (catId) => {
+  const getCategoryFromStateById = (catId) => {
+    if (categories) {
+      const catIndex = categories.findIndex((item) => {
+        return item.id == catId
+      })
+      if (catIndex != -1) return categories[catIndex]
+      else return null
+    }
+
+    return null
+  }
+
+  const handleCategorySelect = (catId) => {
     if (catId) navigate(`/catalog/${catId}`)
     else navigate("/catalog")
   }
 
-  const onCategoryDelete = (catId) => {
-    if (window.confirm(`Delete the '${categories[catId].name}' category?`)) {
+  const handleCategoryDelete = (catId) => {
+    const category = getCategoryFromStateById(catId)
+    if (!category) return
+
+    if (window.confirm(`Delete the '${category.name}' category?`)) {
       deleteCategory(catId, () => {
         navigate("/catalog")
         fetchCategories((data) => setCategories(data))
@@ -39,7 +53,7 @@ const CatalogView = () => {
     }
   }
 
-  const onCategoryEditSubmit = (editObject) => {
+  const handleCategoryEditSubmit = (editObject) => {
     const catId = editObject.id
     delete editObject.id
     patchCategory(catId, editObject, () => {
@@ -48,8 +62,11 @@ const CatalogView = () => {
     })
   }
 
-  const onCategoryEdit = (catId) => {
-    setChangedCategory(categories[catId])
+  const handleCategoryEdit = (catId) => {
+    const category = getCategoryFromStateById(catId)
+    if (!category) return
+
+    setChangedCategory(category)
     setEditModalVisibility(true)
   }
 
@@ -75,7 +92,7 @@ const CatalogView = () => {
             obj={changedCategory}
             editMap={editMap}
             onClose={() => setEditModalVisibility(false)}
-            onSubmit={onCategoryEditSubmit}
+            onSubmit={handleCategoryEditSubmit}
             title="Edit Category"
           />
         )}
@@ -86,9 +103,9 @@ const CatalogView = () => {
               <CategoryList
                 categories={categories}
                 currentCategory={currentCategory}
-                onSelect={onCategorySelect}
-                onEdit={onCategoryEdit}
-                onDelete={onCategoryDelete}
+                onSelect={handleCategorySelect}
+                onEdit={handleCategoryEdit}
+                onDelete={handleCategoryDelete}
               />
             </div>
             <div className="col-md-9 d-flex flex-row flex-wrap">

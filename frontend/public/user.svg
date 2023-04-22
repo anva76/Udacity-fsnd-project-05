@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64"
+   height="64"
+   viewBox="0 0 16.933333 16.933334"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="user.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     units="px"
+     width="64px"
+     inkscape:zoom="9.6030902"
+     inkscape:cx="7.081054"
+     inkscape:cy="32.020943"
+     inkscape:window-width="1920"
+     inkscape:window-height="995"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Слой 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <path
+       id="path1360"
+       style="fill:none;stroke:#000000;stroke-width:0.79375001;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 8.732168,9.6224417 A 6.9934732,4.6977883 0 0 0 2.1356713,12.767469 7.9013486,7.5982626 0 0 0 8.51151,15.886142 7.9013486,7.5982626 0 0 0 15.131778,12.427438 6.9934732,4.6977883 0 0 0 8.732168,9.6224417 Z" />
+    <ellipse
+       style="fill:none;stroke:#000000;stroke-width:0.79375001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path910"
+       cx="8.5194988"
+       cy="8.3597155"
+       rx="7.9013486"
+       ry="7.5982623" />
+    <ellipse
+       style="fill:none;stroke:#000000;stroke-width:0.79375001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path1036"
+       cx="8.5432205"
+       cy="6.1116934"
+       rx="3.5752115"
+       ry="3.3226006" />
+  </g>
+</svg>

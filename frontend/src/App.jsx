@@ -10,8 +10,18 @@ import OrderView from "./components/OrderView"
 import OrderDetailView from "./components/OrderDetailView"
 import CatalogView from "./components/CatalogView"
 import { FlashMessage } from "./components/FlashMessage"
+import CallbackPage from "./components/CallbackPage"
+import PageLoader from "./components/PageLoader"
+import SearchView from "./components/SearchView"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const App = () => {
+  const { isLoading } = useAuth0()
+
+  if (isLoading) {
+    return <PageLoader />
+  }
+
   return (
     <>
       <FlashMessage />
@@ -26,6 +36,8 @@ const App = () => {
         <Route path="/orders/:id" element={<OrderDetailView />} />
         <Route path="/catalog" element={<CatalogView />} />
         <Route path="/catalog/:categoryId" element={<CatalogView />} />
+        <Route path="/callback" element={<CallbackPage />} />
+        <Route path="/search" element={<SearchView />} />
       </Routes>
     </>
   )

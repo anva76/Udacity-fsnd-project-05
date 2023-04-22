@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import config from "../config"
+import { useGlobalState } from "../utils/state"
 
 const CategoryList = ({
   categories,
@@ -9,6 +9,8 @@ const CategoryList = ({
   onEdit,
   onDelete,
 }) => {
+  const [permissions, setPermissions] = useGlobalState("permissions")
+
   return (
     <>
       <ul className="list-group">
@@ -22,38 +24,42 @@ const CategoryList = ({
         >
           All
         </li>
-        {Object.keys(categories).map((catId, index) => (
+        {categories.map((c, index) => (
           <li
-            key={catId}
+            key={c.id}
             role="button"
             className={
               // == is used here to compare 1 and "1"
-              currentCategory == catId
+              currentCategory == c.id
                 ? "list-group-item bg-info"
                 : "list-group-item"
             }
-            onClick={() => onSelect(catId)}
+            onClick={() => onSelect(c.id)}
           >
             <div className="d-flex flex-row justify-content-between">
-              {categories[catId].name}
+              {c.name}
               <div>
-                <button
-                  className=" btn btn-light btn-sm  p-0 me-1"
-                  onClick={() => {
-                    onEdit(catId)
-                  }}
-                >
-                  <img src="/edit.svg" width="18" alt="edit" />
-                </button>
-                <button
-                  className=" btn btn-light btn-sm  p-0"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDelete(catId)
-                  }}
-                >
-                  <img src="/trash-can.svg" width="18" alt="delete" />
-                </button>
+                {permissions.includes("role:admin") && (
+                  <button
+                    className=" btn btn-light btn-sm  p-0 me-1"
+                    onClick={() => {
+                      onEdit(c.id)
+                    }}
+                  >
+                    <img src="/edit.svg" width="18" alt="edit" />
+                  </button>
+                )}
+                {permissions.includes("delete:categories") && (
+                  <button
+                    className=" btn btn-light btn-sm  p-0"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onDelete(c.id)
+                    }}
+                  >
+                    <img src="/trash-can.svg" width="18" alt="delete" />
+                  </button>
+                )}
               </div>
             </div>
           </li>

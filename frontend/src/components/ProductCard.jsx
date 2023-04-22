@@ -27,7 +27,7 @@ const ProductCard = ({
         <div className="card-body">
           <h5 className="card-title">{name}</h5>
           <h5>
-            <span className="badge bg-secondary">${price}</span>
+            <span className="badge bg-secondary">${price.toFixed(2)}</span>
           </h5>
           <button className="btn btn-info btn-sm" onClick={goToDetailView}>
             View

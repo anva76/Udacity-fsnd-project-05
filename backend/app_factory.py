@@ -8,6 +8,7 @@ from validators import (
     ProductValidator,
     OrderValidator,
     CartItemValidator,
+    SearchValidator,
 )
 from flask import Flask, jsonify, request, abort
 from models import (
@@ -74,26 +75,12 @@ def create_flask_app(name, config_obj):
     def get_categories():
         categories = Category.query.all()
 
-        categories = {
-            cat.id: {
-                "id": cat.id,
-                "name": cat.name,
-                "image_link": cat.image_link,
-            }
-            for cat in categories
-        }
         return jsonify(
             {
                 "success": True,
-                "categories": categories,
+                "categories": [cat.to_dict() for cat in categories],
             }
         )
-        # return jsonify(
-        #     {
-        #         "success": True,
-        #         "categories": [cat.to_dict() for cat in categories],
-        #     }
-        # )
 
     # ----------------------------------------------------------------------
     @app.get("/categories/<int:category_id>/")
@@ -402,14 +389,14 @@ def create_flask_app(name, config_obj):
                 {
                     "id": i.id,
                     "quantity": i.quantity,
-                    "sub_total": "{:,.2f}".format(sub_total),
+                    "sub_total": sub_total,
                     "product": i.product.to_dict(),
                 }
             )
         if len(cart_items) != 0:
             cart = {
                 "items": cart_items,
-                "total_amount": "{:,.2f}".format(total),
+                "total_amount": total,
                 "items_count": items_count,
             }
         else:
@@ -685,6 +672,21 @@ def create_flask_app(name, config_obj):
             )
         else:
             return jsonify({"success": True, "order_id": order.id})
+
+    # -----------------------------------------------------------------------
+    @app.post("/search/")
+    def search_products():
+        data = SearchValidator.validate_post(request)
+
+        if data is None:
+            return format_err_response(
+                "JSON schema or parameters are not valid.", 400
+            )
+
+        query = data["search_query"].strip()
+        products = Product.query.filter(Product.name.ilike(f"%{query}%")).all()
+
+        return {"success": True, "products": [pr.to_dict() for pr in products]}
 
     # Error Handling
     # -----------------------------------------------------------------------

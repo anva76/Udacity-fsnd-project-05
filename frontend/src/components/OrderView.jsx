@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import config from "../config"
-import { fetchOrders } from "../utils/QueryUtils"
+import { fetchOrders } from "../utils/queryUtils"
 
 const OrderView = () => {
   const { state } = useLocation()
@@ -41,7 +40,9 @@ const OrderView = () => {
                   <td>{item.country}</td>
                   <td>{item.status}</td>
                   <td className="text-center">{item.items_count}</td>
-                  <td className="text-center">${item.total_amount}</td>
+                  <td className="text-center">
+                    ${item.total_amount.toFixed(2)}
+                  </td>
                   <td>{item.updated_at}</td>
                   <td>{item.created_at}</td>
                 </tr>

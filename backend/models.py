@@ -171,7 +171,7 @@ class Order(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(30), unique=True)
-    total_amount = db.Column(db.Integer)
+    total_amount = db.Column(db.Float(2))
     items_count = db.Column(db.Integer)
 
     # Delivery address
@@ -225,7 +225,7 @@ class Order(db.Model):
         return {
             "id": self.id,
             "order_number": self.order_number,
-            "total_amount": "{:,.2f}".format(self.total_amount),
+            "total_amount": self.total_amount,
             "items_count": self.items_count,
             "country": self.country,
             "status": str(self.status),
@@ -247,14 +247,14 @@ class Order(db.Model):
                     "id": i.id,
                     "quantity": i.quantity,
                     "product": i.product.to_dict(),
-                    "sub_total": "{:,.2f}".format(sub_total),
+                    "sub_total": sub_total,
                 }
             )
 
         return {
             "id": self.id,
             "order_number": self.order_number,
-            "total_amount": "{:,.2f}".format(self.total_amount),
+            "total_amount": self.total_amount,
             "items_count": self.items_count,
             "country": self.country,
             "status": str(self.status),

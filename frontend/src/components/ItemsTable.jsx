@@ -39,8 +39,8 @@ const ItemsTable = ({
                 <td className="align-middle">
                   $
                   {item.product.discounted_price
-                    ? item.product.discounted_price
-                    : item.product.price}
+                    ? item.product.discounted_price.toFixed(2)
+                    : item.product.price.toFixed(2)}
                 </td>
                 <td className="text-center align-middle">
                   <div className="d-flex justify-content-center align-items-center">
@@ -71,7 +71,7 @@ const ItemsTable = ({
                     )}
                   </div>
                 </td>
-                <td className="align-middle">${item.sub_total}</td>
+                <td className="align-middle">${item.sub_total.toFixed(2)}</td>
                 <td className="align-middle">
                   {withButtons && (
                     <button
@@ -91,7 +91,7 @@ const ItemsTable = ({
           <tr>
             <th colSpan="3">Total</th>
             <th className="text-center">{obj.items_count}</th>
-            <th colSpan="2">${obj.total_amount}</th>
+            <th colSpan="2">${obj.total_amount.toFixed(2)}</th>
           </tr>
         </tfoot>
       </table>

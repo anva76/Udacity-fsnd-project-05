@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import config from "../config"
 import ItemsTable from "./ItemsTable"
 import { emitMessage } from "./FlashMessage"
-import { submitOrder, fetchCart } from "../utils/QueryUtils"
+import { submitOrder, fetchCart } from "../utils/queryUtils"
 
 const CheckoutView = () => {
   const navigate = useNavigate()

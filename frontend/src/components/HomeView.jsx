@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
-import config from "../config"
 import ProductCard from "./ProductCard"
-import { fetchProducts } from "../utils/QueryUtils"
+import { fetchProducts } from "../utils/queryUtils"
 
 function HomeView() {
   const { state } = useLocation()

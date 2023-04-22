@@ -2,7 +2,7 @@ import { React, useEffect, useState } from "react"
 import "../stylesheets/FlashMessage.css"
 import EventEmitter from "events"
 
-// General concept was taken from here:
+// The basic concept of a flash message component was taken (and developed further) from here:
 // https://medium.com/@jaouad_45834/building-a-flash-message-component-with-react-js-6288da386d53
 
 const msgWire = new EventEmitter()
