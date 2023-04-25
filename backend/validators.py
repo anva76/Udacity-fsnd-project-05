@@ -19,7 +19,7 @@ class Validator:
         try:
             validate(instance=data, schema=cls.PostSchema)
         except Exception as e:
-            print(str(e))
+            # print(str(e))
             return None
 
         return data
@@ -30,7 +30,7 @@ class Validator:
         try:
             validate(instance=data, schema=cls.PatchSchema)
         except Exception as e:
-            print(str(e))
+            # print(str(e))
             return None
 
         return data
@@ -50,7 +50,7 @@ class CategoryValidator(Validator):
             "image_link": {"type": ["string", "null"]},
             "notes": {"type": ["string", "null"]},
         },
-        "required": ["name", "image_link", "notes"],
+        "required": ["name"],
     }
 
     PatchSchema = {

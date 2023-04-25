@@ -60,6 +60,12 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def get_cart_items(self):
+        return self.cart_items
+
+    def get_orders(self):
+        return self.orders
+
 
 class Category(db.Model):
     __tablename__ = "category"
