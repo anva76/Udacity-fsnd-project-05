@@ -13,7 +13,7 @@ const { useGlobalState, setGlobalState } = createGlobalState(initialState)
 const updatePermissionsFromToken = (token) => {
   const decodedToken = parseJwt(token)
   setGlobalState("permissions", decodedToken.permissions)
-  //console.log(decodedToken.permissions)
+  console.log(decodedToken.permissions)
 }
 
 export { useGlobalState, updatePermissionsFromToken }

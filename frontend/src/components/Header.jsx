@@ -66,18 +66,22 @@ const Header = () => {
                   Categories
                 </NavLink>
               </li>
-              <li className="nav-item">
+              {permissions.includes("role:consumer") && <li className="nav-item">
                 <NavLink
                   to="/orders"
-                  className={
-                    permissions.includes("role:consumer")
-                      ? "nav-link"
-                      : "nav-link disabled"
-                  }
+                  className="nav-link"
                 >
                   My Orders
                 </NavLink>
-              </li>
+              </li>}
+              {permissions.includes("role:admin") && <li className="nav-item">
+                <NavLink
+                  to="/orders"
+                  className="nav-link text-danger"
+                >
+                  Admin Dashboard
+                </NavLink>
+              </li>}
             </ul>
             <form
               className="d-flex me-auto mb-2 mb-lg-0"
@@ -86,7 +90,7 @@ const Header = () => {
               <input
                 className="form-control me-2"
                 type="search"
-                placeholder="Search"
+                placeholder="Search Products"
                 onChange={handleSearchInputChange}
                 value={searchQuery}
               />
@@ -95,8 +99,8 @@ const Header = () => {
               </button>
             </form>
             <div className="btn-group">
-              {
-                <button
+              {!permissions.includes("role:admin") &&
+                < button
                   className={
                     "btn btn-info btn-sm rounded mb-1 mb-lg-0 me-2 " +
                     (permissions.includes("role:consumer") ? "" : "disabled")
@@ -113,7 +117,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav >
     </>
   )
 }

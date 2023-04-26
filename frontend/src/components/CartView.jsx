@@ -2,40 +2,49 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import ItemsTable from "./ItemsTable"
 import { fetchCart, patchCartItem, deleteCartItem } from "../utils/queryUtils"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const CartView = () => {
   const navigate = useNavigate()
-
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
   const [cart, setCart] = useState(null)
 
-  useEffect(() => {
-    fetchCart((data) => setCart(data))
-  }, [])
+  async function getCart() {
+    const token = await getAccessTokenSilently()
+    fetchCart(token, (data) => setCart(data))
+  }
 
-  const incCartItem = (cartItemId, quantity) => {
+  async function incCartItem(cartItemId, quantity) {
+    const token = await getAccessTokenSilently()
     quantity += 1
-    patchCartItem(cartItemId, quantity, () => {
-      fetchCart((data) => setCart(data))
+    patchCartItem(token, cartItemId, quantity, () => {
+      getCart()
     })
   }
 
-  const decCartItem = (cartItemId, quantity) => {
+  async function decCartItem(cartItemId, quantity) {
+    const token = await getAccessTokenSilently()
     quantity -= 1
     if (quantity > 0)
-      patchCartItem(cartItemId, quantity, () => {
-        fetchCart((data) => setCart(data))
+      patchCartItem(token, cartItemId, quantity, () => {
+        getCart()
       })
     else
-      deleteCartItem(cartItemId, () => {
-        fetchCart((data) => setCart(data))
+      deleteCartItem(token, cartItemId, () => {
+        getCart()
       })
   }
 
-  const handleDelCartItem = (id) => {
-    deleteCartItem(id, () => {
-      fetchCart((data) => setCart(data))
+  async function handleDelCartItem(id) {
+    const token = await getAccessTokenSilently()
+    deleteCartItem(token, id, () => {
+      getCart()
     })
   }
+
+  useEffect(() => {
+    getCart()
+  }, [])
 
   if (cart && Object.keys(cart).length !== 0)
     return (

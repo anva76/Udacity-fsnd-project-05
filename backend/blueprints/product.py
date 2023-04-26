@@ -16,13 +16,13 @@ bp = Blueprint("products", __name__, url_prefix="/")
 def get_products():
     products = Product.query.all()
 
-    products_by_page, actual_page = paginator(request, products)
+    # products_by_page, actual_page = paginator(request, products)
 
     return jsonify(
         {
             "success": True,
-            "products": [pr.to_dict() for pr in products_by_page],
-            "actual_page": actual_page,
+            "products": [pr.to_dict() for pr in products],
+            # "actual_page": actual_page,
         }
     )
 

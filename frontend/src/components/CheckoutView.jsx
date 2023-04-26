@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import ItemsTable from "./ItemsTable"
 import { emitMessage } from "./FlashMessage"
 import { submitOrder, fetchCart } from "../utils/queryUtils"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const CheckoutView = () => {
   const navigate = useNavigate()
@@ -19,19 +20,26 @@ const CheckoutView = () => {
     postal_code: "",
     country: "",
   })
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+
+  async function getCart() {
+    const token = await getAccessTokenSilently()
+    fetchCart(token, (data) => setCart(data))
+  }
 
   useEffect(() => {
-    fetchCart((data) => setCart(data))
+    getCart()
   }, [])
 
   const handleChange = (e) => {
     setOrderAddress({ ...orderAddress, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
+    const token = await getAccessTokenSilently()
     e.preventDefault()
     console.log(orderAddress)
-    submitOrder(orderAddress, () => navigate("/orders"))
+    submitOrder(token, orderAddress, () => navigate("/orders"))
   }
 
   if (cart && Object.keys(cart).length !== 0) {

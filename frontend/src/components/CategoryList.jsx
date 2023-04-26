@@ -9,7 +9,7 @@ const CategoryList = ({
   onEdit,
   onDelete,
 }) => {
-  const [permissions, setPermissions] = useGlobalState("permissions")
+  const [permissions] = useGlobalState("permissions")
 
   return (
     <>

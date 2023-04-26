@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import CategoryList from "./CategoryList"
 import ProductCard from "./ProductCard"
 import EditModal from "./EditModal"
+import { useAuth0 } from "@auth0/auth0-react"
 import {
   fetchCategories,
   fetchProducts,
@@ -16,9 +17,9 @@ const CatalogView = () => {
   const { categoryId } = useParams()
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
-  const [currentCategory, setCurrentCategory] = useState(categoryId)
   const [editModalVisible, setEditModalVisibility] = useState(false)
   const [changedCategory, setChangedCategory] = useState({})
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
 
   const editMap = {
     name: { control: "text", label: "Name" },
@@ -41,22 +42,24 @@ const CatalogView = () => {
     else navigate("/catalog")
   }
 
-  const handleCategoryDelete = (catId) => {
+  async function handleCategoryDelete(catId) {
+    const token = await getAccessTokenSilently()
     const category = getCategoryFromStateById(catId)
     if (!category) return
 
     if (window.confirm(`Delete the '${category.name}' category?`)) {
-      deleteCategory(catId, () => {
+      deleteCategory(token, catId, () => {
         navigate("/catalog")
         fetchCategories((data) => setCategories(data))
       })
     }
   }
 
-  const handleCategoryEditSubmit = (editObject) => {
+  async function handleCategoryEditSubmit(editObject) {
+    const token = await getAccessTokenSilently()
     const catId = editObject.id
     delete editObject.id
-    patchCategory(catId, editObject, () => {
+    patchCategory(token, catId, editObject, () => {
       setEditModalVisibility(false)
       fetchCategories((data) => setCategories(data))
     })
@@ -75,13 +78,9 @@ const CatalogView = () => {
   }, [])
 
   useEffect(() => {
-    if (currentCategory)
-      fetchProductsByCategory(currentCategory, (data) => setProducts(data))
+    if (categoryId)
+      fetchProductsByCategory(categoryId, (data) => setProducts(data))
     else fetchProducts((data) => setProducts(data))
-  }, [currentCategory])
-
-  useEffect(() => {
-    setCurrentCategory(categoryId)
   }, [categoryId])
 
   return (
@@ -102,7 +101,7 @@ const CatalogView = () => {
             <div className="col-md-3 mb-3">
               <CategoryList
                 categories={categories}
-                currentCategory={currentCategory}
+                currentCategory={categoryId}
                 onSelect={handleCategorySelect}
                 onEdit={handleCategoryEdit}
                 onDelete={handleCategoryDelete}

@@ -33,7 +33,7 @@ class TestOrders(TestCase):
 
     def test_get_one_order(self):
         response = self.app.get(
-            "/orders/1/",
+            "/orders/3/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },

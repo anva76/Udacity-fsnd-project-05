@@ -19,7 +19,7 @@ bp = Blueprint("orders", __name__, url_prefix="/")
 @bp.get("/orders/")
 @requires_auth("view:orders")
 def get_orders(auth_user):
-    # Admin users can see all orders, normal users can only see their own
+    # Admins can see all orders, normal users can only see their own
     if auth_user["admin"] == True:
         orders = Order.query.all()
     else:
@@ -40,7 +40,7 @@ def get_orders(auth_user):
 @bp.get("/orders/<int:order_id>/")
 @requires_auth("view:orders")
 def get_order(order_id, auth_user):
-    # Admin users can see all orders, normal users can only see their own
+    # Admins can see all orders, normal users can only see their own
     if auth_user["admin"] == True:
         order = Order.query.filter(Order.id == order_id).one_or_none()
         if order is None:
@@ -97,14 +97,14 @@ def submit_new_order(auth_user):
             order_item.order_id = order.id
             order_item.product_id = item.product_id
             order_item.quantity = item.quantity
-            order_item.flush()
+            db.session.add(order_item)
 
         current_date = datetime.today().strftime("%Y%m%d")
         order_number = current_date + "." + str(order.id)
         order.order_number = order_number
         order.total_amount = total_amount
         order.items_count = items_count
-        order.flush()
+        # order.flush()
         # Clear cart items
         CartItem.query.filter(CartItem.user_id == user.id).delete()
 

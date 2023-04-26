@@ -8,6 +8,13 @@ const defaultHeaders = {
   "Content-Type": "application/json",
 }
 
+function formatHeaders(token) {
+  if (token)
+    return { ...defaultHeaders, Authorization: `Bearer ${token}` }
+  else return { ...defaultHeaders }
+
+}
+
 // ---------------------------------------------------------------------
 const fetchProducts = (onSuccess) => {
   fetch(config.apiUrl + "/products/")
@@ -61,13 +68,10 @@ const fetchOneProduct = (id, onSuccess) => {
 }
 
 // ------------------------------------------------------------------------
-const addProductToCart = (productId, quantity, onSuccess = null) => {
+const addProductToCart = (token, productId, quantity, onSuccess = null) => {
   fetch(config.apiUrl + "/cart/", {
     method: "POST",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
     body: JSON.stringify({ product_id: productId, quantity }),
   })
     .then((response) => response.json())
@@ -87,13 +91,10 @@ const addProductToCart = (productId, quantity, onSuccess = null) => {
 }
 
 // ---------------------------------------------------------------------------
-const deleteProduct = (id, onSuccess = null) => {
+const deleteProduct = (token, id, onSuccess = null) => {
   fetch(config.apiUrl + `/products/${id}/`, {
     method: "DELETE",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -112,13 +113,10 @@ const deleteProduct = (id, onSuccess = null) => {
 }
 
 // -----------------------------------------------------------------------
-const patchProduct = (id, obj, onSuccess = null) => {
+const patchProduct = (token, id, obj, onSuccess = null) => {
   fetch(config.apiUrl + `/products/${id}/`, {
     method: "PATCH",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
     body: JSON.stringify({ ...obj }),
   })
     .then((response) => response.json())
@@ -140,13 +138,10 @@ const patchProduct = (id, obj, onSuccess = null) => {
 }
 
 // -----------------------------------------------------------------------------------------
-const fetchOrders = (onSuccess) => {
+const fetchOrders = (token, onSuccess) => {
   fetch(config.apiUrl + "/orders/", {
     method: "GET",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -162,18 +157,16 @@ const fetchOrders = (onSuccess) => {
       alert("Unable to get order data. Please try again later.")
     })
 }
+// -----------------------------------------------------------------------------------------
 
-const fetchOneOrder = (id, onSuccess) => {
+const fetchOneOrder = (token, id, onSuccess) => {
   fetch(config.apiUrl + `/orders/${id}/`, {
     method: "GET",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.order)
+      //console.log(data.order)
       if (!data["success"]) {
         alert("Sever Error. Unable to get order data.")
       } else {
@@ -185,15 +178,31 @@ const fetchOneOrder = (id, onSuccess) => {
       alert("Unable to get order data. Please try again later.")
     })
 }
-
+// -----------------------------------------------------------------------------------------
+const deleteOrder = (token, id, onSuccess = nul) => {
+  fetch(config.apiUrl + `/orders/${id}/`, {
+    method: "DELETE",
+    headers: formatHeaders(token),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data["success"]) {
+        alert("Sever Error. Unable to delete this order.")
+      } else {
+        onSuccess && onSuccess()
+        emitMessage("Order was successfully deleted.")
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Unable to delete this order. Please try again later.")
+    })
+}
 // ------------------------------------------------------------------
-const fetchCart = (onSuccess) => {
+const fetchCart = (token, onSuccess) => {
   fetch(config.apiUrl + "/cart/", {
     method: "GET",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -212,13 +221,10 @@ const fetchCart = (onSuccess) => {
 }
 
 // ----------------------------------------------------------------
-const submitOrder = (orderData, onSuccess = null) => {
+const submitOrder = (token, orderData, onSuccess = null) => {
   fetch(config.apiUrl + "/orders/", {
     method: "POST",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
     body: JSON.stringify(orderData),
   })
     .then((response) => response.json())
@@ -239,6 +245,32 @@ const submitOrder = (orderData, onSuccess = null) => {
     })
 }
 
+// ----------------------------------------------------------------
+const patchOrder = (token, id, orderData, onSuccess = null) => {
+  fetch(config.apiUrl + `/orders/${id}/`, {
+    method: "PATCH",
+    headers: formatHeaders(token),
+    body: JSON.stringify(orderData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      if (!data["success"]) {
+        alert(
+          "Unable to update this order. Please check the form fields and try again."
+        )
+      } else {
+        emitMessage("Order was successfully updated")
+        onSuccess && onSuccess()
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Unable to update this order. Please try again later.")
+    })
+}
+
+
 // ---------------------------------------------------------------------------------------
 const fetchCategories = (onSuccess) => {
   fetch(config.apiUrl + "/categories/")
@@ -257,13 +289,10 @@ const fetchCategories = (onSuccess) => {
 }
 
 // ----------------------------------------------------------------------------------------
-const patchCartItem = (cartItemId, quantity, onSuccess = null) => {
+const patchCartItem = (token, cartItemId, quantity, onSuccess = null) => {
   fetch(config.apiUrl + `/cart/${cartItemId}/`, {
     method: "PATCH",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
     body: JSON.stringify({ quantity }),
   })
     .then((response) => response.json())
@@ -282,13 +311,10 @@ const patchCartItem = (cartItemId, quantity, onSuccess = null) => {
 }
 
 // ----------------------------------------------------------------------
-const deleteCartItem = (cartItemId, onSuccess = null) => {
+const deleteCartItem = (token, cartItemId, onSuccess = null) => {
   fetch(config.apiUrl + `/cart/${cartItemId}/`, {
     method: "DELETE",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -306,13 +332,10 @@ const deleteCartItem = (cartItemId, onSuccess = null) => {
 }
 
 // -------------------------------------------------------------------------
-const deleteCategory = (id, onSuccess = null) => {
+const deleteCategory = (token, id, onSuccess = null) => {
   fetch(config.apiUrl + `/categories/${id}/`, {
     method: "DELETE",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -331,13 +354,10 @@ const deleteCategory = (id, onSuccess = null) => {
 }
 
 // -----------------------------------------------------------------------
-const patchCategory = (id, obj, onSuccess = null) => {
+const patchCategory = (token, id, obj, onSuccess = null) => {
   fetch(config.apiUrl + `/categories/${id}/`, {
     method: "PATCH",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${config.testToken}`,
-    },
+    headers: formatHeaders(token),
     body: JSON.stringify({ ...obj }),
   })
     .then((response) => response.json())
@@ -401,4 +421,6 @@ export {
   deleteCategory,
   patchCategory,
   searchProducts,
+  deleteOrder,
+  patchOrder,
 }

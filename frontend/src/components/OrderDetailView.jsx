@@ -1,22 +1,94 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import "../stylesheets/OrderDetailView.css"
 import ItemsTable from "./ItemsTable"
-import { fetchOneOrder } from "../utils/queryUtils"
+import { fetchOneOrder, deleteOrder, patchOrder } from "../utils/queryUtils"
+import { useAuth0 } from "@auth0/auth0-react"
+import EditModal from "./EditModal"
+import { useGlobalState } from "../utils/state"
 
 const OrderDetailView = () => {
+  const navigate = useNavigate()
   const { id } = useParams()
   const [order, setOrder] = useState(null)
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const [editModalVisible, setEditModalVisibility] = useState(false)
+  const [permissions] = useGlobalState("permissions")
+
+  const editMap = {
+    status: {
+      control: "select",
+      label: "Status",
+      choices: ["submitted",
+        "accepted",
+        "in_assembly",
+        "in_delivery",
+        "delivered",
+        "cancelled"]
+    },
+  }
+
+  async function getOrder() {
+    const token = await getAccessTokenSilently()
+    fetchOneOrder(token, id, (data) => setOrder(data))
+  }
+
+  async function handleOrderEditSubmit(editObject) {
+    const token = await getAccessTokenSilently()
+    const obj = { status: editObject.status }
+    console.log(obj)
+    patchOrder(token, order.id, obj, () => {
+      setEditModalVisibility(false)
+      getOrder()
+    })
+  }
+
+  async function handleOrderDelete() {
+    const token = await getAccessTokenSilently()
+    if (window.confirm("Delete this order?"))
+      deleteOrder(token, order.id, () => {
+        navigate(-1)
+      })
+  }
 
   useEffect(() => {
-    fetchOneOrder(id, (data) => setOrder(data))
+    getOrder()
   }, [])
 
   return (
     order && (
       <>
+        {editModalVisible && (
+          <EditModal
+            obj={order}
+            editMap={editMap}
+            onClose={() => setEditModalVisibility(false)}
+            onSubmit={handleOrderEditSubmit}
+            title="Edit Order"
+          />
+        )}
         <div className="container">
-          <h4 className="mb-3 text-primary">{"Order " + order.order_number}</h4>
+          <div className="d-flex d-row">
+            <h4 className="mb-3 text-primary">{"Order " + order.order_number}</h4>
+            {permissions.includes("role:admin") && (
+              <button
+                className="btn btn-light btn-sm ms-2 mb-3"
+                title="Edit Product"
+                onClick={() => setEditModalVisibility(true)}
+              >
+                <img src="/edit.svg" width="25" alt="cart" />
+              </button>
+            )}
+            {permissions.includes("delete:products") && (
+              <button
+                className="btn btn-light btn-sm mb-3"
+                title="Delete Order"
+                onClick={handleOrderDelete}
+              >
+                <img src="/trash-can.svg" width="25" alt="cart" />
+              </button>
+            )}
+          </div>
           <div className="mb-3 row">
             <div className="col-md-4">
               <label className="form-label text-secondary">Order status</label>

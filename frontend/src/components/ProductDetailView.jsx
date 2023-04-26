@@ -17,9 +17,9 @@ const ProductDetailView = () => {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [editModalVisible, setEditModalVisibility] = useState(false)
-  const [permissions, setPermissions] = useGlobalState("permissions")
+  const [permissions] = useGlobalState("permissions")
 
-  const { isAuthenticated, loginWithRedirect } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0()
 
   const editMap = {
     name: { control: "text", label: "Name" },
@@ -29,24 +29,28 @@ const ProductDetailView = () => {
     notes: { control: "textarea", label: "Notes" },
   }
 
+
   useEffect(() => {
     fetchOneProduct(id, (data) => setProduct(data))
   }, [])
 
-  const handleProductDelete = () => {
+  async function handleProductDelete() {
+    const token = await getAccessTokenSilently()
     if (window.confirm("Delete this product?"))
-      deleteProduct(product.id, () => {
+      deleteProduct(token, product.id, () => {
         navigate(-1)
       })
   }
 
-  const handleAddToCart = () => {
-    if (product) addProductToCart(product.id, 1)
+  async function handleAddToCart() {
+    const token = await getAccessTokenSilently()
+    if (product) addProductToCart(token, product.id, 1)
   }
 
-  const handleProductEditSubmit = (editObject) => {
+  async function handleProductEditSubmit(editObject) {
+    const token = await getAccessTokenSilently()
     delete editObject.id
-    patchProduct(product.id, editObject, () => {
+    patchProduct(token, product.id, editObject, () => {
       setEditModalVisibility(false)
       fetchOneProduct(id, (data) => setProduct(data))
     })

@@ -11,41 +11,55 @@ const EditModal = ({
 }) => {
   const [editObject, setEditObject] = useState({ ...obj })
 
-  const renderEditControl = (prop, value, index) => {
+  const renderEditControl = (prop, fieldValue, index) => {
     if (editMap[prop])
-      if (editMap[prop].control != "textarea") {
+      if (editMap[prop].control == "textarea") {
         return (
-          <div className="row" key={index}>
-            <div className="mb-3">
-              <label className="form-label text-secondary">
-                {editMap[prop].label}
-              </label>
-              <input
-                type={editMap[prop].control}
-                className="form-control"
-                onChange={handleChange}
-                name={prop}
-                value={value ? value : ""}
-              />
-            </div>
+          <div className="row mb-3" key={index}>
+            <label className="form-label text-secondary">
+              {editMap[prop].label}
+            </label>
+            <textarea
+              type={editMap[prop].control}
+              className="form-control"
+              onChange={handleChange}
+              name={prop}
+              value={fieldValue ? fieldValue : ""}
+              rows="3"
+            />
           </div>
         )
-      } else {
+      } else if (editMap[prop].control == "select") {
         return (
-          <div className="row" key={index}>
-            <div className="mb-3">
-              <label className="form-label text-secondary">
-                {editMap[prop].label}
-              </label>
-              <textarea
-                type={editMap[prop].control}
-                className="form-control"
-                onChange={handleChange}
-                name={prop}
-                value={value ? value : ""}
-                rows="3"
-              />
-            </div>
+          <div className="row mb-3" key={index}>
+            <label className="form-label text-secondary">
+              {editMap[prop].label}
+            </label>
+            <select className="form-select"
+              name={prop}
+              onChange={handleChange}
+              defaultValue={(fieldValue == "not_defined") ? "" : fieldValue}>
+              <option value=""></option>
+              {editMap[prop].choices.map((item, index) => (
+                <option key={index} value={item}>{item}</option>
+              ))}
+            </select>
+          </div>
+        )
+      }
+      else {
+        return (
+          <div className="row mb-3" key={index}>
+            <label className="form-label text-secondary">
+              {editMap[prop].label}
+            </label>
+            <input
+              type={editMap[prop].control}
+              className="form-control"
+              onChange={handleChange}
+              name={prop}
+              value={fieldValue ? fieldValue : ""}
+            />
           </div>
         )
       }
@@ -60,7 +74,6 @@ const EditModal = ({
     } else {
       setEditObject({ ...editObject, [e.target.name]: e.target.value })
     }
-    //console.log(editObject)
   }
 
   const trimStrings = () => {
