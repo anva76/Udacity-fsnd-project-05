@@ -1,0 +1,11 @@
+.profile-image {
+    filter: grayscale(60%);
+}
+
+.admin-button {
+    background-color: #FFA07A;
+}
+
+.user-button {
+    background-color:#ffefd3;
+}

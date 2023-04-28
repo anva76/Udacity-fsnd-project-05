@@ -6,9 +6,7 @@ from flask import Blueprint, Flask, jsonify, request, abort
 from models import db, Category, Product
 from sqlalchemy import func as fn
 from auth import requires_auth
-from .utils import (
-    format_err_response,
-)
+from .utils import format_err_response, paginator
 
 bp = Blueprint("categories", __name__, url_prefix="/")
 
@@ -16,7 +14,7 @@ bp = Blueprint("categories", __name__, url_prefix="/")
 # ----------------------------------------------------------------------
 @bp.get("/categories/")
 def get_categories():
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.name).all()
 
     return jsonify(
         {
@@ -43,13 +41,19 @@ def get_products_by_category(category_id):
     if category is None:
         abort(404)
 
-    products = Product.query.filter_by(category_id=category.id).all()
+    products = (
+        Product.query.filter_by(category_id=category.id)
+        .order_by(Product.created_at.desc())
+        .all()
+    )
+    paginated_products, actual_page = paginator(request, products)
 
     return jsonify(
         {
             "success": True,
-            "products": [p.to_dict() for p in products],
+            "products": [p.to_dict() for p in paginated_products],
             "category_id": category.id,
+            "actual_page": actual_page,
         }
     )
 

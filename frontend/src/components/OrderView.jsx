@@ -3,10 +3,11 @@ import { Link, useLocation } from "react-router-dom"
 import { fetchOrders } from "../utils/queryUtils"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useGlobalState } from "../utils/state"
+import PageLoader from "./PageLoader"
 
 const OrderView = () => {
   const { state } = useLocation()
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState(null)
   const { getAccessTokenSilently, isAuthenticated } = useAuth0()
   const [permissions] = useGlobalState("permissions")
 
@@ -19,15 +20,33 @@ const OrderView = () => {
     getOrders()
   }, [])
 
-  return (
-    orders.length !== 0 && (
+  if (!orders)
+    return (
+      <>
+        <PageLoader />
+      </>
+    )
+
+  if (orders.length == 0)
+    return (
       <>
         <div className="container">
-          {permissions.includes("role:admin") ?
-            <h4 className="mb-3 text-danger">Admin Dashboard</h4> :
-            <h4 className="mb-3 text-primary">My Orders</h4>}
+          <h4 className="text-secondary">No orders so far</h4>
+        </div>
+      </>
+    )
+
+  return (
+    orders && (
+      <>
+        <div className="container">
+          {permissions.includes("role:admin") ? (
+            <h4 className="mb-3 text-secondary">Orders Dashboard</h4>
+          ) : (
+            <h4 className="mb-3 text-secondary">My Orders</h4>
+          )}
           <table className="table mb-3">
-            <thead className="table-primary">
+            <thead className="table-secondary">
               <tr>
                 <th>#</th>
                 <th>Order Number</th>

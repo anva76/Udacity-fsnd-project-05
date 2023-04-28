@@ -9,10 +9,25 @@ const defaultHeaders = {
 }
 
 function formatHeaders(token) {
-  if (token)
-    return { ...defaultHeaders, Authorization: `Bearer ${token}` }
+  if (token) return { ...defaultHeaders, Authorization: `Bearer ${token}` }
   else return { ...defaultHeaders }
+}
 
+// ---------------------------------------------------------------------
+const fetchLatestProducts = (onSuccess) => {
+  fetch(config.apiUrl + "/products/?page=1")
+    .then((response) => response.json())
+    .then((data) => {
+      //console.log(data.products)
+
+      if (!data["success"]) {
+        alert("Server error. Unable to fetch products.")
+      } else onSuccess(data.products)
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Unable to fetch products. Please try again later.")
+    })
 }
 
 // ---------------------------------------------------------------------
@@ -20,7 +35,7 @@ const fetchProducts = (onSuccess) => {
   fetch(config.apiUrl + "/products/")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.products)
+      //console.log(data.products)
 
       if (!data["success"]) {
         alert("Server error. Unable to fetch products.")
@@ -39,7 +54,7 @@ const fetchProductsByCategory = (category, onSuccess) => {
   fetch(config.apiUrl + fetchUrl)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.products)
+      //console.log(data.products)
 
       if (!data["success"]) {
         alert("Server error. Unable to fetch products.")
@@ -56,7 +71,7 @@ const fetchOneProduct = (id, onSuccess) => {
   fetch(config.apiUrl + `/products/${id}`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.product)
+      //console.log(data.product)
       if (!data["success"]) {
         alert("Server error. Unable to fetch this product.")
       } else onSuccess(data.product)
@@ -76,7 +91,7 @@ const addProductToCart = (token, productId, quantity, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert("Server error. Unable to add the product to the cart.")
       } else {
@@ -98,7 +113,7 @@ const deleteProduct = (token, id, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert("Server error. Unable to delete the product.")
       } else {
@@ -121,7 +136,7 @@ const patchProduct = (token, id, obj, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert(
           "Unable to update the product. Please check the form fields and try again."
@@ -137,6 +152,31 @@ const patchProduct = (token, id, obj, onSuccess = null) => {
     })
 }
 
+// -----------------------------------------------------------------------
+const createProduct = (token, obj, onSuccess = null) => {
+  fetch(config.apiUrl + `/products/`, {
+    method: "POST",
+    headers: formatHeaders(token),
+    body: JSON.stringify({ ...obj }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      //console.log(data)
+      if (!data["success"]) {
+        alert(
+          "Unable to create the new product. Please check the form fields and try again."
+        )
+      } else {
+        emitMessage("Product was successfully updated.")
+        onSuccess && onSuccess(data["product_id"])
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Unable to create the new product. Please try again later.")
+    })
+}
+
 // -----------------------------------------------------------------------------------------
 const fetchOrders = (token, onSuccess) => {
   fetch(config.apiUrl + "/orders/", {
@@ -145,7 +185,7 @@ const fetchOrders = (token, onSuccess) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.orders)
+      //console.log(data.orders)
       if (!data["success"]) {
         alert("Sever Error. Unable to get order data.")
       } else {
@@ -206,7 +246,7 @@ const fetchCart = (token, onSuccess) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.cart)
+      //console.log(data.cart)
 
       if (!data["success"]) {
         alert("Sever Error. Unable to get cart data.")
@@ -229,7 +269,7 @@ const submitOrder = (token, orderData, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert(
           "Unable to submit the order. Please check the form fields and try again."
@@ -254,7 +294,7 @@ const patchOrder = (token, id, orderData, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert(
           "Unable to update this order. Please check the form fields and try again."
@@ -270,13 +310,12 @@ const patchOrder = (token, id, orderData, onSuccess = null) => {
     })
 }
 
-
 // ---------------------------------------------------------------------------------------
 const fetchCategories = (onSuccess) => {
   fetch(config.apiUrl + "/categories/")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.categories)
+      //console.log(data.categories)
 
       if (!data["success"]) {
         alert("Server error. Unable to fetch categories.")
@@ -297,7 +336,7 @@ const patchCartItem = (token, cartItemId, quantity, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert("Server error. Unable to update this cart item.")
       } else {
@@ -318,7 +357,7 @@ const deleteCartItem = (token, cartItemId, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert("Server error. Unable to delete this cart item.")
       } else {
@@ -339,7 +378,7 @@ const deleteCategory = (token, id, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert("Server error. Unable to delete this category.")
       } else {
@@ -362,7 +401,7 @@ const patchCategory = (token, id, obj, onSuccess = null) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert(
           "Unable to update this category. Please check the form fields and try again."
@@ -379,6 +418,31 @@ const patchCategory = (token, id, obj, onSuccess = null) => {
 }
 
 // -----------------------------------------------------------------------
+const createCategory = (token, obj, onSuccess = null) => {
+  fetch(config.apiUrl + `/categories/`, {
+    method: "POST",
+    headers: formatHeaders(token),
+    body: JSON.stringify({ ...obj }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      //console.log(data)
+      if (!data["success"]) {
+        alert(
+          "Unable to create the new category. Please check the form fields and try again."
+        )
+      } else {
+        emitMessage("Category was successfully created.")
+        onSuccess && onSuccess(data["category_id"])
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Unable to create the new category. Please try again later.")
+    })
+}
+
+// -----------------------------------------------------------------------
 const searchProducts = (searchQuery, onSuccess) => {
   fetch(config.apiUrl + "/search/", {
     method: "POST",
@@ -389,7 +453,7 @@ const searchProducts = (searchQuery, onSuccess) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      //console.log(data)
       if (!data["success"]) {
         alert(
           "Unable to process the search request. Please check the data and try again."
@@ -423,4 +487,7 @@ export {
   searchProducts,
   deleteOrder,
   patchOrder,
+  createCategory,
+  createProduct,
+  fetchLatestProducts,
 }

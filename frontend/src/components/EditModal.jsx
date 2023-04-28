@@ -10,6 +10,7 @@ const EditModal = ({
   title = "Modal Form",
 }) => {
   const [editObject, setEditObject] = useState({ ...obj })
+  const [finalForm, setFinalForm] = useState(null)
 
   const renderEditControl = (prop, fieldValue, index) => {
     if (editMap[prop])
@@ -35,19 +36,22 @@ const EditModal = ({
             <label className="form-label text-secondary">
               {editMap[prop].label}
             </label>
-            <select className="form-select"
+            <select
+              className="form-select"
               name={prop}
               onChange={handleChange}
-              defaultValue={(fieldValue == "not_defined") ? "" : fieldValue}>
-              <option value=""></option>
+              defaultValue={fieldValue == "not_defined" ? "" : fieldValue}
+            >
+              <option value="" hidden></option>
               {editMap[prop].choices.map((item, index) => (
-                <option key={index} value={item}>{item}</option>
+                <option key={index} value={item[0]}>
+                  {item[1]}
+                </option>
               ))}
             </select>
           </div>
         )
-      }
-      else {
+      } else {
         return (
           <div className="row mb-3" key={index}>
             <label className="form-label text-secondary">
@@ -66,36 +70,42 @@ const EditModal = ({
   }
 
   const handleChange = (e) => {
-    if (e.target.type == "number") {
-      setEditObject({
-        ...editObject,
-        [e.target.name]: parseFloat(e.target.value),
-      })
-    } else {
-      setEditObject({ ...editObject, [e.target.name]: e.target.value })
-    }
+    setEditObject({ ...editObject, [e.target.name]: e.target.value })
+    //console.log(editObject)
   }
 
-  const trimStrings = () => {
-    for (let prop in editObject) {
-      if (editMap[prop])
+  const formatData = () => {
+    const tmpObj = { ...editObject }
+    for (let prop in tmpObj) {
+      if (editMap[prop]) {
         if (
           editMap[prop].control == "text" ||
           editMap[prop].control == "tel" ||
           editMap[prop].control == "phone"
         ) {
-          const tmpValue = editObject[prop].trim()
-          setEditObject({ ...editObject, [prop]: tmpValue })
+          tmpObj[prop] = tmpObj[prop].trim()
         }
+
+        if (editMap[prop]?.type == "float") {
+          tmpObj[prop] = parseFloat(tmpObj[prop])
+        }
+
+        if (editMap[prop]?.type == "integer") {
+          tmpObj[prop] = parseInt(tmpObj[prop])
+        }
+      } else if (prop !== "id") delete tmpObj[prop]
     }
+    return tmpObj
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    trimStrings()
-    console.log(editObject)
-    onSubmit(editObject)
+    setFinalForm(formatData())
   }
+
+  useEffect(() => {
+    finalForm && onSubmit(finalForm)
+  }, [finalForm])
 
   return (
     <>
@@ -112,7 +122,7 @@ const EditModal = ({
               ></button>
             </div>
             <div className="modal-body">
-              <form className="row" onSubmit={handleSubmit}>
+              <form className="row ms-1 me-1" onSubmit={handleSubmit}>
                 {editObject &&
                   Object.keys(editMap).map((prop, index) =>
                     renderEditControl(prop, editObject[prop], index)

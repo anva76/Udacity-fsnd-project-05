@@ -7,7 +7,7 @@ import EventEmitter from "events"
 
 const msgWire = new EventEmitter()
 
-const emitMessage = (message, type = "info") => {
+const emitMessage = (message, type = "warning") => {
   msgWire.emit("flash-message", { message, type })
 }
 

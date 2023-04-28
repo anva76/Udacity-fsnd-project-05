@@ -8,9 +8,11 @@ db_path = os.path.join(backend_dir, "database", database_filename)
 db_uri = f"sqlite:///{db_path}"
 test_db_uri = db_uri
 
-TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdXRoMHw2M2ZkZTBiODc1NDUzNGZmZDQ3YzA3NWY3OCIsInBlcm1pc3Npb25zIjpbImNyZWF0ZTpwcm9kdWN0cyIsInVwZGF0ZTpwcm9kdWN0cyIsImRlbGV0ZTpwcm9kdWN0cyIsImNyZWF0ZTpjYXRlZ29yaWVzIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJkZWxldGU6Y2F0ZWdvcmllcyIsInZpZXc6b3JkZXJzIiwiY3JlYXRlOm9yZGVycyIsInVwZGF0ZTpvcmRlcnMiLCJkZWxldGU6b3JkZXJzIiwidmlldzp1cGRhdGU6Y2FydCJdfQ.diuD6q8Y9jgktH6NUq8wCjx4JbQ58jbFB-ShjgqEEfY"
+# Dummy test token for CRUD unit test
+# Not to be used for actual authorization
+TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3VzZXJfMSIsInBlcm1pc3Npb25zIjpbImNyZWF0ZTpwcm9kdWN0cyIsInVwZGF0ZTpwcm9kdWN0cyIsImRlbGV0ZTpwcm9kdWN0cyIsImNyZWF0ZTpjYXRlZ29yaWVzIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJkZWxldGU6Y2F0ZWdvcmllcyIsInZpZXc6b3JkZXJzIiwiY3JlYXRlOm9yZGVycyIsInVwZGF0ZTpvcmRlcnMiLCJkZWxldGU6b3JkZXJzIiwidmlldzp1cGRhdGU6Y2FydCIsInJvbGU6YWRtaW4iXX0.h0MubbhNJWOwf9jQ-ofCQ7f6RlAoE669EmG1cc8QRAU"
 
-ITEMS_PER_PAGE = 8
+ITEMS_PER_PAGE = 10
 
 
 class DevelopmentConfig:
@@ -34,4 +36,4 @@ class UnittestConfig(DevelopmentConfig):
 class AuthConfig:
     AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
     ALGORITHMS = ["RS256"]
-    API_AUDIENCE = os.getenv("API_AUDIENCE")
+    API_AUDIENCE = os.getenv("AUTH0_API_AUDIENCE")

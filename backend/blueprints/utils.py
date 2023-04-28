@@ -21,7 +21,10 @@ def get_user_from_auth_id(auth_user_id):
 # Paginator
 # ---------------------------------------------------------------
 def paginator(request, selection):
-    page = request.args.get("page", 1, int)
+    page = request.args.get("page", None, int)
+    if page is None:
+        return selection, None
+
     start = (page - 1) * ITEMS_PER_PAGE
     end = start + ITEMS_PER_PAGE
 

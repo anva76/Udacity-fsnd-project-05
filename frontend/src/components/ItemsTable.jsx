@@ -12,7 +12,7 @@ const ItemsTable = ({
   return (
     <>
       <table className="table mb-4">
-        <thead className="table-primary">
+        <thead className="table-secondary">
           <tr>
             <th>#</th>
             <th>Product</th>
@@ -29,9 +29,13 @@ const ItemsTable = ({
                 <td className="align-middle">
                   <Link to={"/products/" + item.product.id}>
                     <img
-                      src={item.product.image_link}
+                      src={
+                        item.product.image_link
+                          ? item.product.image_link
+                          : "/img-placeholder.png"
+                      }
                       className="item-image me-2"
-                      alt={item.product.name}
+                      alt="Product image"
                     />
                     {item.product.name}
                   </Link>
@@ -46,7 +50,7 @@ const ItemsTable = ({
                   <div className="d-flex justify-content-center align-items-center">
                     {withButtons && (
                       <button
-                        className="btn btn-info btn-sm me-2"
+                        className="btn btn-light btn-sm me-2"
                         onClick={() => {
                           onItemIncrease(item.id, item.quantity)
                         }}
@@ -57,7 +61,7 @@ const ItemsTable = ({
                     {item.quantity}
                     {withButtons && (
                       <button
-                        className="btn btn-info btn-sm ms-2"
+                        className="btn btn-light btn-sm ms-2"
                         onClick={() => {
                           onItemDecrease(item.id, item.quantity)
                         }}
@@ -75,7 +79,7 @@ const ItemsTable = ({
                 <td className="align-middle">
                   {withButtons && (
                     <button
-                      className="btn btn-info btn-sm"
+                      className="btn btn-light btn-sm"
                       onClick={() => {
                         onItemDelete(item.id)
                       }}
@@ -87,7 +91,7 @@ const ItemsTable = ({
               </tr>
             ))}
         </tbody>
-        <tfoot className="table-primary">
+        <tfoot className="table-secondary">
           <tr>
             <th colSpan="3">Total</th>
             <th className="text-center">{obj.items_count}</th>

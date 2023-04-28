@@ -108,7 +108,9 @@ class TestProductsFail(TestCase):
     @mock.patch("blueprints.product.Product")
     def test_get_produtcs(self, mock_model):
         # Mocking an internal server error
-        mock_model.query.all.side_effect = InternalServerError("Mock error")
+        mock_model.query.order_by.return_value.all.side_effect = (
+            InternalServerError("Mock error")
+        )
 
         response = self.app.get("/products/")
         data = json.loads(response.data)

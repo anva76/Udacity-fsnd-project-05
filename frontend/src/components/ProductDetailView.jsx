@@ -11,6 +11,7 @@ import {
   patchProduct,
 } from "../utils/queryUtils"
 import { useGlobalState } from "../utils/state"
+import PageLoader from "./PageLoader"
 
 const ProductDetailView = () => {
   const navigate = useNavigate()
@@ -19,20 +20,20 @@ const ProductDetailView = () => {
   const [editModalVisible, setEditModalVisibility] = useState(false)
   const [permissions] = useGlobalState("permissions")
 
-  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
+    useAuth0()
 
   const editMap = {
     name: { control: "text", label: "Name" },
-    price: { control: "number", label: "Price" },
-    discounted_price: { control: "number", label: "Discounted Price" },
+    price: { control: "number", type: "float", label: "Price" },
+    discounted_price: {
+      control: "number",
+      type: "float",
+      label: "Discounted Price",
+    },
     image_link: { control: "text", label: "Image Link" },
     notes: { control: "textarea", label: "Notes" },
   }
-
-
-  useEffect(() => {
-    fetchOneProduct(id, (data) => setProduct(data))
-  }, [])
 
   async function handleProductDelete() {
     const token = await getAccessTokenSilently()
@@ -56,6 +57,39 @@ const ProductDetailView = () => {
     })
   }
 
+  function renderPrice() {
+    if (product.discounted_price)
+      return (
+        <div className="d-flex flex-row align-items-center col-md-3 mb-3">
+          <h5 className="p-2 rounded rounded-4 price-badge-discount">
+            ${product.discounted_price.toFixed(2)}
+          </h5>
+          <h6 className="text-secondary price-badge text-decoration-line-through p-1 ms-2 rounded rounded-4">
+            ${product.price.toFixed(2)}
+          </h6>
+        </div>
+      )
+    else
+      return (
+        <div className="d-flex flex-row align-items-center col-md-2 mb-3">
+          <h5 className="p-2 rounded rounded-4 price-badge">
+            ${product.price.toFixed(2)}
+          </h5>
+        </div>
+      )
+  }
+
+  useEffect(() => {
+    fetchOneProduct(id, (data) => setProduct(data))
+  }, [])
+
+  if (!product)
+    return (
+      <>
+        <PageLoader />
+      </>
+    )
+
   return (
     product && (
       <>
@@ -70,14 +104,14 @@ const ProductDetailView = () => {
         )}
         <div className="container">
           <div className="d-flex d-row">
-            <h4 className="mb-3 text-primary">{product.name}</h4>
+            <h4 className="mb-3 text-secondary">{product.name}</h4>
             {permissions.includes("role:admin") && (
               <button
                 className="btn btn-light btn-sm ms-2 mb-3"
                 title="Edit Product"
                 onClick={() => setEditModalVisibility(true)}
               >
-                <img src="/edit.svg" width="25" alt="cart" />
+                <img src="/edit-red.svg" width="25" alt="Edit" />
               </button>
             )}
             {permissions.includes("delete:products") && (
@@ -86,7 +120,7 @@ const ProductDetailView = () => {
                 title="Delete Product"
                 onClick={handleProductDelete}
               >
-                <img src="/trash-can.svg" width="25" alt="cart" />
+                <img src="/trash-can-red.svg" width="25" alt="Delete" />
               </button>
             )}
           </div>
@@ -94,25 +128,28 @@ const ProductDetailView = () => {
           <div className="row">
             <div className="col-md-6 mb-5">
               <img
-                src={product.image_link}
+                src={
+                  product.image_link
+                    ? product.image_link
+                    : "/img-placeholder.png"
+                }
                 className="product-image"
-                alt={product.name}
+                alt="Product image"
               />
             </div>
             <div className="col-md-6 mb-5">
-              <h5>${product.price.toFixed(2)}</h5>
-              <button
-                className={
-                  "btn btn-info btn-lg me-2 " +
-                  (!permissions.includes("view:update:cart") ? "disabled" : "")
-                }
-                onClick={handleAddToCart}
-              >
-                Add to cart
-              </button>
+              {renderPrice()}
               {permissions.includes("view:update:cart") && (
                 <button
-                  className="btn btn-secondary btn-lg"
+                  className={"btn btn-warning btn-lg me-2 "}
+                  onClick={handleAddToCart}
+                >
+                  Add to cart
+                </button>
+              )}
+              {permissions.includes("view:update:cart") && (
+                <button
+                  className="btn btn-outline-secondary btn-lg"
                   onClick={() => navigate("/cart")}
                 >
                   Go to cart
@@ -120,7 +157,7 @@ const ProductDetailView = () => {
               )}
               {!isAuthenticated && (
                 <button
-                  className="btn btn-warning btn-lg"
+                  className="btn btn-outline-secondary btn-lg"
                   onClick={() =>
                     loginWithRedirect({
                       appState: {

@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from aenum import Enum
 from sqlalchemy.sql import func
+import datetime
 
 # Fix for sqlite3
 # -------------------------------------------------------
@@ -45,7 +46,9 @@ class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     auth_user_id = db.Column(db.String(150), unique=True, nullable=False)
-    created_at = db.Column(db.DateTime(), server_default=func.now())
+    created_at = db.Column(
+        db.DateTime(timezone=True), server_default=func.now()
+    )
 
     cart_items = db.relationship(
         "CartItem", back_populates="user", cascade="all,delete-orphan"
@@ -72,12 +75,14 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
-    notes = db.Column(db.String(255))
-    image_link = db.Column(db.String(500))
 
-    created_at = db.Column(db.DateTime(), server_default=func.now())
+    created_at = db.Column(
+        db.DateTime(timezone=True), server_default=func.now()
+    )
     updated_at = db.Column(
-        db.DateTime(), server_default=func.now(), onupdate=func.now()
+        db.DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
 
     products = db.relationship("Product", back_populates="category")
@@ -101,16 +106,15 @@ class Category(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "image_link": self.image_link,
         }
 
     def to_dict_long(self):
         return {
             "id": self.id,
             "name": self.name,
-            "image_link": self.image_link,
-            "notes": self.notes,
             "products_count": len(self.products),
+            "created_at": self.created_at.strftime("%d.%m.%Y %H:%M"),
+            "updated_at": self.updated_at.strftime("%d.%m.%Y %H:%M"),
         }
 
 
@@ -123,11 +127,14 @@ class Product(db.Model):
     price = db.Column(db.Float(2), nullable=False)
     discounted_price = db.Column(db.Float(2))
     image_link = db.Column(db.String(500))
-    sku_code = db.Column(db.String(100), unique=True)
 
-    created_at = db.Column(db.DateTime(), server_default=func.now())
+    created_at = db.Column(
+        db.DateTime(timezone=True), server_default=func.now()
+    )
     updated_at = db.Column(
-        db.DateTime(), server_default=func.now(), onupdate=func.now()
+        db.DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
 
     category_id = db.Column(
@@ -167,8 +174,9 @@ class Product(db.Model):
             "price": self.price,
             "discounted_price": self.discounted_price,
             "image_link": self.image_link,
-            "sku_code": self.sku_code,
             "category_id": self.category_id,
+            "created_at": self.created_at.strftime("%d.%m.%Y %H:%M"),
+            "updated_at": self.updated_at.strftime("%d.%m.%Y %H:%M"),
         }
 
 
@@ -192,9 +200,13 @@ class Order(db.Model):
     postal_code = db.Column(db.String(50))
     country = db.Column(db.String(50), nullable=False)
 
-    created_at = db.Column(db.DateTime(), server_default=func.now())
+    created_at = db.Column(
+        db.DateTime(timezone=True), server_default=func.now()
+    )
     updated_at = db.Column(
-        db.DateTime(), server_default=func.now(), onupdate=func.now()
+        db.DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
 
     status = db.Column(

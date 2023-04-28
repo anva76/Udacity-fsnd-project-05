@@ -1,6 +1,7 @@
 import React from "react"
 import { useAuth0 } from "@auth0/auth0-react"
 import { updatePermissionsFromToken, useGlobalState } from "../utils/state"
+import "../stylesheets/UserLoginButton.css"
 
 const UserLoginButton = () => {
   const { user, loginWithRedirect, logout, isAuthenticated, isLoading } =
@@ -20,22 +21,14 @@ const UserLoginButton = () => {
         }
       >
         <img src="/user.svg" width="25" alt="user" className="me-2" />
-        {isLoading && (
-          <div className="spinner-grow spinner-grow-sm text-info" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        )}
         Sign in
       </button>
     )
 
   return (
-    <div className="navbar-item dropdown">
+    <div className="navbar-item dropdown dropdown-center">
       <a
-        className={
-          "nav-link dropdown-toggle rounded p-1 bg-light " +
-          (permissions.includes("role:admin") && "text-danger")
-        }
+        className="nav-link dropdown-toggle rounded p-1 user-button"
         href="#"
         id="navbarDropdown"
         role="button"
@@ -46,32 +39,26 @@ const UserLoginButton = () => {
           <img
             src={user.picture}
             width="25"
-            alt="user"
-            className="rounded me-2"
+            alt=""
+            className="rounded me-2 profile-image"
           />
         )}
-        {isLoading && (
-          <div className="spinner-grow spinner-grow-sm text-info" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        )}
         {user?.name}
+        <span className="text-danger fw-bold">
+          {permissions.includes("role:admin") ? " [admin]" : ""}
+        </span>
       </a>
       <ul className="dropdown-menu dropdown-menu-end shadow">
-        <li>
-          <a
-            className="dropdown-item"
-            href="#"
-            role="button"
+        <li className="text-center">
+          <button
+            style={{ width: "90%" }}
+            className="btn btn-sm btn-outline-secondary"
             onClick={() => logout()}
+            type="button"
           >
             Logout
-          </a>
+          </button>
         </li>
-        <li>
-          <hr className="dropdown-divider" />
-        </li>
-        <li></li>
       </ul>
     </div>
   )

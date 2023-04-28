@@ -15,21 +15,44 @@ const ProductCard = ({
     navigate(`/products/${id}`)
   }
 
+  function renderPrice() {
+    if (discountedPrice)
+      return (
+        <div className="d-flex flex-row align-items-center col-md-3">
+          <h5 className="p-1 rounded rounded-4 price-badge-discount">
+            ${discountedPrice.toFixed(2)}
+          </h5>
+          <h6 className="text-secondary price-badge text-decoration-line-through p-1 ms-2 rounde rounded-4">
+            ${price.toFixed(2)}
+          </h6>
+        </div>
+      )
+    else
+      return (
+        <div className="d-flex flex-row align-items-center col-md-2">
+          <h5 className="p-1 rounded rounded-4 price-badge">
+            ${price.toFixed(2)}
+          </h5>
+        </div>
+      )
+  }
+
   return (
     <>
       <div className="card list-card me-1 mb-1 ">
         <img
-          src={image_link}
+          src={image_link ? image_link : "/img-placeholder.png"}
           className="card-img-top card-image"
-          alt={name}
+          alt="Product image"
           onClick={goToDetailView}
         />
         <div className="card-body">
           <h5 className="card-title">{name}</h5>
-          <h5>
-            <span className="badge bg-secondary">${price.toFixed(2)}</span>
-          </h5>
-          <button className="btn btn-info btn-sm" onClick={goToDetailView}>
+          {renderPrice()}
+          <button
+            className="btn btn-outline-warning btn-sm"
+            onClick={goToDetailView}
+          >
             View
           </button>
         </div>

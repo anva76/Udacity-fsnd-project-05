@@ -5,7 +5,7 @@ EMAIL_FIELD_PATTERN = "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
 PHONE_FIELD_PATTERN = (
     "^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$"
 )
-SEARCH_QUERY_PATTERN = "^[\w.-]+$"
+SEARCH_QUERY_PATTERN = "^[\w\s.-]+$"
 
 
 # JSON schema validator - base class
@@ -47,8 +47,6 @@ class CategoryValidator(Validator):
                 "minLength": 3,
                 "pattern": NAME_FIELD_PATTERN,
             },
-            "image_link": {"type": ["string", "null"]},
-            "notes": {"type": ["string", "null"]},
         },
         "required": ["name"],
     }
@@ -63,8 +61,6 @@ class CategoryValidator(Validator):
                 "minLength": 3,
                 "pattern": NAME_FIELD_PATTERN,
             },
-            "image_link": {"type": ["string", "null"]},
-            "notes": {"type": ["string", "null"]},
         },
     }
 
@@ -82,7 +78,6 @@ class ProductValidator(Validator):
             },
             "image_link": {"type": ["string", "null"]},
             "notes": {"type": ["string", "null"]},
-            "sku_code": {"type": ["string", "null"]},
             "category_id": {"type": "integer", "minumum": 0},
             "price": {"type": "number", "minumum": 0},
             "discounted_price": {"type": ["number", "null"], "minumum": 0},
@@ -106,7 +101,6 @@ class ProductValidator(Validator):
             },
             "image_link": {"type": ["string", "null"]},
             "notes": {"type": ["string", "null"]},
-            "sku_code": {"type": ["string", "null"]},
             "category_id": {"type": "integer", "minumum": 0},
             "price": {"type": "number", "minumum": 0},
             "discounted_price": {"type": ["number", "null"], "minumum": 0},

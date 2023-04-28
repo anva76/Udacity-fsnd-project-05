@@ -3,5 +3,14 @@
     object-position: center;
     height: 400px;
     width: 400px;
+    filter: grayscale(50%);
 
+}
+
+.price-badge-discount {
+    background-color: #FFE4B5;
+}
+
+.price-badge {
+    background-color: #D3D3D3;
 }

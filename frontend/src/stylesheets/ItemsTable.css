@@ -4,4 +4,5 @@
     height: 80px;
     width: 80px;
     cursor: pointer;
+    filter: grayscale(50%);
 }

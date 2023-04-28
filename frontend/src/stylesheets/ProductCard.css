@@ -4,8 +4,17 @@
     height: 200px;
     width: 200px;
     cursor: pointer;
+    filter: grayscale(70%);
 }
 
 .list-card {
     width: 14rem;
+}
+
+.price-badge-discount {
+    background-color: #FFE4B5;
+}
+
+.price-badge {
+    background-color: #D3D3D3;
 }

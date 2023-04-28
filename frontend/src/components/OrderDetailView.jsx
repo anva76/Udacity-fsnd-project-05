@@ -6,6 +6,7 @@ import { fetchOneOrder, deleteOrder, patchOrder } from "../utils/queryUtils"
 import { useAuth0 } from "@auth0/auth0-react"
 import EditModal from "./EditModal"
 import { useGlobalState } from "../utils/state"
+import PageLoader from "./PageLoader"
 
 const OrderDetailView = () => {
   const navigate = useNavigate()
@@ -19,12 +20,14 @@ const OrderDetailView = () => {
     status: {
       control: "select",
       label: "Status",
-      choices: ["submitted",
-        "accepted",
-        "in_assembly",
-        "in_delivery",
-        "delivered",
-        "cancelled"]
+      choices: [
+        ["submitted", "Submitted"],
+        ["accepted", "Accepted"],
+        ["in_assembly", "In Assembly"],
+        ["in_delivery", "In Delivery"],
+        ["delivered", "Delivered"],
+        ["cancelled", "Cancelled"],
+      ],
     },
   }
 
@@ -55,6 +58,13 @@ const OrderDetailView = () => {
     getOrder()
   }, [])
 
+  if (!order)
+    return (
+      <>
+        <PageLoader />
+      </>
+    )
+
   return (
     order && (
       <>
@@ -69,23 +79,25 @@ const OrderDetailView = () => {
         )}
         <div className="container">
           <div className="d-flex d-row">
-            <h4 className="mb-3 text-primary">{"Order " + order.order_number}</h4>
+            <h4 className="mb-3 text-secondary">
+              {"Order " + order.order_number}
+            </h4>
             {permissions.includes("role:admin") && (
               <button
                 className="btn btn-light btn-sm ms-2 mb-3"
-                title="Edit Product"
+                title="Edit Order"
                 onClick={() => setEditModalVisibility(true)}
               >
-                <img src="/edit.svg" width="25" alt="cart" />
+                <img src="/edit-red.svg" width="25" alt="Edit" />
               </button>
             )}
             {permissions.includes("delete:products") && (
               <button
-                className="btn btn-light btn-sm mb-3"
+                className="btn btn-light btn-sm ms-2 mb-3"
                 title="Delete Order"
                 onClick={handleOrderDelete}
               >
-                <img src="/trash-can.svg" width="25" alt="cart" />
+                <img src="/trash-can-red.svg" width="25" alt="Delete" />
               </button>
             )}
           </div>

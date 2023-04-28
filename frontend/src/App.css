@@ -3,3 +3,19 @@
     left: 50%;
     object-position: center;
 }
+
+.footer {
+    margin-top: auto;
+}
+
+.clear-button {
+    right: 5px;
+    z-index: 100;
+}
+
+.App {
+    min-height: 110vh;
+    display: flex;
+    flex-direction: column;
+}
+

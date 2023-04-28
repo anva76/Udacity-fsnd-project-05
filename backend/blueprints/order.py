@@ -6,10 +6,7 @@ from flask import Blueprint, Flask, jsonify, request, abort
 from models import db, Order, OrderStatus, OrderItem, CartItem, User
 from sqlalchemy import func as fn
 from auth import requires_auth
-from .utils import (
-    get_user_from_auth_id,
-    format_err_response,
-)
+from .utils import get_user_from_auth_id, format_err_response, paginator
 
 bp = Blueprint("orders", __name__, url_prefix="/")
 
@@ -28,10 +25,13 @@ def get_orders(auth_user):
             return jsonify({"success": True, "orders": []})
         orders = user.get_orders()
 
+    paginated_orders, actual_page = paginator(request, orders)
+
     return jsonify(
         {
             "success": True,
-            "orders": [order.to_dict() for order in orders],
+            "orders": [order.to_dict() for order in paginated_orders],
+            "actual_page": actual_page,
         }
     )
 
@@ -104,7 +104,6 @@ def submit_new_order(auth_user):
         order.order_number = order_number
         order.total_amount = total_amount
         order.items_count = items_count
-        # order.flush()
         # Clear cart items
         CartItem.query.filter(CartItem.user_id == user.id).delete()
 

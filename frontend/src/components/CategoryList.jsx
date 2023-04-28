@@ -18,7 +18,7 @@ const CategoryList = ({
           key="-1"
           role="button"
           className={
-            currentCategory ? "list-group-item" : "list-group-item bg-info"
+            currentCategory ? "list-group-item" : "list-group-item bg-warning"
           }
           onClick={() => onSelect(null)}
         >
@@ -31,7 +31,7 @@ const CategoryList = ({
             className={
               // == is used here to compare 1 and "1"
               currentCategory == c.id
-                ? "list-group-item bg-info"
+                ? "list-group-item bg-warning"
                 : "list-group-item"
             }
             onClick={() => onSelect(c.id)}
@@ -41,23 +41,25 @@ const CategoryList = ({
               <div>
                 {permissions.includes("role:admin") && (
                   <button
-                    className=" btn btn-light btn-sm  p-0 me-1"
+                    className=" btn btn-light btn-sm  p-1 me-1"
+                    title="Edit Category"
                     onClick={() => {
                       onEdit(c.id)
                     }}
                   >
-                    <img src="/edit.svg" width="18" alt="edit" />
+                    <img src="/edit-red.svg" width="18" alt="edit" />
                   </button>
                 )}
                 {permissions.includes("delete:categories") && (
                   <button
-                    className=" btn btn-light btn-sm  p-0"
+                    className=" btn btn-light btn-sm  p-1"
+                    title="Delete Category"
                     onClick={(e) => {
                       e.stopPropagation()
                       onDelete(c.id)
                     }}
                   >
-                    <img src="/trash-can.svg" width="18" alt="delete" />
+                    <img src="/trash-can-red.svg" width="18" alt="delete" />
                   </button>
                 )}
               </div>

@@ -44,7 +44,7 @@ class TestCategories(TestCase):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
             "/categories/",
-            json={"name": test_name, "image_link": "", "notes": "test notes"},
+            json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {TEST_TOKEN}",
@@ -73,7 +73,7 @@ class TestCategories(TestCase):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
             "/categories/",
-            json={"name": test_name, "image_link": "", "notes": "test notes"},
+            json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {TEST_TOKEN}",
@@ -104,7 +104,9 @@ class TestCategoriesFail(TestCase):
     @mock.patch("blueprints.category.Category")
     def test_get_categories(self, mock_model):
         # Mocking an internal server error
-        mock_model.query.all.side_effect = InternalServerError("Mock error")
+        mock_model.query.order_by.return_value.all.side_effect = (
+            InternalServerError("Mock error")
+        )
 
         response = self.app.get("/categories/")
         data = json.loads(response.data)
@@ -152,7 +154,7 @@ class TestCategoriesFail(TestCase):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
             "/categories/",
-            json={"name": test_name, "image_link": "", "notes": "test notes"},
+            json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {TEST_TOKEN}",
@@ -166,7 +168,7 @@ class TestCategoriesFail(TestCase):
         response = self.app.post(
             "/categories/",
             # Incorrect data - name is missing
-            json={"image_link": "", "notes": "test notes"},
+            json={"name": ""},
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {TEST_TOKEN}",
@@ -183,7 +185,7 @@ class TestCategoriesFail(TestCase):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.patch(
             "/categories/1/",
-            json={"name": test_name, "image_link": "", "notes": "test notes"},
+            json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {TEST_TOKEN}",
@@ -226,7 +228,7 @@ class TestCategoriesFail(TestCase):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
             "/categories/",
-            json={"name": test_name, "image_link": "", "notes": "test notes"},
+            json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {TEST_TOKEN}",
