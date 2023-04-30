@@ -182,8 +182,8 @@ def requires_auth(permission=""):
             if app.config["VALIDATE_TOKENS"] == True:
                 payload = validate_jwt_token(token)
             else:
+                # This is used for unit tests
                 payload = decode_jwt_token_without_validation(token)
-            # print(payload)
             check_permissions(permission, payload)
             auth_user = get_user_info(payload)
             return f(*args, **kwargs, auth_user=auth_user)

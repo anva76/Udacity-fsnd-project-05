@@ -32,6 +32,7 @@ def get_orders(auth_user):
             "success": True,
             "orders": [order.to_dict() for order in paginated_orders],
             "actual_page": actual_page,
+            "total_orders": len(orders),
         }
     )
 
@@ -97,6 +98,11 @@ def submit_new_order(auth_user):
             order_item.order_id = order.id
             order_item.product_id = item.product_id
             order_item.quantity = item.quantity
+            order_item.price = (
+                item.product.discounted_price
+                if item.product.discounted_price is not None
+                else item.product.price
+            )
             db.session.add(order_item)
 
         current_date = datetime.today().strftime("%Y%m%d")

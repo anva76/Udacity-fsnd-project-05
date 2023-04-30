@@ -9,6 +9,14 @@ const ItemsTable = ({
   onItemDecrease = null,
   onItemDelete = null,
 }) => {
+  function getPrice(item) {
+    if (item?.price) return item.price.toFixed(2)
+    else
+      return item.product.discounted_price
+        ? item.product.discounted_price.toFixed(2)
+        : item.product.price.toFixed(2)
+  }
+
   return (
     <>
       <table className="table mb-4">
@@ -40,12 +48,7 @@ const ItemsTable = ({
                     {item.product.name}
                   </Link>
                 </td>
-                <td className="align-middle">
-                  $
-                  {item.product.discounted_price
-                    ? item.product.discounted_price.toFixed(2)
-                    : item.product.price.toFixed(2)}
-                </td>
+                <td className="align-middle">${getPrice(item)}</td>
                 <td className="text-center align-middle">
                   <div className="d-flex justify-content-center align-items-center">
                     {withButtons && (

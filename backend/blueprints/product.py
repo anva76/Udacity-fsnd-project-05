@@ -23,6 +23,7 @@ def get_products():
             "success": True,
             "products": [pr.to_dict() for pr in paginated_products],
             "actual_page": actual_page,
+            "total_products": len(products),
         }
     )
 
@@ -176,4 +177,8 @@ def search_products():
     query = data["search_query"].strip()
     products = Product.query.filter(Product.name.ilike(f"%{query}%")).all()
 
-    return {"success": True, "products": [pr.to_dict() for pr in products]}
+    return {
+        "success": True,
+        "products": [pr.to_dict() for pr in products],
+        "total_products": len(products),
+    }

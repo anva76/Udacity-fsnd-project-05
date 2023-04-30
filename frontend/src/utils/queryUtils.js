@@ -380,6 +380,11 @@ const deleteCategory = (token, id, onSuccess = null) => {
     .then((data) => {
       //console.log(data)
       if (!data["success"]) {
+        if (data?.code == "category_not_empty") {
+          alert("Unable to delete: this category is not empty.")
+          return
+        }
+
         alert("Server error. Unable to delete this category.")
       } else {
         emitMessage("Category was successfully deleted.")

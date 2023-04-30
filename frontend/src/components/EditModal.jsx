@@ -10,7 +10,6 @@ const EditModal = ({
   title = "Modal Form",
 }) => {
   const [editObject, setEditObject] = useState({ ...obj })
-  const [finalForm, setFinalForm] = useState(null)
 
   const renderEditControl = (prop, fieldValue, index) => {
     if (editMap[prop])
@@ -74,7 +73,7 @@ const EditModal = ({
     //console.log(editObject)
   }
 
-  const formatData = () => {
+  const formattedData = () => {
     const tmpObj = { ...editObject }
     for (let prop in tmpObj) {
       if (editMap[prop]) {
@@ -100,12 +99,8 @@ const EditModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setFinalForm(formatData())
+    onSubmit(formattedData())
   }
-
-  useEffect(() => {
-    finalForm && onSubmit(finalForm)
-  }, [finalForm])
 
   return (
     <>

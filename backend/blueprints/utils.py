@@ -4,9 +4,16 @@ from config import ITEMS_PER_PAGE
 
 # Response with a specific message if necessary
 # ----------------------------------------------------------------------
-def format_err_response(message, code):
+def format_err_response(message, status_code, code=None):
     return (
-        jsonify({"success": False, "error": code, "message": message}),
+        jsonify(
+            {
+                "success": False,
+                "error": status_code,
+                "message": message,
+                "code": code,
+            }
+        ),
         code,
     )
 

@@ -5,23 +5,6 @@ from aenum import Enum
 from sqlalchemy.sql import func
 import datetime
 
-# Fix for sqlite3
-# -------------------------------------------------------
-from sqlalchemy import event
-from sqlalchemy.engine import Engine
-from sqlite3 import Connection as SQLite3Connection
-
-
-@event.listens_for(Engine, "connect")
-def _set_sqlite_pragma(dbapi_connection, connection_record):
-    if isinstance(dbapi_connection, SQLite3Connection):
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON;")
-        cursor.close()
-
-
-# -------------------------------------------------------
-
 db = SQLAlchemy()
 
 
@@ -255,17 +238,17 @@ class Order(db.Model):
     def to_dict_long(self):
         items = []
         for i in self.order_items:
-            if i.product.discounted_price is None:
-                sub_total = i.product.price * i.quantity
-            else:
-                sub_total = i.product.discounted_price * i.quantity
-
             items.append(
                 {
                     "id": i.id,
                     "quantity": i.quantity,
-                    "product": i.product.to_dict(),
-                    "sub_total": sub_total,
+                    "product": {
+                        "id": i.product.id,
+                        "image_link": i.product.image_link,
+                        "name": i.product.name,
+                    },
+                    "price": i.price,
+                    "sub_total": i.price * i.quantity,
                 }
             )
 
@@ -297,7 +280,7 @@ class OrderItem(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
-
+    price = db.Column(db.Float(2), nullable=False)
     product_id = db.Column(
         db.Integer, db.ForeignKey("product.id", ondelete="CASCADE")
     )
@@ -324,6 +307,7 @@ class OrderItem(db.Model):
         db.session.flush()
 
 
+# Items in this model belonging to a specific user represent a shopping cart of this user.
 class CartItem(db.Model):
     __tablename__ = "cart_item"
 

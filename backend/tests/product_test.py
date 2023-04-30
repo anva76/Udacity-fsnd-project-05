@@ -98,6 +98,39 @@ class TestProducts(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
 
+    def test_search(self):
+        # add a test product for searching later
+        test_name = "test -" + uuid.uuid4().hex[:8]
+        response = self.app.post(
+            "/products/",
+            json={
+                "name": test_name,
+                "category_id": 1,
+                "notes": "test notes",
+                "price": 50.0,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {TEST_TOKEN}",
+            },
+        )
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        product_id = data["product_id"]
+
+        # Search for the created product
+        response = self.app.post(
+            f"/search/",
+            headers={
+                "Content-Type": "application/json",
+            },
+            json={"search_query": test_name},
+        )
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["products"])
+
 
 # Product fail tests
 # --------------------------------------------------------------------------
@@ -249,6 +282,23 @@ class TestProductsFail(TestCase):
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
+        )
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(data["success"], False)
+
+    @mock.patch("blueprints.product.Product")
+    def test_search(self, mock_model):
+        # Mocking an internal server error
+        mock_model.query.filter.return_value.all.side_effect = (
+            InternalServerError("Mock error")
+        )
+        response = self.app.post(
+            f"/search/",
+            headers={
+                "Content-Type": "application/json",
+            },
+            json={"search_query": "shirt"},
         )
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 500)

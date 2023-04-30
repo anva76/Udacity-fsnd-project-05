@@ -54,6 +54,7 @@ def get_products_by_category(category_id):
             "products": [p.to_dict() for p in paginated_products],
             "category_id": category.id,
             "actual_page": actual_page,
+            "total_products": len(products),
         }
     )
 
@@ -162,7 +163,9 @@ def delete_category(category_id, **kwargs):
         abort(404)
 
     if not confirm_category_empty(category):
-        return format_err_response("Category is not empty.", 400)
+        return format_err_response(
+            "Category is not empty.", 400, "category_not_empty"
+        )
 
     try:
         category.delete()

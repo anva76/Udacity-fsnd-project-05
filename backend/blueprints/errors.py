@@ -39,7 +39,6 @@ def not_found(error):
 # Bad request
 @bp.app_errorhandler(400)
 def bad_request(error):
-    print(error)
     return (
         jsonify(
             {
@@ -75,7 +74,7 @@ def access_denied(error):
             {
                 "success": False,
                 "error": 403,
-                "message": "Access denied!!.",
+                "message": "Access denied.",
             }
         ),
         403,

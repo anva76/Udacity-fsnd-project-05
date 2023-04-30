@@ -1,0 +1,590 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.6 (Ubuntu 14.6-0ubuntu0.22.04.1)
+-- Dumped by pg_dump version 14.6 (Ubuntu 14.6-0ubuntu0.22.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: orderstatus; Type: TYPE; Schema: public; Owner: dbuser
+--
+
+CREATE TYPE public.orderstatus AS ENUM (
+    'not_defined',
+    'submitted',
+    'accepted',
+    'in_assembly',
+    'in_delivery',
+    'delivered',
+    'cancelled'
+);
+
+
+ALTER TYPE public.orderstatus OWNER TO dbuser;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO dbuser;
+
+--
+-- Name: cart_item; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public.cart_item (
+    id integer NOT NULL,
+    quantity integer NOT NULL,
+    user_id integer,
+    product_id integer
+);
+
+
+ALTER TABLE public.cart_item OWNER TO dbuser;
+
+--
+-- Name: cart_item_id_seq; Type: SEQUENCE; Schema: public; Owner: dbuser
+--
+
+CREATE SEQUENCE public.cart_item_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.cart_item_id_seq OWNER TO dbuser;
+
+--
+-- Name: cart_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbuser
+--
+
+ALTER SEQUENCE public.cart_item_id_seq OWNED BY public.cart_item.id;
+
+
+--
+-- Name: category; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public.category (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.category OWNER TO dbuser;
+
+--
+-- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: dbuser
+--
+
+CREATE SEQUENCE public.category_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.category_id_seq OWNER TO dbuser;
+
+--
+-- Name: category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbuser
+--
+
+ALTER SEQUENCE public.category_id_seq OWNED BY public.category.id;
+
+
+--
+-- Name: order; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public."order" (
+    id integer NOT NULL,
+    order_number character varying(30),
+    total_amount real,
+    items_count integer,
+    first_name character varying(50) NOT NULL,
+    last_name character varying(50) NOT NULL,
+    email character varying(50) NOT NULL,
+    phone character varying(50) NOT NULL,
+    street_address_1 character varying(50) NOT NULL,
+    street_address_2 character varying(50),
+    city character varying(50) NOT NULL,
+    province character varying(50) NOT NULL,
+    postal_code character varying(50),
+    country character varying(50) NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    status public.orderstatus,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public."order" OWNER TO dbuser;
+
+--
+-- Name: order_id_seq; Type: SEQUENCE; Schema: public; Owner: dbuser
+--
+
+CREATE SEQUENCE public.order_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.order_id_seq OWNER TO dbuser;
+
+--
+-- Name: order_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbuser
+--
+
+ALTER SEQUENCE public.order_id_seq OWNED BY public."order".id;
+
+
+--
+-- Name: order_item; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public.order_item (
+    id integer NOT NULL,
+    quantity integer NOT NULL,
+    price real NOT NULL,
+    product_id integer,
+    order_id integer
+);
+
+
+ALTER TABLE public.order_item OWNER TO dbuser;
+
+--
+-- Name: order_item_id_seq; Type: SEQUENCE; Schema: public; Owner: dbuser
+--
+
+CREATE SEQUENCE public.order_item_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.order_item_id_seq OWNER TO dbuser;
+
+--
+-- Name: order_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbuser
+--
+
+ALTER SEQUENCE public.order_item_id_seq OWNED BY public.order_item.id;
+
+
+--
+-- Name: product; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public.product (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL,
+    notes character varying(255),
+    price real NOT NULL,
+    discounted_price real,
+    image_link character varying(500),
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    category_id integer NOT NULL
+);
+
+
+ALTER TABLE public.product OWNER TO dbuser;
+
+--
+-- Name: product_id_seq; Type: SEQUENCE; Schema: public; Owner: dbuser
+--
+
+CREATE SEQUENCE public.product_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.product_id_seq OWNER TO dbuser;
+
+--
+-- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbuser
+--
+
+ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: dbuser
+--
+
+CREATE TABLE public."user" (
+    id integer NOT NULL,
+    auth_user_id character varying(150) NOT NULL,
+    created_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE public."user" OWNER TO dbuser;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: dbuser
+--
+
+CREATE SEQUENCE public.user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_id_seq OWNER TO dbuser;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbuser
+--
+
+ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
+
+
+--
+-- Name: cart_item id; Type: DEFAULT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.cart_item ALTER COLUMN id SET DEFAULT nextval('public.cart_item_id_seq'::regclass);
+
+
+--
+-- Name: category id; Type: DEFAULT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.category ALTER COLUMN id SET DEFAULT nextval('public.category_id_seq'::regclass);
+
+
+--
+-- Name: order id; Type: DEFAULT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."order" ALTER COLUMN id SET DEFAULT nextval('public.order_id_seq'::regclass);
+
+
+--
+-- Name: order_item id; Type: DEFAULT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.order_item ALTER COLUMN id SET DEFAULT nextval('public.order_item_id_seq'::regclass);
+
+
+--
+-- Name: product id; Type: DEFAULT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.product ALTER COLUMN id SET DEFAULT nextval('public.product_id_seq'::regclass);
+
+
+--
+-- Name: user id; Type: DEFAULT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+05fd44aac83f
+\.
+
+
+--
+-- Data for Name: cart_item; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public.cart_item (id, quantity, user_id, product_id) FROM stdin;
+5	1	2	2
+\.
+
+
+--
+-- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public.category (id, name, created_at, updated_at) FROM stdin;
+1	Shirts	2023-04-30 17:50:33.362079+00	2023-04-30 17:50:33.362079+00
+2	Shoes	2023-04-30 17:50:33.454512+00	2023-04-30 17:50:33.454512+00
+3	Accessories	2023-04-30 17:50:33.498934+00	2023-04-30 17:50:33.498934+00
+4	T-Shirts	2023-04-30 17:50:33.53276+00	2023-04-30 17:50:33.53276+00
+5	Jeans	2023-04-30 17:50:33.566968+00	2023-04-30 17:50:33.566968+00
+\.
+
+
+--
+-- Data for Name: order; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public."order" (id, order_number, total_amount, items_count, first_name, last_name, email, phone, street_address_1, street_address_2, city, province, postal_code, country, created_at, updated_at, status, user_id) FROM stdin;
+1	20230430.1	115	4	John	Smith	john.smith@example.com	+65.111.222.3333	Postgre Str, 123		Denpasar	Bali	101010101	Indonesia	2023-04-30 17:54:39.944769+00	2023-04-30 17:54:39.944769+00	submitted	1
+2	20230430.2	35	1	Anna	Jones	email@example.com	+65-11-222-3333	123, Postgre str		Singapore	Central Region	101101101	Singapore	2023-04-30 18:04:57.66727+00	2023-04-30 18:13:56.321719+00	in_assembly	2
+\.
+
+
+--
+-- Data for Name: order_item; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public.order_item (id, quantity, price, product_id, order_id) FROM stdin;
+1	1	35	6	1
+2	1	40	3	1
+3	2	20	5	1
+4	1	35	2	2
+\.
+
+
+--
+-- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public.product (id, name, notes, price, discounted_price, image_link, created_at, updated_at, category_id) FROM stdin;
+1	Winter Boots	Winter Boots	100	\N	https://images.unsplash.com/photo-1611193876764-7611520c8582?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80	2023-04-30 17:50:33.60377+00	2023-04-30 17:50:33.60377+00	2
+2	Summer Sneakers	Summer Sneakers	50.5	35	https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60	2023-04-30 17:50:33.64593+00	2023-04-30 17:50:33.64593+00	2
+4	Blue Jeans	Blue Jeans	50	35	https://plus.unsplash.com/premium_photo-1674828601362-afb73c907ebe?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fGJsdWUlMjBqZWFuc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60	2023-04-30 17:50:33.735798+00	2023-04-30 17:50:33.735798+00	5
+6	Black T-Shirt	Black T-Shirt	45	30	https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80	2023-04-30 17:50:33.814913+00	2023-04-30 18:09:35.280033+00	4
+5	Gray Polo T-Shirt	Gray Polo T-Shirt	20	15	https://images.unsplash.com/photo-1586363090844-099253d6a1cb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHBvbG8lMjB0JTIwc2hpcnR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60	2023-04-30 17:50:33.780868+00	2023-04-30 18:10:59.979011+00	4
+3	Classic Shirt	Classic Shirt	35	\N	https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80	2023-04-30 17:50:33.69117+00	2023-04-30 18:12:39.419704+00	1
+8	Red Sneakers	Red Sneakers	80	\N	https://images.unsplash.com/photo-1607522370275-f14206abe5d3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8c25lYWtlcnN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60	2023-04-30 18:27:33.874209+00	2023-04-30 18:27:33.874209+00	2
+9	Leather Belt	Leather Belt	40	\N	https://images.unsplash.com/photo-1549654929-e63d34779e41?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bGVhdGhlciUyMGJlbHR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60	2023-04-30 19:17:58.687665+00	2023-04-30 19:17:58.687665+00	3
+10	Bow Tie	Bow Tie	20	15	https://images.unsplash.com/photo-1550595993-1b48b8a3543a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8dGllfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60	2023-04-30 19:19:55.625206+00	2023-04-30 19:19:55.625206+00	3
+11	Tie with abstract print	Tie with abstract print	30	\N	https://images.unsplash.com/photo-1589756823695-278bc923f962?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dGllfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60	2023-04-30 19:21:40.113958+00	2023-04-30 19:21:40.113958+00	3
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: dbuser
+--
+
+COPY public."user" (id, auth_user_id, created_at) FROM stdin;
+1	auth0|64429d7276641cef1c0c70ae	2023-04-30 17:52:26.546071+00
+2	auth0|63fde0b8754534ffd47c075f78	2023-04-30 18:00:45.132299+00
+\.
+
+
+--
+-- Name: cart_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbuser
+--
+
+SELECT pg_catalog.setval('public.cart_item_id_seq', 5, true);
+
+
+--
+-- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbuser
+--
+
+SELECT pg_catalog.setval('public.category_id_seq', 5, true);
+
+
+--
+-- Name: order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbuser
+--
+
+SELECT pg_catalog.setval('public.order_id_seq', 2, true);
+
+
+--
+-- Name: order_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbuser
+--
+
+SELECT pg_catalog.setval('public.order_item_id_seq', 4, true);
+
+
+--
+-- Name: product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbuser
+--
+
+SELECT pg_catalog.setval('public.product_id_seq', 11, true);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbuser
+--
+
+SELECT pg_catalog.setval('public.user_id_seq', 2, true);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: cart_item cart_item_pkey; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.cart_item
+    ADD CONSTRAINT cart_item_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category category_name_key; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.category
+    ADD CONSTRAINT category_name_key UNIQUE (name);
+
+
+--
+-- Name: category category_pkey; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.category
+    ADD CONSTRAINT category_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: order_item order_item_pkey; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.order_item
+    ADD CONSTRAINT order_item_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: order order_order_number_key; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."order"
+    ADD CONSTRAINT order_order_number_key UNIQUE (order_number);
+
+
+--
+-- Name: order order_pkey; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."order"
+    ADD CONSTRAINT order_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product product_name_key; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.product
+    ADD CONSTRAINT product_name_key UNIQUE (name);
+
+
+--
+-- Name: product product_pkey; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.product
+    ADD CONSTRAINT product_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_auth_user_id_key; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_auth_user_id_key UNIQUE (auth_user_id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cart_item cart_item_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.cart_item
+    ADD CONSTRAINT cart_item_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
+
+
+--
+-- Name: cart_item cart_item_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.cart_item
+    ADD CONSTRAINT cart_item_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+
+
+--
+-- Name: order_item order_item_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.order_item
+    ADD CONSTRAINT order_item_order_id_fkey FOREIGN KEY (order_id) REFERENCES public."order"(id) ON DELETE CASCADE;
+
+
+--
+-- Name: order_item order_item_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.order_item
+    ADD CONSTRAINT order_item_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
+
+
+--
+-- Name: order order_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public."order"
+    ADD CONSTRAINT order_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: product product_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbuser
+--
+
+ALTER TABLE ONLY public.product
+    ADD CONSTRAINT product_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.category(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
