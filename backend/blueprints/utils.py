@@ -14,7 +14,7 @@ def format_err_response(message, status_code, code=None):
                 "code": code,
             }
         ),
-        code,
+        status_code,
     )
 
 

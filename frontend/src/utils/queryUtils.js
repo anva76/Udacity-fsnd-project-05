@@ -460,9 +460,8 @@ const searchProducts = (searchQuery, onSuccess) => {
     .then((data) => {
       //console.log(data)
       if (!data["success"]) {
-        alert(
-          "Unable to process the search request. Please check the data and try again."
-        )
+        // If it is not successful, just return an empty array.
+        onSuccess && onSuccess([])
       } else {
         onSuccess && onSuccess(data.products)
       }

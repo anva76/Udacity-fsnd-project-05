@@ -39,7 +39,7 @@ const OrderDetailView = () => {
   async function handleOrderEditSubmit(editObject) {
     const token = await getAccessTokenSilently()
     const obj = { status: editObject.status }
-    console.log(obj)
+    //console.log(obj)
     patchOrder(token, order.id, obj, () => {
       setEditModalVisibility(false)
       getOrder()

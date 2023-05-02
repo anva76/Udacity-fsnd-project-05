@@ -2,7 +2,7 @@
 
 ## Overview
 
-The backend part of this application was implemeted based on Flask/SQLAlchemy and PostgreSQL. For authorization and token validation, some code examples provided by Auth0 were used.
+The backend part of this application was implemeted based on Flask/SQLAlchemy and PostgreSQL. Authentication is done by a third party provider - Autu0.com. Some code examples provided by Auth0 were used for implementing authorization and token validation on the backend side.
 
 ## Setting up the Backend
 
@@ -78,9 +78,9 @@ The backend and frontend parts are secured by a third party authentication provi
 
 In simple terms, the frontend sends an authorization request to Auth0 servers. Auth0 validates this request, provides a login form to authenticate the end user, and sends back an access token upon success. This access token is then used by the frontend to access the Flask-based backend API. The backend validates the token and checks the available permissions according to Auth0 predefined procedures.
 
-### User roles
+### Use cases
 
-There are four usage scenarios possible in this application.
+There are four use cases possible in this application:
 
 - Public users - no authentication required. They can view products and categories.
 
@@ -113,6 +113,36 @@ There are four usage scenarios possible in this application.
   - `delete:products`
   - `delete:orders`
   - `role:admin`
+
+## Testing
+
+### Unit tests
+
+In your terminal, navigate to the `/backend` folder and activate your virtual environment as described above.
+
+The backend application loads its secrets as environment variables from an `.env` file. Please create one in the `/backend` folder as shown above.
+
+Finally, execute the following commands to perform testing:
+
+```bash
+dropdb ecommerce_test
+createdb ecommerce_test
+psql ecommerce_test < ecommerce.psql
+python test_app.py
+```
+
+Please note that a dummy test token (with all permissions) is used in the process of unit testing. This token is not suitable for actual authentication and consequently is not validated via the normal Auth0 validation procedure.
+
+### Permission tests
+
+Please ensure that the backend API server and PostgreSQL database are up and running as described above.
+
+To perform permission tests for authenticated users, please open the `fsnd-capstone-test-collection-postman.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in request headers. 
+
+If necessary, please change the `host` variable of the test collection to `http://127.0.0.1:5000` for local testing, or update the variables containing access tokens for each relevant auth test group:
+- `userToken` (consumer role)
+- `salesToken` (sales specialist role)
+- `managerToken` (manager role)
 
 ## API documentation
 
@@ -175,7 +205,7 @@ There are four usage scenarios possible in this application.
 
 `GET '/categories/<int:category_id>'`
 
-- Fetches the details of a specified category.
+- Fetches the details of a specific category.
 - Request Arguments: `category_id` - passed as a url parameter.
 - Returns: a dictionary of category properties.
 
@@ -279,7 +309,7 @@ There are four usage scenarios possible in this application.
 
 `GET '/products/<product_id>'`
 
-- Fetches the details of a specified product.
+- Fetches the details of a specific product.
 - Request Arguments: `product_id` - passed as a url parameter.
 - Returns: a dictionary of product properties.
 
@@ -311,7 +341,7 @@ There are four usage scenarios possible in this application.
 }
 ```
 
-- Returns: a list of products matching the search criteria and total number of the products in the list.
+- Returns: a list of products matching the search criteria and total number of products in the list.
 
 ```json
 {
@@ -339,7 +369,7 @@ There are four usage scenarios possible in this application.
 `POST '/products'`
 
 - Sends a request to add a new product. This operation is only allowed to admin users.
-- Request Arguments: `name`, `category_id`, `price`, `discounted_price`, `notes`, `image_link` - all passed in the body of a JSON request. The first three parameters are requited, and the others are optional.
+- Request Arguments: `name`, `category_id`, `price`, `discounted_price`, `notes`, `image_link` - all passed in the body of a JSON request. The first three parameters are required, and the others are optional.
 
 ```json
 {
@@ -414,18 +444,30 @@ There are four usage scenarios possible in this application.
       {
         "id": 1,
         "product": {
-          "id": 1,
-          "name": "T-Shirt",
-          "price": 75.0,
-          "discounted_price": 65.0,
+          "id": 4,
+          "name": "T-Shirt with flower print",
+          "price": 45.0,
+          "discounted_price": 40.0,
           "image_link": ""
         },
         "quantity": 1,
-        "sub_total": 65.0
+        "sub_total": 40.0
+      },
+      {
+        "id": 2,
+        "product": {
+          "id": 12,
+          "name": "Blue T-Shirt",
+          "price": 35.0,
+          "discounted_price": 30.0,
+          "image_link": ""
+        },
+        "quantity": 1,
+        "sub_total": 30.0
       }
     ],
-    "items_count": 1,
-    "total_amount": 65.0
+    "items_count": 2,
+    "total_amount": 70.0
   },
   "success": true
 }
@@ -438,7 +480,7 @@ There are four usage scenarios possible in this application.
 
 ```json
 {
-  "product_id": 1,
+  "product_id": 12,
   "quantity": 2
 }
 ```
@@ -467,7 +509,7 @@ There are four usage scenarios possible in this application.
 
 ```json
 {
-  "cart_item_id": 6,
+  "cart_item_id": 1,
   "success": true
 }
 ```
@@ -480,7 +522,7 @@ There are four usage scenarios possible in this application.
 
 ```json
 {
-  "cart_item_id": 6,
+  "cart_item_id": 1,
   "success": true
 }
 ```
@@ -489,7 +531,7 @@ There are four usage scenarios possible in this application.
 
 `GET '/orders/?page=<n>'`
 
-- Fetches a list of orders belonging to the current authenticated user or all orders in the database if the user has an admin role. If necessary, the result can be paginated.
+- Fetches a list of orders belonging to the current authenticated user or all orders in the database if the user has an `admin role` assigned. If necessary, the result can be paginated.
 - Request Arguments: `?page=` - passed as a url parameter. If the page parameter is omitted, the whole range of orders will be provided. The user id is derived from the authorization token at the server side.
 - Returns: a list of orders, actual page, and total number of orders. The actual page parameter may be different from the requested page if it is out of range.
 
@@ -583,7 +625,7 @@ There are four usage scenarios possible in this application.
 `POST '/orders`
 
 - Sends a request to submit a new order containing items from the current user's cart. This operation is only allowed to end users (consumers).
-- Request Arguments: destination address fields passed in the body of a JSON request as shown below. The user id is derived from the authorization token at the server side.
+- Request Arguments: delivery address fields are passed in the body of a JSON request as shown below. The user id is derived from the authorization token at the server side.
 
 ```json
 {
@@ -612,7 +654,7 @@ There are four usage scenarios possible in this application.
 `PATCH '/orders/<order_id>'`
 
 - Sends a request to update a specific order. This operation is only allowed to admin users.
-- Request Arguments: `order_id` - passed as a URL parameter. `status` and the destination address parameters described above can be added in the body of a JSON request. At least one parameter should be present in the JSON request.
+- Request Arguments: `order_id` - passed as a URL parameter. `status` and the delivery address parameters described above can be added in the body of a JSON request. At least one modified parameter should be present in the JSON request.
 
 ```json
 {
@@ -654,26 +696,3 @@ If an API request is successful, a `success` indicator equal to `true` as well a
   "success": false
 }
 ```
-
-## Testing
-
-### Unit tests
-
-In your terminal, navigate to the `/backend` folder and activate your virtual environment as described above.
-
-The backend application loads its secrets as environment variables from an `.env` file. Please create one in the `/backend` folder as shown above.
-
-Finally, execute the following commands to perform testing:
-
-```bash
-dropdb ecommerce_test
-createdb ecommerce_test
-psql ecommerce_test < ecommerce.psql
-python test_app.py
-```
-
-Please note that a dummy test token (with all permissions) is used in the process of unit testing. This token is not suitable for actual authentication and consequently is not validated by using the normal Auth0 validation procedure.
-
-### Permission tests
-
-To perform permission tests for the authenticated users, please open the `fsnd-capstone-test-collection.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in the request headers. If necessary, please change the `host` parameter of the test collection to `http://127.0.0.1:5000` for local testing.

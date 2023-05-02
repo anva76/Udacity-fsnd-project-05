@@ -22,7 +22,7 @@ const Header = () => {
   async function updatePermissionsFromAuth0() {
     try {
       const token = await getAccessTokenSilently()
-      //console.log(token)
+      console.log(token)
       updatePermissionsFromToken(token)
     } catch (e) {
       console.log(e.message)

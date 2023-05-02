@@ -156,8 +156,8 @@ class TestOrdersFail(TestCase):
     @mock.patch("blueprints.order.Order")
     def test_get_orders(self, mock_order_model, mock_user_model):
         # Mocking an internal server error
-        mock_order_model.query.all.side_effect = InternalServerError(
-            "Mock error"
+        mock_order_model.query.order_by.return_value.all.side_effect = (
+            InternalServerError("Mock error")
         )
         mock_user_model.side_effect = InternalServerError("Mock error")
 

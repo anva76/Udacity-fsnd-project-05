@@ -1,0 +1,3710 @@
+{
+	"info": {
+		"_postman_id": "be6a6032-1226-4509-a8fd-9d7627f5ab30",
+		"name": "fsnd-capstone-test-collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9544918"
+	},
+	"item": [
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.categories).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/products/7",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/5",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    var jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"search_query\": \"shirt\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/search/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"search",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart/6",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/cart/6",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/3",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/orders",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/orders/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(401)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Consumer (end user)",
+			"item": [
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.categories).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/products/7",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/5",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"search_query\": \"shirt\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/search/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"search",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.cart).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.cart_item_id).to.be.an('number')",
+											"    pm.collectionVariables.set(\"testCartItemId\", jsonData[\"cart_item_id\"])",
+											"",
+											"})",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 1,\n    \"quantity\": 2\n}"
+								},
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.cart_item_id).to.be.an('number')",
+											"",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"quantity\": 4\n}"
+								},
+								"url": {
+									"raw": "{{host}}/cart/{{testCartItemId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"{{testCartItemId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.cart_item_id).to.be.an('number')",
+											"",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart/{{testCartItemId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"{{testCartItemId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.orders).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order_id).to.be.an('number')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const token = pm.collectionVariables.get(\"userToken\")",
+											"",
+											"// Add a cart item for a subsequent order to be created",
+											"const options = {",
+											"    url: pm.collectionVariables.get(\"host\")+\"/cart\",",
+											"    method: 'POST',",
+											"    header: { 'content-type': 'application/json', \"Authorization\": `Bearer ${token}` },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({\"product_id\": 1, \"quantity\": 1})",
+											"",
+											"    }",
+											"}",
+											"",
+											"pm.sendRequest(options, function (err, res) {",
+											"    var jsonData = res.json();",
+											"    if (err) {",
+											"        console.log(err)",
+											"    }",
+											"    else {",
+											"        pm.collectionVariables.set(\"testCartItemId\", jsonData[\"cart_item_id\"])",
+											"    }",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n            \"first_name\": \"John\",\n            \"last_name\": \"Smith\",\n            \"email\": \"email@example.com\",\n            \"phone\": \"+65-11-222-3333\",\n            \"street_address_1\": \"123, Postgre str\",\n            \"street_address_2\": \"\",\n            \"city\": \"Singapore\",\n            \"province\": \"Central Region\",\n            \"country\": \"Singapore\",\n            \"postal_code\": \"101101101\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/orders",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/orders/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{userToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Sales Specialist (admin)",
+			"item": [
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.categories).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category_id).to.be.an('number')",
+											"    pm.collectionVariables.set(\"testCategoryId\", jsonData[\"category_id\"])",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"New Products\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category_id).to.be.an('number')",
+											"})",
+											"",
+											"// ---------------------------------------------------------------------------",
+											"// Clean up the created test data",
+											"const token = pm.collectionVariables.get(\"managerToken\")",
+											"const testCatId = pm.collectionVariables.get(\"testCategoryId\")",
+											"const options = {",
+											"    url: pm.collectionVariables.get(\"host\")+`/categories/${testCatId}`,",
+											"    method: 'DELETE',",
+											"    header: { \"Authorization\": `Bearer ${token}`  },",
+											"}",
+											"",
+											"pm.sendRequest(options, function (err, res) {",
+											"    var jsonData = res.json();",
+											"    if (err) {",
+											"        console.log(err)",
+											"    }",
+											"    else {",
+											"        ",
+											"    }",
+											"})",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Home Appliances\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/categories/{{testCategoryId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"{{testCategoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product_id).to.be.an('number')",
+											"    pm.collectionVariables.set(\"testProductId\", jsonData[\"product_id\"])",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Shirt 1\",\n    \"category_id\": 1,\n    \"image_link\": \"https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80\",\n    \"price\": 40.0\n}"
+								},
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product_id).to.be.an('number')",
+											"})",
+											"",
+											"// ---------------------------------------------------------------------------",
+											"// Clean up the created test data",
+											"const token = pm.collectionVariables.get(\"managerToken\")",
+											"const testProdId = pm.collectionVariables.get(\"testProductId\")",
+											"const options = {",
+											"    url: pm.collectionVariables.get(\"host\")+`/products/${testProdId}`,",
+											"    method: 'DELETE',",
+											"    header: { \"Authorization\": `Bearer ${token}`  },",
+											"}",
+											"",
+											"pm.sendRequest(options, function (err, res) {",
+											"    var jsonData = res.json();",
+											"    if (err) {",
+											"        console.log(err)",
+											"    }",
+											"    else {",
+											"        ",
+											"    }",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Cotton Shirt\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/products/{{testProductId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"{{testProductId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"search_query\": \"shirt\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/search/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"search",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart/6",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/cart/6",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.orders).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n            \"first_name\": \"John\",\n            \"last_name\": \"Smith\",\n            \"email\": \"email@example.com\",\n            \"phone\": \"+65-11-222-3333\",\n            \"street_address_1\": \"123, Postgre str\",\n            \"street_address_2\": \"\",\n            \"city\": \"Singapore\",\n            \"province\": \"Central Region\",\n            \"country\": \"Singapore\",\n            \"postal_code\": \"101101101\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/orders",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order_id).to.be.an('number')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"in_delivery\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/orders/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{salesToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Manager (admin)",
+			"item": [
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.categories).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/1/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"1",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category_id).to.be.an('number')",
+											"    pm.collectionVariables.set(\"testCategoryId\", jsonData[\"category_id\"])",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"New Products\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category_id).to.be.an('number')",
+											"})",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Home Appliances\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/categories/{{testCategoryId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"{{testCategoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.category_id).to.be.an('number')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/categories/{{testCategoryId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"categories",
+										"{{testCategoryId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains category dictionary\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product_id).to.be.an('number')",
+											"    pm.collectionVariables.set(\"testProductId\", jsonData[\"product_id\"])",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Shirt 1\",\n    \"category_id\": 1,\n    \"image_link\": \"https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80\",\n    \"price\": 40.0\n}"
+								},
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product_id).to.be.an('number')",
+											"})",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Cotton Shirt\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/products/{{testProductId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"{{testProductId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.product_id).to.be.an('number')",
+											"})",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products/{{testProductId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products",
+										"{{testProductId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.products).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"search_query\": \"shirt\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/search/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"search",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/cart",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/cart/6",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cart/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/cart/6",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cart",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.orders).to.be.an('array')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order).to.be.an('object')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403 since no credentials are present\", function () {",
+											"    pm.response.to.have.status(403)",
+											"})",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n            \"first_name\": \"John\",\n            \"last_name\": \"Smith\",\n            \"email\": \"email@example.com\",\n            \"phone\": \"+65-11-222-3333\",\n            \"street_address_1\": \"123, Postgre str\",\n            \"street_address_2\": \"\",\n            \"city\": \"Singapore\",\n            \"province\": \"Central Region\",\n            \"country\": \"Singapore\",\n            \"postal_code\": \"101101101\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/orders",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order_id).to.be.an('number')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"",
+											"",
+											"// -----------------------------------------------------------------------------------",
+											"// Prepare test data for the next tests ",
+											"",
+											"const token = pm.collectionVariables.get(\"userToken\")",
+											"",
+											"// Add a cart item for a subsequent order to be created",
+											"const options = {",
+											"    url: pm.collectionVariables.get(\"host\")+\"/cart/\",",
+											"    method: 'POST',",
+											"    header: { 'content-type': 'application/json', \"Authorization\": `Bearer ${token}` },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({\"product_id\": 1, \"quantity\": 1})",
+											"",
+											"    }",
+											"}",
+											"",
+											"pm.sendRequest(options, function (err, res) {",
+											"    const jsonData = res.json();",
+											"    if (err) {",
+											"        console.log(err)",
+											"    }",
+											"    else {",
+											"        const jsonData = res.json()",
+											"        console.log(jsonData)",
+											"",
+											"        // Create an order for subsequent deletion",
+											"        const options2 = {",
+											"            url: pm.collectionVariables.get(\"host\")+\"/orders/\",",
+											"            method: 'POST',",
+											"            header: { 'content-type': 'application/json', \"Authorization\": `Bearer ${token}` },",
+											"            body: {",
+											"                mode: 'raw',",
+											"                raw: JSON.stringify({",
+											"                    \"first_name\": \"test\",",
+											"                    \"last_name\": \"test\",",
+											"                    \"email\": \"email@example.com\",",
+											"                    \"phone\": \"+65-11-222-3333\",",
+											"                    \"street_address_1\": \"test\",",
+											"                    \"street_address_2\": \"\",",
+											"                    \"city\": \"test\",",
+											"                    \"province\": \"test\",",
+											"                    \"country\": \"test\",",
+											"                    \"postal_code\": \"101101101\"",
+											"                })",
+											"",
+											"            }",
+											"        }",
+											"",
+											"        pm.sendRequest(options2, function (err, res) {",
+											"            ",
+											"            if (err) {",
+											"                console.log(err)",
+											"            }",
+											"            else {",
+											"                const jsonData = res.json()",
+											"                console.log(jsonData)",
+											"                pm.collectionVariables.set(\"testOrderId\", jsonData[\"order_id\"])",
+											"            }",
+											"        })",
+											"    }",
+											"})",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"in_delivery\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/orders/{{testOrderId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"{{testOrderId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/orders/<n>",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"})",
+											"",
+											"pm.test(\"Response data contains categories array\", function () {",
+											"    const jsonData = pm.response.json()",
+											"    pm.expect(jsonData.order_id).to.be.an('number')",
+											"})",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/{{testOrderId}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"{{testOrderId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{managerToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "userToken",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjdmTVg5SEhMVnNIZmpSNC04YXA5QiJ9.eyJpc3MiOiJodHRwczovL2Rldi03dW40ZGhmYng0aHhkcDE4LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2NDQyOWQ3Mjc2NjQxY2VmMWMwYzcwYWUiLCJhdWQiOlsiZS1jb21tZXJjZS1hcGkiLCJodHRwczovL2Rldi03dW40ZGhmYng0aHhkcDE4LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2ODMwMjQ2NDYsImV4cCI6MTY4MzMyNDY0NiwiYXpwIjoiR256dUV6MVFaNVV5cWNtd0lDMDdVM0FSbVFRSDI2ZDkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlOm9yZGVycyIsInJvbGU6Y29uc3VtZXIiLCJ2aWV3Om9yZGVycyIsInZpZXc6dXBkYXRlOmNhcnQiXX0.OPDvhlTXku8iLDQNZj2qMGPlMj8HIKoRsZcCtLHebKDMiig-M-FthXztx8cAPjYBOe7R-r4IKohUb98xQib7_xGVDWJTcgCZZQwtwtydaMEKc2dx2VAkOhXmZICA6MLu-fQHiRcEQFeiDua6G3JSVFZRpKd0bpqUgVwf139uEZ1LjR95dBrnnanAmlnpMvotY6uZjYPpKFzRLcsBhMvsUAnqklsI6R-C9jv1e1rW_Guka24HeB_-xhEEOfzCCxN5h_soEkxwmJG68KvR84hb2Xn6h8DS9Gz8_ZbAWFESQr16k3BzW-pn2QvajQ4YBhq9AdRu5su5mM-_nTci7TFdWg",
+			"type": "string"
+		},
+		{
+			"key": "salesToken",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjdmTVg5SEhMVnNIZmpSNC04YXA5QiJ9.eyJpc3MiOiJodHRwczovL2Rldi03dW40ZGhmYng0aHhkcDE4LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2NDQzYzExYTEyYTNhMzZjMWM3ZGQ4OTYiLCJhdWQiOlsiZS1jb21tZXJjZS1hcGkiLCJodHRwczovL2Rldi03dW40ZGhmYng0aHhkcDE4LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2ODMwMzAxOTYsImV4cCI6MTY4MzMzMDE5NiwiYXpwIjoiR256dUV6MVFaNVV5cWNtd0lDMDdVM0FSbVFRSDI2ZDkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlOmNhdGVnb3JpZXMiLCJjcmVhdGU6cHJvZHVjdHMiLCJyb2xlOmFkbWluIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJ1cGRhdGU6b3JkZXJzIiwidXBkYXRlOnByb2R1Y3RzIiwidmlldzpvcmRlcnMiXX0.MODgUyO094J9amgdhNDc0qjztDg8C_obQvzuAYcel_FR1fCKj7d4ak0oYZ8uJpmmKz6P5MT274hS9JQoGnk015PYT-yvlJUep53VgxM0R-ZYCpYeiiKTk9xbbB8FGdxBK6Pnkv5rwntay4sK-pRj0fXZB1JqA6pLQ9-4ANp9OFvbasT1bv5ziCVNcARRIa8OpxZEcR7kOtTXPvX-OjL2BS-r0EZPPZwyQbQ8wdPmct53-Fjqfn5uuztFtAg5rSNseTDEJTnNwJ_13KxEf3AH2NVe4CCNBQAvaWKWoMyYeVhI5NjZOe9K95uS-svzorzFK9Kj8DG8BOkcptdca3qUdA",
+			"type": "string"
+		},
+		{
+			"key": "managerToken",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjdmTVg5SEhMVnNIZmpSNC04YXA5QiJ9.eyJpc3MiOiJodHRwczovL2Rldi03dW40ZGhmYng0aHhkcDE4LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2NDQ4Y2FjOWYxODc0ZWY2ZDMzOTZhOGEiLCJhdWQiOlsiZS1jb21tZXJjZS1hcGkiLCJodHRwczovL2Rldi03dW40ZGhmYng0aHhkcDE4LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2ODMwMzUxMzAsImV4cCI6MTY4MzMzNTEzMCwiYXpwIjoiR256dUV6MVFaNVV5cWNtd0lDMDdVM0FSbVFRSDI2ZDkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlOmNhdGVnb3JpZXMiLCJjcmVhdGU6cHJvZHVjdHMiLCJkZWxldGU6Y2F0ZWdvcmllcyIsImRlbGV0ZTpvcmRlcnMiLCJkZWxldGU6cHJvZHVjdHMiLCJyb2xlOmFkbWluIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJ1cGRhdGU6b3JkZXJzIiwidXBkYXRlOnByb2R1Y3RzIiwidmlldzpvcmRlcnMiXX0.itPRgEDqIIVqJB9UkdVVXkSULr-Bq6fRqYEzObuzisefYPvbEx_RdfrancWtvM5mkRwglxW_VGs9D50Jqc6mO3HY5wUXsfBtRZRbKTzKyMIx-0_UH1zqY6ZJuzfOenVk2Xl_WJUVq8TOy_va-NzHkOBrnzpfdbzXq3yNeam9Jj-7WvC3zCilrxfPkK_bQj52tekBMn-JPHFXk8AnWKdQi9qFNnfPJMwrh2dcl6F0Sxq_GMys0LV1xj6s_LcIu_IxrjiIYFJEG6mTVX38vZ5R-8STwgim7oCCHj9ggWgRgfN93XI0l1dNrHsxi058eGB6KxzcVwy31LGgegzidX3shQ",
+			"type": "string"
+		},
+		{
+			"key": "testCartItemId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "testCategoryId",
+			"value": null,
+			"type": "string"
+		},
+		{
+			"key": "testProductId",
+			"value": null,
+			"type": "string"
+		},
+		{
+			"key": "testOrderId",
+			"value": null,
+			"type": "string"
+		}
+	]
+}

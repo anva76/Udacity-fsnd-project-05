@@ -107,5 +107,5 @@ def auth_error(e):
                 "message": e.error["description"],
             }
         ),
-        401,
+        e.status_code,
     )

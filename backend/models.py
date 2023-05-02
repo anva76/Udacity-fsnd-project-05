@@ -50,7 +50,11 @@ class User(db.Model):
         return self.cart_items
 
     def get_orders(self):
-        return self.orders
+        return (
+            Order.query.filter_by(user_id=self.id)
+            .order_by(Order.created_at.desc())
+            .all()
+        )
 
 
 class Category(db.Model):

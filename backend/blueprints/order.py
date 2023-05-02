@@ -18,7 +18,7 @@ bp = Blueprint("orders", __name__, url_prefix="/")
 def get_orders(auth_user):
     # Admins can see all orders, normal users can only see their own
     if auth_user["admin"] == True:
-        orders = Order.query.all()
+        orders = Order.query.order_by(Order.created_at.desc()).all()
     else:
         user = get_user_from_auth_id(auth_user["id"])
         if user is None:
