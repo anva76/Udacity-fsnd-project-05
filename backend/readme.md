@@ -2,7 +2,7 @@
 
 ## Overview
 
-The backend part of this application was implemeted based on Flask/SQLAlchemy and PostgreSQL. Authentication is done by a third party provider - Autu0.com. Some code examples provided by Auth0 were used for implementing authorization and token validation on the backend side.
+The backend part of this application was implemeted based on Flask/SQLAlchemy and PostgreSQL. Authentication is done by a third party provider - Auth0.com. Some code examples provided by Auth0 were used for implementing authorization and token validation on the backend side.
 
 ## Setting up the Backend
 
@@ -131,13 +131,15 @@ psql ecommerce_test < ecommerce.psql
 python test_app.py
 ```
 
-Please note that a dummy test token (with all permissions) is used in the process of unit testing. This token is not suitable for actual authentication and consequently is not validated via the normal Auth0 validation procedure.
+Please note that a dummy test auth token (with all permissions) is used in the process of unit testing. This token is not suitable for actual authentication and consequently is not validated via the normal Auth0 validation procedure.
 
 ### Permission tests
 
 Please ensure that the backend API server and PostgreSQL database are up and running as described above.
 
 To perform permission tests for authenticated users, please open the `fsnd-capstone-test-collection-postman.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in request headers. 
+
+It is recommended to run the tests as a whole collection or on a role basis because some tests within one folder may depend on each other. E.g. a database record created in a previous test can be patched or deleted in a subsequent test.
 
 If necessary, please change the `host` variable of the test collection to `http://127.0.0.1:5000` for local testing, or update the variables containing access tokens for each relevant auth test group:
 - `userToken` (consumer role)

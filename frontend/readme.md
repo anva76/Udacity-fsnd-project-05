@@ -26,7 +26,7 @@ npm install
 
 ## Running Frontend in Development Mode
 
-Vite loads some parameters from the `.env` file. Please create one in the `/frontend` dicrectory:
+Vite loads some parameters from an `.env` file. Please create one in the `/frontend` dicrectory:
 
 ```bash
 VITE_API_SERVER_URL=back_end_server_address
