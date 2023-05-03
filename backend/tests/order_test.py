@@ -5,7 +5,7 @@ from models import db
 from unittest import TestCase, mock
 from werkzeug.exceptions import InternalServerError
 from app_factory import create_flask_app
-from config import TEST_TOKEN
+from config import TEST_TOKEN, API_PREFIX
 
 app = create_flask_app(__name__, "config.UnittestConfig")
 
@@ -21,7 +21,7 @@ class TestOrders(TestCase):
 
     def test_get_orders(self):
         response = self.app.get(
-            "/orders/",
+            API_PREFIX + "/orders/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
@@ -33,7 +33,7 @@ class TestOrders(TestCase):
 
     def test_get_one_order(self):
         response = self.app.get(
-            "/orders/3/",
+            API_PREFIX + "/orders/3/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
@@ -46,7 +46,7 @@ class TestOrders(TestCase):
     def test_create_order(self):
         # Add one product to the cart before creating an order
         response = self.app.post(
-            "/cart/",
+            API_PREFIX + "/cart/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -57,7 +57,7 @@ class TestOrders(TestCase):
 
         # Create order
         response = self.app.post(
-            "/orders/",
+            API_PREFIX + "/orders/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -81,7 +81,7 @@ class TestOrders(TestCase):
 
     def test_update_order(self):
         response = self.app.patch(
-            "/orders/1/",
+            API_PREFIX + "/orders/1/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -99,7 +99,7 @@ class TestOrders(TestCase):
     def test_delete_order(self):
         # Add one product to the cart before creating an order
         response = self.app.post(
-            "/cart/",
+            API_PREFIX + "/cart/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -110,7 +110,7 @@ class TestOrders(TestCase):
 
         # Create order
         response = self.app.post(
-            "/orders/",
+            API_PREFIX + "/orders/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -135,7 +135,7 @@ class TestOrders(TestCase):
 
         # Update the created order
         response = self.app.delete(
-            f"/orders/{order_id}/",
+            API_PREFIX + f"/orders/{order_id}/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -162,7 +162,7 @@ class TestOrdersFail(TestCase):
         mock_user_model.side_effect = InternalServerError("Mock error")
 
         response = self.app.get(
-            "/orders/",
+            API_PREFIX + "/orders/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
@@ -179,7 +179,7 @@ class TestOrdersFail(TestCase):
         )
 
         response = self.app.get(
-            "/orders/1/",
+            API_PREFIX + "/orders/1/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
@@ -192,7 +192,7 @@ class TestOrdersFail(TestCase):
     def test_create_order(self, mock_model):
         # Add one product to the cart before creating an order
         response = self.app.post(
-            "/cart/",
+            API_PREFIX + "/cart/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -206,7 +206,7 @@ class TestOrdersFail(TestCase):
         # Mocking an internal server error
         mock_model.side_effect = InternalServerError("Mock error")
         response = self.app.post(
-            "/orders/",
+            API_PREFIX + "/orders/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -235,7 +235,7 @@ class TestOrdersFail(TestCase):
 
         # Try to update an order
         response = self.app.patch(
-            f"/orders/{1}/",
+            API_PREFIX + f"/orders/{1}/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -257,7 +257,7 @@ class TestOrdersFail(TestCase):
 
         # Try to delete an order
         response = self.app.delete(
-            f"/orders/{1}/",
+            API_PREFIX + f"/orders/{1}/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",
@@ -270,7 +270,7 @@ class TestOrdersFail(TestCase):
     def test_delete_order_404(self):
         # Try to delete an order
         response = self.app.delete(
-            "/orders/99999/",
+            API_PREFIX + "/orders/99999/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
                 "Content-Type": "application/json",

@@ -137,14 +137,11 @@ Please note that a dummy test auth token (with all permissions) is used in the p
 
 Please ensure that the backend API server and PostgreSQL database are up and running as described above.
 
-To perform permission tests for authenticated users, please open the `fsnd-capstone-test-collection-postman.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in request headers. 
+To perform permission tests for authenticated users, please open the `fsnd-capstone-test-collection-postman.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in request headers.
 
 It is recommended to run the tests as a whole collection or on a role basis because some tests within one folder may depend on each other. E.g. a database record created in a previous test can be patched or deleted in a subsequent test.
 
-If necessary, please change the `host` variable of the test collection to `http://127.0.0.1:5000` for local testing, or update the variables containing access tokens for each relevant auth test group:
-- `userToken` (consumer role)
-- `salesToken` (sales specialist role)
-- `managerToken` (manager role)
+If necessary, please change the `host` variable of the test collection to `http://127.0.0.1:5000/api` for local testing.
 
 ## API documentation
 

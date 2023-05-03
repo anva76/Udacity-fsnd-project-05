@@ -11,7 +11,7 @@ from .utils import (
     format_err_response,
 )
 
-bp = Blueprint("cart", __name__, url_prefix="/")
+bp = Blueprint("cart", __name__, url_prefix="/api")
 
 
 # Get cart contents

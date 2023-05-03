@@ -8,7 +8,7 @@ from sqlalchemy import func as fn
 from auth import requires_auth
 from .utils import get_user_from_auth_id, format_err_response, paginator
 
-bp = Blueprint("orders", __name__, url_prefix="/")
+bp = Blueprint("orders", __name__, url_prefix="/api")
 
 
 # Get orders

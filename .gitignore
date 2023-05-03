@@ -9,10 +9,12 @@ instance/*
 !instance/.gitignore
 .webassets-cache
 .env
+.env.production
 migrations/
 _insert_initial_data.py
 database/
 setenv.sh
+client/
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files

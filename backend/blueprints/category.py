@@ -8,7 +8,7 @@ from sqlalchemy import func as fn
 from auth import requires_auth
 from .utils import format_err_response, paginator
 
-bp = Blueprint("categories", __name__, url_prefix="/")
+bp = Blueprint("categories", __name__, url_prefix="/api")
 
 
 # ----------------------------------------------------------------------

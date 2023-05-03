@@ -11,6 +11,7 @@ const CartView = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0()
   const [cart, setCart] = useState(null)
   const [permissions] = useGlobalState("permissions")
+  const [dataLoading, setDataLoading] = useState(false)
 
   async function getCart() {
     const token = await getAccessTokenSilently()
@@ -18,30 +19,37 @@ const CartView = () => {
   }
 
   async function incCartItem(cartItemId, quantity) {
+    setDataLoading(true)
     const token = await getAccessTokenSilently()
     quantity += 1
     patchCartItem(token, cartItemId, quantity, () => {
       getCart()
+      setDataLoading(false)
     })
   }
 
   async function decCartItem(cartItemId, quantity) {
+    setDataLoading(true)
     const token = await getAccessTokenSilently()
     quantity -= 1
     if (quantity > 0)
       patchCartItem(token, cartItemId, quantity, () => {
         getCart()
+        setDataLoading(false)
       })
     else
       deleteCartItem(token, cartItemId, () => {
         getCart()
+        setDataLoading(false)
       })
   }
 
   async function handleDelCartItem(id) {
+    setDataLoading(true)
     const token = await getAccessTokenSilently()
     deleteCartItem(token, id, () => {
       getCart()
+      setDataLoading(false)
     })
   }
 
@@ -92,7 +100,15 @@ const CartView = () => {
   return (
     <>
       <div className="container">
-        <h4 className="mb-3 text-secondary">Cart</h4>
+        <div className="d-flex flex-row">
+          <h4 className="mb-3 text-secondary me-2">Cart</h4>
+          {dataLoading && (
+            <div className="spinner-grow text-warning" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          )}
+        </div>
+
         <ItemsTable
           obj={cart}
           withButtons={true}

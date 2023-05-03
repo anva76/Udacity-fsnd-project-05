@@ -21,21 +21,6 @@ def unprocessable(error):
     )
 
 
-# Entity not found
-@bp.app_errorhandler(404)
-def not_found(error):
-    return (
-        jsonify(
-            {
-                "success": False,
-                "error": 404,
-                "message": "Entity not found.",
-            }
-        ),
-        404,
-    )
-
-
 # Bad request
 @bp.app_errorhandler(400)
 def bad_request(error):

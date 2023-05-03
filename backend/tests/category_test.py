@@ -5,7 +5,7 @@ from models import db
 from unittest import TestCase, mock
 from werkzeug.exceptions import InternalServerError
 from app_factory import create_flask_app
-from config import TEST_TOKEN
+from config import TEST_TOKEN, API_PREFIX
 
 app = create_flask_app(__name__, "config.UnittestConfig")
 
@@ -20,21 +20,21 @@ class TestCategories(TestCase):
         self.app = app.test_client()
 
     def test_get_categories(self):
-        response = self.app.get("/categories/")
+        response = self.app.get(API_PREFIX + "/categories/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertTrue(data["categories"])
 
     def test_get_one_category(self):
-        response = self.app.get("/categories/1/")
+        response = self.app.get(API_PREFIX + "/categories/1/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertTrue(data["category"])
 
     def test_get_products_by_category(self):
-        response = self.app.get("/categories/1/products/")
+        response = self.app.get(API_PREFIX + "/categories/1/products/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
@@ -43,7 +43,7 @@ class TestCategories(TestCase):
     def test_create_category(self):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
-            "/categories/",
+            API_PREFIX + "/categories/",
             json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
@@ -57,7 +57,7 @@ class TestCategories(TestCase):
     def test_update_category(self):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.patch(
-            "/categories/1/",
+            API_PREFIX + "/categories/1/",
             json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
@@ -72,7 +72,7 @@ class TestCategories(TestCase):
         # add a test category to be deleted
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
-            "/categories/",
+            API_PREFIX + "/categories/",
             json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
@@ -85,7 +85,7 @@ class TestCategories(TestCase):
 
         # delete the created category
         response = self.app.delete(
-            f"/categories/{category_id}/",
+            API_PREFIX + f"/categories/{category_id}/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
@@ -108,7 +108,7 @@ class TestCategoriesFail(TestCase):
             InternalServerError("Mock error")
         )
 
-        response = self.app.get("/categories/")
+        response = self.app.get(API_PREFIX + "/categories/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data["success"], False)
@@ -119,13 +119,13 @@ class TestCategoriesFail(TestCase):
         mock_model.query.filter_by.return_value.one_or_none.side_effect = (
             InternalServerError("Mock error")
         )
-        response = self.app.get("/categories/1/")
+        response = self.app.get(API_PREFIX + "/categories/1/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data["success"], False)
 
     def test_get_one_category_404(self):
-        response = self.app.get("/categories/9999/")
+        response = self.app.get(API_PREFIX + "/categories/9999/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data["success"], False)
@@ -136,13 +136,13 @@ class TestCategoriesFail(TestCase):
         mock_model.query.filter_by.return_value.one_or_none.side_effect = (
             InternalServerError("Mock error")
         )
-        response = self.app.get("/categories/1/products/")
+        response = self.app.get(API_PREFIX + "/categories/1/products/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data["success"], False)
 
     def test_get_products_by_category_404(self):
-        response = self.app.get("/categories/9999/products/")
+        response = self.app.get(API_PREFIX + "/categories/9999/products/")
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data["success"], False)
@@ -153,7 +153,7 @@ class TestCategoriesFail(TestCase):
         mock_model.side_effect = InternalServerError("Mock error")
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
-            "/categories/",
+            API_PREFIX + "/categories/",
             json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
@@ -166,7 +166,7 @@ class TestCategoriesFail(TestCase):
 
     def test_create_category_400(self):
         response = self.app.post(
-            "/categories/",
+            API_PREFIX + "/categories/",
             # Incorrect data - name is missing
             json={"name": ""},
             headers={
@@ -184,7 +184,7 @@ class TestCategoriesFail(TestCase):
         mock_model.side_effect = InternalServerError("Mock error")
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.patch(
-            "/categories/1/",
+            API_PREFIX + "/categories/1/",
             json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
@@ -197,7 +197,7 @@ class TestCategoriesFail(TestCase):
 
     def test_update_category_400(self):
         response = self.app.patch(
-            "/categories/1/",
+            API_PREFIX + "/categories/1/",
             # Incorrect type
             json={"name": 1234.23},
             headers={
@@ -211,7 +211,7 @@ class TestCategoriesFail(TestCase):
 
     def test_update_category_404(self):
         response = self.app.patch(
-            "/categories/999/",
+            API_PREFIX + "/categories/999/",
             json={"name": "test"},
             headers={
                 "Content-Type": "application/json",
@@ -227,7 +227,7 @@ class TestCategoriesFail(TestCase):
         # Add a test category to be deleted
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
-            "/categories/",
+            API_PREFIX + "/categories/",
             json={"name": test_name},
             headers={
                 "Content-Type": "application/json",
@@ -242,7 +242,7 @@ class TestCategoriesFail(TestCase):
         # Mocking an internal server error
         mock_model.side_effect = InternalServerError("Mock error")
         response = self.app.delete(
-            f"/categories/{category_id}/",
+            API_PREFIX + f"/categories/{category_id}/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },
@@ -253,7 +253,7 @@ class TestCategoriesFail(TestCase):
 
     def test_delete_category_404(self):
         response = self.app.delete(
-            "/categories/999/",
+            API_PREFIX + "/categories/999/",
             headers={
                 "Authorization": f"Bearer {TEST_TOKEN}",
             },

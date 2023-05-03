@@ -20,15 +20,16 @@ test_db_uri = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{TEST_DB_NAME}"
 TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3VzZXJfMSIsInBlcm1pc3Npb25zIjpbImNyZWF0ZTpwcm9kdWN0cyIsInVwZGF0ZTpwcm9kdWN0cyIsImRlbGV0ZTpwcm9kdWN0cyIsImNyZWF0ZTpjYXRlZ29yaWVzIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJkZWxldGU6Y2F0ZWdvcmllcyIsInZpZXc6b3JkZXJzIiwiY3JlYXRlOm9yZGVycyIsInVwZGF0ZTpvcmRlcnMiLCJkZWxldGU6b3JkZXJzIiwidmlldzp1cGRhdGU6Y2FydCIsInJvbGU6YWRtaW4iXX0.h0MubbhNJWOwf9jQ-ofCQ7f6RlAoE669EmG1cc8QRAU"
 
 ITEMS_PER_PAGE = 10
+API_PREFIX = "/api"
 
 
 class DevelopmentConfig:
-    SECRET_KEY = os.urandom(32)
+    SECRET_KEY = env_config.get("SECRET_KEY", os.urandom(32))
     SQLALCHEMY_DATABASE_URI = db_uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEVELOPMENT = True
     DEBUG = True
-    VALIDATE_TOKENS = False  #
+    VALIDATE_TOKENS = True  #
 
 
 class ProductionConfig(DevelopmentConfig):

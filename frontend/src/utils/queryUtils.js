@@ -1,6 +1,5 @@
 import config from "../reactConfig"
 import { emitMessage } from "../components/FlashMessage"
-import { useAuth0 } from "@auth0/auth0-react"
 
 // CRUD functions
 
