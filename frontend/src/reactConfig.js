@@ -6,4 +6,8 @@ const config = {
   callbackUrl: import.meta.env.VITE_AUTH0_CALLBACK_URL,
 }
 
+if (!config.apiUrl) {
+  alert("The .env file for Vite is not present or not complete.")
+}
+
 export default config
