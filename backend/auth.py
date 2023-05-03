@@ -57,7 +57,9 @@ def get_token_from_auth_header():
         raise AuthError(
             {
                 "code": "invalid_header",
-                "description": 'Authorization header must start with "Bearer".',
+                "description": (
+                    'Authorization header must start with "Bearer".'
+                ),
             },
             401,
         )
@@ -88,7 +90,8 @@ def check_permissions(requested_permission, payload):
 
     if token_permissions is None:
         raise AuthError(
-            {"code": "invalid_payload", "description": "Invalid payload."}, 401
+            {"code": "invalid_payload", "description": "Invalid payload."},
+            401,
         )
 
     # print(token_permissions, requested_permission)
@@ -141,7 +144,8 @@ def validate_jwt_token(token):
 
         except jwt.ExpiredSignatureError:
             raise AuthError(
-                {"code": "token_expired", "description": "Token expired."}, 401
+                {"code": "token_expired", "description": "Token expired."},
+                401,
             )
 
         except jwt.JWTClaimsError:
@@ -179,7 +183,7 @@ def requires_auth(permission=""):
         def wrapper(*args, **kwargs):
             # print("====> inside @requires_auth")
             token = get_token_from_auth_header()
-            if app.config["VALIDATE_TOKENS"] == True:
+            if app.config["VALIDATE_TOKENS"] is True:
                 payload = validate_jwt_token(token)
             else:
                 # This is used for unit tests

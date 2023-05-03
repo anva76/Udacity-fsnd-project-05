@@ -2,13 +2,17 @@
 
 ## Overview
 
-The frontend side of this project was created by means of React and the Vite development server. This React application implements a user interface of an E-Commerce Kiosk (web shop). 
+The frontend side of this project was created by means of React and the Vite development server. This React application implements a user interface of an E-Commerce Kiosk (web shop).
 
-Both backend and frontend sides are secured by a third party authentication provider - Auth0.com. To implement authentication in the React application, the standard Auth0 npm module was installed. 
+Both backend and frontend sides are secured by a third party authentication provider - Auth0.com. To implement authentication in the React application, the standard Auth0 npm module was installed.
 
 Access to React routes and specific interface elements is provided based on whether the user is authenticated and the user's role/permissions. New end users can sign up (register) via the Auth0 sign-in/sign-up page with the `consumer` role being assigned to them automatically. Admin users with roles `sales specialist` and `manager` can only be created manually via the Auth0 web admin interface.
 
-## Getting Setup
+## Running E-Commerce Kiosk App
+
+The web application was deployed on `Render.com`, a unified cloud provider. The deployed instance is accessible via this link: `https://ecommerce-kiosk.onrender.com`.
+
+## Running the frontend app locally
 
 ### Prerequisites
 

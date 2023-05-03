@@ -53,7 +53,9 @@ const UserLoginButton = () => {
           <button
             style={{ width: "90%" }}
             className="btn btn-sm btn-outline-secondary"
-            onClick={() => logout()}
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
             type="button"
           >
             Logout

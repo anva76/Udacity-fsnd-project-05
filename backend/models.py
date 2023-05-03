@@ -311,7 +311,8 @@ class OrderItem(db.Model):
         db.session.flush()
 
 
-# Items in this model belonging to a specific user represent a shopping cart of this user.
+# Items in this model belonging to a specific user represent
+# a shopping cart of this user.
 class CartItem(db.Model):
     __tablename__ = "cart_item"
 

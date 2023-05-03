@@ -4,11 +4,15 @@
 
 The backend part of this application was implemeted based on Flask/SQLAlchemy and PostgreSQL. Authentication is done by a third party provider - Auth0.com. Some code examples provided by Auth0 were used for implementing authorization and token validation on the backend side.
 
-## Setting up the Backend
+## Accessing the backend API server
+
+The web application was deployed on `Render.com`, a unified cloud provider. The deployed backend API server is accessible via this link: `https://ecommerce-kiosk.onrender.com/api`
+
+## Running the Backend locally
 
 ### Prerequisites
 
-- **Python 3.9 or higher** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+- **Python 3.7 or higher** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
 - **Virtual Environment** - It is recommended to use a python virtual environment for running the backend Flask code. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
@@ -116,13 +120,21 @@ There are four use cases possible in this application:
 
 ## Testing
 
+### Authenticated tests with Postman
+
+To perform tests of authenticated API calls, please open the `fsnd-capstone-test-collection-postman.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in request headers.
+
+It is recommended to run the tests as a whole collection or on a role basis because some tests within one folder may depend on each other. E.g. a database record created in a previous test can be patched or deleted in a subsequent test.
+
+Currently, the `host` variable of the test collection points to the API server deployed on `Render.com`. If necessary, please change the `host` variable to `http://127.0.0.1:5000/api` for local testing.
+
 ### Unit tests
 
 In your terminal, navigate to the `/backend` folder and activate your virtual environment as described above.
 
 The backend application loads its secrets as environment variables from an `.env` file. Please create one in the `/backend` folder as shown above.
 
-Finally, execute the following commands to perform testing:
+Finally, execute the following commands to perform unit tests locally:
 
 ```bash
 dropdb ecommerce_test
@@ -132,16 +144,6 @@ python test_app.py
 ```
 
 Please note that a dummy test auth token (with all permissions) is used in the process of unit testing. This token is not suitable for actual authentication and consequently is not validated via the normal Auth0 validation procedure.
-
-### Permission tests
-
-Please ensure that the backend API server and PostgreSQL database are up and running as described above.
-
-To perform permission tests for authenticated users, please open the `fsnd-capstone-test-collection-postman.json` file in Postman and run the tests. All API end points are tested against different user roles (public access, consumer, sales specialist, manager) by sending relevant access tokens in request headers.
-
-It is recommended to run the tests as a whole collection or on a role basis because some tests within one folder may depend on each other. E.g. a database record created in a previous test can be patched or deleted in a subsequent test.
-
-If necessary, please change the `host` variable of the test collection to `http://127.0.0.1:5000/api` for local testing.
 
 ## API documentation
 

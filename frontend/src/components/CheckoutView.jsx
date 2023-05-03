@@ -126,6 +126,7 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="email"
                   value={orderAddress.email}
+                  placeholder="email@example.com"
                 />
               </div>
               <div className="col-md-6">
@@ -136,6 +137,7 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="phone"
                   value={orderAddress.phone}
+                  placeholder="+99.999.999.9999"
                 />
               </div>
             </div>

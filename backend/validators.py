@@ -1,11 +1,11 @@
 from jsonschema import validate
 
-NAME_FIELD_PATTERN = "^[\w][\w\s.-]+[\w]$"
-EMAIL_FIELD_PATTERN = "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+NAME_FIELD_PATTERN = r"^[\w][\w\s.-]+[\w]$"
+EMAIL_FIELD_PATTERN = r"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
 PHONE_FIELD_PATTERN = (
-    "^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$"
+    r"^\+([0-9]{1,3})[-. ]?([0-9]{2,3})[-. ]?([0-9]{3,4})[-. ]?([0-9]{3,4})$"
 )
-SEARCH_QUERY_PATTERN = "^[\w\s.-]+$"
+SEARCH_QUERY_PATTERN = r"^[\w\s.-]+$"
 
 
 # JSON schema validator - base class

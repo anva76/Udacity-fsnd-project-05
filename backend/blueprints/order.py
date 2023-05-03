@@ -17,7 +17,7 @@ bp = Blueprint("orders", __name__, url_prefix="/api")
 @requires_auth("view:orders")
 def get_orders(auth_user):
     # Admins can see all orders, normal users can only see their own
-    if auth_user["admin"] == True:
+    if auth_user["admin"] is True:
         orders = Order.query.order_by(Order.created_at.desc()).all()
     else:
         user = get_user_from_auth_id(auth_user["id"])
@@ -42,7 +42,7 @@ def get_orders(auth_user):
 @requires_auth("view:orders")
 def get_order(order_id, auth_user):
     # Admins can see all orders, normal users can only see their own
-    if auth_user["admin"] == True:
+    if auth_user["admin"] is True:
         order = Order.query.filter(Order.id == order_id).one_or_none()
         if order is None:
             abort(404)

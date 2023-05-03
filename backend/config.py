@@ -1,6 +1,9 @@
 import os
 from dotenv import dotenv_values
 
+ITEMS_PER_PAGE = 10
+API_PREFIX = "/api"
+
 env_config = {
     **dotenv_values(".env"),
     **os.environ,  # override loaded values with environment variables
@@ -17,10 +20,15 @@ test_db_uri = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{TEST_DB_NAME}"
 
 # Dummy test token for CRUD unit tests
 # Not to be used for actual authorization
-TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3VzZXJfMSIsInBlcm1pc3Npb25zIjpbImNyZWF0ZTpwcm9kdWN0cyIsInVwZGF0ZTpwcm9kdWN0cyIsImRlbGV0ZTpwcm9kdWN0cyIsImNyZWF0ZTpjYXRlZ29yaWVzIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJkZWxldGU6Y2F0ZWdvcmllcyIsInZpZXc6b3JkZXJzIiwiY3JlYXRlOm9yZGVycyIsInVwZGF0ZTpvcmRlcnMiLCJkZWxldGU6b3JkZXJzIiwidmlldzp1cGRhdGU6Y2FydCIsInJvbGU6YWRtaW4iXX0.h0MubbhNJWOwf9jQ-ofCQ7f6RlAoE669EmG1cc8QRAU"
-
-ITEMS_PER_PAGE = 10
-API_PREFIX = "/api"
+TEST_TOKEN = (
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3VzZX"
+    "JfMSIsInBlcm1pc3Npb25zIjpbImNyZWF0ZTpwcm9kdWN0cyIsInVwZGF0Z"
+    "Tpwcm9kdWN0cyIsImRlbGV0ZTpwcm9kdWN0cyIsImNyZWF0ZTpjYXRlZ29y"
+    "aWVzIiwidXBkYXRlOmNhdGVnb3JpZXMiLCJkZWxldGU6Y2F0ZWdvcmllcyI"
+    "sInZpZXc6b3JkZXJzIiwiY3JlYXRlOm9yZGVycyIsInVwZGF0ZTpvcmRlcn"
+    "MiLCJkZWxldGU6b3JkZXJzIiwidmlldzp1cGRhdGU6Y2FydCIsInJvbGU6Y"
+    "WRtaW4iXX0.h0MubbhNJWOwf9jQ-ofCQ7f6RlAoE669EmG1cc8QRAU"
+)
 
 
 class DevelopmentConfig:
