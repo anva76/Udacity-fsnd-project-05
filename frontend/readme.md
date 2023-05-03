@@ -10,7 +10,7 @@ Access to React routes and specific interface elements is provided based on whet
 
 ## Running E-Commerce Kiosk App
 
-The web application was deployed on `Render.com`, a unified cloud provider. The deployed instance is accessible via this link: `https://ecommerce-kiosk.onrender.com`.
+The web application was deployed on `Render.com`, a unified cloud provider. The deployed instance is accessible via this link: https://ecommerce-kiosk.onrender.com.
 
 ## Running the frontend app locally
 

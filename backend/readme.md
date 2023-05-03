@@ -6,7 +6,7 @@ The backend part of this application was implemeted based on Flask/SQLAlchemy an
 
 ## Accessing the backend API server
 
-The web application was deployed on `Render.com`, a unified cloud provider. The deployed backend API server is accessible via this link: `https://ecommerce-kiosk.onrender.com/api`
+The web application was deployed on `Render.com`, a unified cloud provider. The deployed backend API server is accessible via this link: https://ecommerce-kiosk.onrender.com/api.
 
 ## Running the Backend locally
 
