@@ -12,12 +12,6 @@ To implement authentication in the React application, the standard Auth0 React m
 
 Please refer to readme files in the frontend and backend folders to get more details about each part specifically.
 
-## Running E-Commerce Kiosk App
-
-The web application was deployed on `Render.com`, a unified cloud provider. The deployed instance can be accessed via this link: https://ecommerce-kiosk.onrender.com.
-
-The backend API is accessible via this link: https://ecommerce-kiosk.onrender.com/api.
-
 ## Installing and running E-Commerce Kiosk App locally
 
 - Git-clone this project (or download and extract a zip file) into a separate folder.
