@@ -4,10 +4,6 @@
 
 The backend part of this application was implemeted based on Flask/SQLAlchemy and PostgreSQL. Authentication is done by a third party provider - Auth0.com. Some code examples provided by Auth0 were used for implementing authorization and token validation on the backend side.
 
-## Accessing the backend API server
-
-The web application was deployed on `Render.com`, a unified cloud provider. The deployed backend API server is accessible via this link: https://ecommerce-kiosk.onrender.com/api.
-
 ## Running the Backend locally
 
 ### Prerequisites
