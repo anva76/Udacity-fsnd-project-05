@@ -62,10 +62,10 @@ const ProductDetailView = () => {
       return (
         <div className="d-flex flex-row align-items-center col-md-3 mb-3">
           <h5 className="p-2 rounded rounded-4 price-badge-discount">
-            ${product.discounted_price.toFixed(2)}
+            ⌑{product.discounted_price.toFixed(2)}
           </h5>
           <h6 className="text-secondary price-badge text-decoration-line-through p-1 ms-2 rounded rounded-4">
-            ${product.price.toFixed(2)}
+            ⌑{product.price.toFixed(2)}
           </h6>
         </div>
       )
@@ -73,7 +73,7 @@ const ProductDetailView = () => {
       return (
         <div className="d-flex flex-row align-items-center col-md-2 mb-3">
           <h5 className="p-2 rounded rounded-4 price-badge">
-            ${product.price.toFixed(2)}
+            ⌑{product.price.toFixed(2)}
           </h5>
         </div>
       )
@@ -102,46 +102,62 @@ const ProductDetailView = () => {
             title="Edit Product"
           />
         )}
-        <div className="container">
-          <div className="d-flex d-row">
-            <h4 className="mb-3 text-secondary">{product.name}</h4>
+        <div className="container-xl">
+          <div className="d-flex d-row mb-3 align-items-center">
+            <button
+              className="btn btn-outline-secondary btn"
+              onClick={() => navigate("/catalog")}
+            >
+              Back to catalog
+            </button>
+
             {permissions.includes("role:admin") && (
               <button
-                className="btn btn-light btn-sm ms-2 mb-3"
+                className="btn btn-light btn-sm ms-2"
                 title="Edit Product"
                 onClick={() => setEditModalVisibility(true)}
               >
-                <img src="/edit-red.svg" width="25" alt="Edit" />
+                <img
+                  src="/edit-red.svg"
+                  width="25"
+                  alt="Edit"
+                />
               </button>
             )}
             {permissions.includes("delete:products") && (
               <button
-                className="btn btn-light btn-sm ms-2 mb-3"
+                className="btn btn-light btn-sm ms-2"
                 title="Delete Product"
                 onClick={handleProductDelete}
               >
-                <img src="/trash-can-red.svg" width="25" alt="Delete" />
+                <img
+                  src="/trash-can-red.svg"
+                  width="25"
+                  alt="Delete"
+                />
               </button>
             )}
           </div>
 
-          <div className="row">
-            <div className="col-md-6 mb-5">
+          <div className="row justify-content-center">
+            <h3 className="mb-4 text-secondary text-center">{product.name}</h3>
+            <div className="col-md mb-5 ">
               <img
                 src={
                   product.image_link
                     ? product.image_link
                     : "/img-placeholder.png"
                 }
-                className="product-image"
+                className="product-image rounded"
                 alt="Product image"
               />
             </div>
-            <div className="col-md-6 mb-5">
+            <div className="col-md mb-5">
+              <p>{product.notes}</p>
               {renderPrice()}
               {permissions.includes("view:update:cart") && (
                 <button
-                  className={"btn btn-warning btn-lg me-2 "}
+                  className={"btn btn-warning btn me-2 "}
                   onClick={handleAddToCart}
                 >
                   Add to cart
@@ -149,7 +165,7 @@ const ProductDetailView = () => {
               )}
               {permissions.includes("view:update:cart") && (
                 <button
-                  className="btn btn-outline-secondary btn-lg"
+                  className="btn btn-outline-secondary btn"
                   onClick={() => navigate("/cart")}
                 >
                   Go to cart
@@ -169,12 +185,6 @@ const ProductDetailView = () => {
                   Sign in
                 </button>
               )}
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6">
-              <h5>Description</h5>
-              <p>{product.notes}</p>
             </div>
           </div>
         </div>

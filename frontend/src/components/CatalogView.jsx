@@ -184,7 +184,7 @@ const CatalogView = () => {
           />
         )}
 
-        <div className="container">
+        <div className="container-xxl">
           <div className="row">
             <div className="col-md-3 d-flex flex-column mb-3">
               <div className="d-flex flex-row">
@@ -195,7 +195,11 @@ const CatalogView = () => {
                     title="New Category"
                     onClick={handleCategoryCreate}
                   >
-                    <img src="/plus-circle-red.svg" width="25" alt="New" />
+                    <img
+                      src="/plus-circle-red.svg"
+                      width="25"
+                      alt="New"
+                    />
                   </button>
                 )}
               </div>
@@ -216,11 +220,15 @@ const CatalogView = () => {
                     title="New Product"
                     onClick={handleProductCreate}
                   >
-                    <img src="/plus-circle-red.svg" width="25" alt="New" />
+                    <img
+                      src="/plus-circle-red.svg"
+                      width="25"
+                      alt="New"
+                    />
                   </button>
                 )}
               </div>
-              <div className="d-flex flex-row flex-wrap">
+              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-3">
                 {products &&
                   products.map((p) => (
                     <ProductCard

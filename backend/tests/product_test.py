@@ -141,8 +141,8 @@ class TestProductsFail(TestCase):
     @mock.patch("blueprints.product.Product")
     def test_get_produtcs(self, mock_model):
         # Mocking an internal server error
-        mock_model.query.order_by.return_value.all.side_effect = (
-            InternalServerError("Mock error")
+        mock_model.query.order_by.return_value.all.side_effect = InternalServerError(
+            "Mock error"
         )
 
         response = self.app.get(API_PREFIX + "/products/")
@@ -190,7 +190,7 @@ class TestProductsFail(TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data["success"], False)
 
-    def test_create_product_400(self):
+    def test_create_product_422(self):
         test_name = "test -" + uuid.uuid4().hex[:8]
         response = self.app.post(
             API_PREFIX + "/products/",
@@ -207,7 +207,7 @@ class TestProductsFail(TestCase):
             },
         )
         data = json.loads(response.data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 422)
         self.assertEqual(data["success"], False)
 
     @mock.patch("blueprints.product.Product.update")
@@ -290,8 +290,8 @@ class TestProductsFail(TestCase):
     @mock.patch("blueprints.product.Product")
     def test_search(self, mock_model):
         # Mocking an internal server error
-        mock_model.query.filter.return_value.all.side_effect = (
-            InternalServerError("Mock error")
+        mock_model.query.filter.return_value.all.side_effect = InternalServerError(
+            "Mock error"
         )
         response = self.app.post(
             API_PREFIX + f"/search/",

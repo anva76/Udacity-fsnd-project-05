@@ -104,8 +104,8 @@ class TestCategoriesFail(TestCase):
     @mock.patch("blueprints.category.Category")
     def test_get_categories(self, mock_model):
         # Mocking an internal server error
-        mock_model.query.order_by.return_value.all.side_effect = (
-            InternalServerError("Mock error")
+        mock_model.query.order_by.return_value.all.side_effect = InternalServerError(
+            "Mock error"
         )
 
         response = self.app.get(API_PREFIX + "/categories/")
@@ -164,7 +164,7 @@ class TestCategoriesFail(TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data["success"], False)
 
-    def test_create_category_400(self):
+    def test_create_category_422(self):
         response = self.app.post(
             API_PREFIX + "/categories/",
             # Incorrect data - name is missing
@@ -175,7 +175,7 @@ class TestCategoriesFail(TestCase):
             },
         )
         data = json.loads(response.data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 422)
         self.assertEqual(data["success"], False)
 
     @mock.patch("blueprints.category.Category.update")
@@ -195,7 +195,7 @@ class TestCategoriesFail(TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data["success"], False)
 
-    def test_update_category_400(self):
+    def test_update_category_422(self):
         response = self.app.patch(
             API_PREFIX + "/categories/1/",
             # Incorrect type
@@ -206,7 +206,7 @@ class TestCategoriesFail(TestCase):
             },
         )
         data = json.loads(response.data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 422)
         self.assertEqual(data["success"], False)
 
     def test_update_category_404(self):

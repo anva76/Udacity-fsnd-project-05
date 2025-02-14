@@ -65,12 +65,10 @@ def add_new_product(**kwargs):
     error = False
     new_data = ProductValidator.validate_post(request)
     if new_data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
     if not confirm_product_unique(new_data["name"]):
-        return format_err_response("Product name is not unique.", 400)
+        return format_err_response("Product name is not unique.", 422)
 
     try:
         product = Product(**new_data)
@@ -95,18 +93,14 @@ def update_product(product_id, **kwargs):
     error = False
     new_data = ProductValidator.validate_patch(request)
     if new_data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
     product = Product.query.filter_by(id=product_id).one_or_none()
     if product is None:
         abort(404)
 
-    if not confirm_product_unique(
-        new_data["name"], product.name, patched=True
-    ):
-        return format_err_response("Product name is not unique.", 400)
+    if not confirm_product_unique(new_data["name"], product.name, patched=True):
+        return format_err_response("Product name is not unique.", 422)
 
     try:
         product.update_from_dict(new_data)
@@ -146,7 +140,7 @@ def delete_product(product_id, **kwargs):
         abort(404)
 
     if was_ordered(product):
-        return format_err_response("Product was already ordered.", 400)
+        return format_err_response("Product was already ordered.", 422)
 
     try:
         product.delete()
@@ -170,9 +164,7 @@ def search_products():
     data = SearchValidator.validate_post(request)
 
     if data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
     query = data["search_query"].strip()
     products = Product.query.filter(Product.name.ilike(f"%{query}%")).all()

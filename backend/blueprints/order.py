@@ -69,15 +69,11 @@ def submit_new_order(auth_user):
     user = get_user_from_auth_id(auth_user["id"])
 
     if user is None or len(user.cart_items) == 0:
-        return format_err_response(
-            "Order could not be submitted. Cart is empty.", 400
-        )
+        return format_err_response("Order could not be submitted. Cart is empty.", 422)
 
     data = OrderValidator.validate_post(request)
     if data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
     try:
         order = Order(**data)
@@ -121,9 +117,7 @@ def submit_new_order(auth_user):
         print(str(e))
 
     if error:
-        return format_err_response(
-            "Server error. Order could not be created.", 500
-        )
+        return format_err_response("Server error. Order could not be created.", 500)
     else:
         return jsonify({"success": True, "order_id": order.id})
 
@@ -161,9 +155,7 @@ def update_order(order_id, **kwargs):
     error = False
     new_data = OrderValidator.validate_patch(request)
     if new_data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
     order = Order.query.filter(Order.id == order_id).one_or_none()
     if order is None:
@@ -179,8 +171,6 @@ def update_order(order_id, **kwargs):
         print(str(e))
 
     if error:
-        return format_err_response(
-            f"Order id:{order.id} could not be updated.", 500
-        )
+        return format_err_response(f"Order id:{order.id} could not be updated.", 500)
     else:
         return jsonify({"success": True, "order_id": order.id})

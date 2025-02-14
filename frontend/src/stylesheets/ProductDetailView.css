@@ -1,8 +1,8 @@
 .product-image {
     object-fit: cover;
     object-position: center;
-    height: 400px;
-    width: 400px;
+    height: 30rem;
+    width: 100%;
     filter: grayscale(50%);
 
 }

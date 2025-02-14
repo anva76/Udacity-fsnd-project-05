@@ -86,14 +86,17 @@ const CheckoutView = () => {
 
   return (
     <>
-      <div className="container">
-        <h4 className="mb-3 text-secondary">Checkout</h4>
+      <div className="container-xxl">
+        <h4 className="mb-3 text-secondary text-center">Checkout</h4>
         <h5 className="mb-3">1) Please verify your order:</h5>
 
         <ItemsTable obj={cart} />
 
         <h5 className="mb-3">2) Please provide your delivery address:</h5>
-        <form className="row" onSubmit={handleSubmit}>
+        <form
+          className="row"
+          onSubmit={handleSubmit}
+        >
           <div className="col-md-6">
             <div className="mb-3 row">
               <div className="col-md-6">
@@ -104,6 +107,7 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="first_name"
                   value={orderAddress.first_name}
+                  required
                 />
               </div>
               <div className="col-md-6">
@@ -114,6 +118,7 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="last_name"
                   value={orderAddress.last_name}
+                  required
                 />
               </div>
             </div>
@@ -127,6 +132,7 @@ const CheckoutView = () => {
                   name="email"
                   value={orderAddress.email}
                   placeholder="email@example.com"
+                  required
                 />
               </div>
               <div className="col-md-6">
@@ -138,6 +144,7 @@ const CheckoutView = () => {
                   name="phone"
                   value={orderAddress.phone}
                   placeholder="+99.999.999.9999"
+                  required
                 />
               </div>
             </div>
@@ -151,6 +158,7 @@ const CheckoutView = () => {
                 onChange={handleChange}
                 name="street_address_1"
                 value={orderAddress.street_address_1}
+                required
               />
             </div>
             <div className="mb-3">
@@ -174,6 +182,7 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="city"
                   value={orderAddress.city}
+                  required
                 />
               </div>
               <div className="col-md-6">
@@ -184,18 +193,22 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="province"
                   value={orderAddress.province}
+                  required
                 />
               </div>
             </div>
             <div className="mb-3 row">
               <div className="col-md-6">
-                <label className="form-label text-secondary">Postal code</label>
+                <label className="form-label text-secondary">
+                  Postal code
+                </label>
                 <input
                   type="text"
                   className="form-control"
                   onChange={handleChange}
                   name="postal_code"
                   value={orderAddress.postal_code}
+                  required
                 />
               </div>
               <div className="col-md-6">
@@ -206,11 +219,12 @@ const CheckoutView = () => {
                   onChange={handleChange}
                   name="country"
                   value={orderAddress.country}
+                  required
                 />
               </div>
             </div>
           </div>
-          <div className="col-md-6 d-flex flex-row align-items-start justify-content-end">
+          <div className="col-md-6 d-flex flex-row align-items-start justify-content-end mb-3">
             <button
               className="btn btn-outline-secondary btn-lg me-2"
               onClick={() => {
@@ -219,7 +233,10 @@ const CheckoutView = () => {
             >
               Back to cart
             </button>
-            <button type="submit" className="btn btn-warning btn-lg ">
+            <button
+              type="submit"
+              className="btn btn-warning btn-lg "
+            >
               Submit order
             </button>
           </div>

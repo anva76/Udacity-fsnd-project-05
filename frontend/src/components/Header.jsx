@@ -68,26 +68,60 @@ const Header = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="collapse navbar-collapse" id="navbarContent">
+          <div
+            className="collapse navbar-collapse"
+            id="navbarContent"
+          >
             <ul className="navbar-nav me-auto mb-1 mb-lg-0">
-              <li className="nav-item" title="Catalog by categories">
-                <NavLink to="/catalog" className="nav-link">
-                  By Categories
+              <li
+                className="nav-item"
+                title="Catalog by categories"
+              >
+                <NavLink
+                  to="/catalog"
+                  className="nav-link"
+                >
+                  Catalog
                 </NavLink>
               </li>
               {permissions.includes("role:consumer") && (
-                <li className="nav-item" title="My Orders">
-                  <NavLink to="/orders" className="nav-link">
-                    My Orders
+                <li
+                  className="nav-item"
+                  title="My Orders"
+                >
+                  <NavLink
+                    to="/orders"
+                    className="nav-link"
+                  >
+                    Orders
                   </NavLink>
                 </li>
               )}
               {permissions.includes("role:admin") && (
-                <li className="nav-item" title="Admin Orders Dashboard">
-                  <NavLink to="/orders" className="nav-link">
+                <li
+                  className="nav-item"
+                  title="Admin Orders Dashboard"
+                >
+                  <NavLink
+                    to="/orders"
+                    className="nav-link"
+                  >
                     <span className="text-danger fw-bold">[</span>
-                    Orders Dashboard
+                    Dashboard
                     <span className="text-danger fw-bold">]</span>
+                  </NavLink>
+                </li>
+              )}
+              {permissions.includes("role:admin") || (
+                <li
+                  className="nav-item"
+                  title="About"
+                >
+                  <NavLink
+                    to="/about"
+                    className="nav-link"
+                  >
+                    About
                   </NavLink>
                 </li>
               )}
@@ -111,7 +145,11 @@ const Header = () => {
                   type="submit"
                   title="Search Products"
                 >
-                  <img src="/search.svg" width="25" alt="cart" />
+                  <img
+                    src="/search.svg"
+                    width="25"
+                    alt="cart"
+                  />
                 </button>
               </div>
             </form>
@@ -128,7 +166,11 @@ const Header = () => {
                     navigate("/cart")
                   }}
                 >
-                  <img src="/cart.svg" width="25" alt="cart" />
+                  <img
+                    src="/cart.svg"
+                    width="25"
+                    alt="cart"
+                  />
                 </button>
               )}
               <UserLoginButton />

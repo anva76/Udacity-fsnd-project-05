@@ -84,7 +84,7 @@ def add_product_to_cart(auth_user):
     error = False
     data = CartItemValidator.validate_post(request)
     if data is None:
-        abort(400)
+        abort(422)
 
     product = Product.query.filter_by(id=data["product_id"]).one_or_none()
     if product is None:
@@ -125,9 +125,7 @@ def delete_cart_item(cart_item_id, auth_user):
     if user is None:
         abort(404)
 
-    cart_item = CartItem.query.filter_by(
-        user_id=user.id, id=cart_item_id
-    ).one_or_none()
+    cart_item = CartItem.query.filter_by(user_id=user.id, id=cart_item_id).one_or_none()
     if cart_item is None:
         abort(404)
 
@@ -155,15 +153,13 @@ def patch_cart_item(cart_item_id, auth_user):
     error = False
     data = CartItemValidator.validate_patch(request)
     if data is None:
-        abort(400)
+        abort(422)
 
     user = get_user_from_auth_id(auth_user["id"])
     if user is None:
         abort(404)
 
-    cart_item = CartItem.query.filter_by(
-        user_id=user.id, id=cart_item_id
-    ).one_or_none()
+    cart_item = CartItem.query.filter_by(user_id=user.id, id=cart_item_id).one_or_none()
     if cart_item is None:
         abort(404)
 

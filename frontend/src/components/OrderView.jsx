@@ -30,8 +30,12 @@ const OrderView = () => {
   if (orders.length == 0)
     return (
       <>
-        <div className="container">
-          <h4 className="text-secondary">No orders so far</h4>
+        <div className="container-lg">
+          <div className="row justify-content-center">
+            <h4 className="text-secondary text-center mt-5">
+              No orders so far
+            </h4>
+          </div>
         </div>
       </>
     )
@@ -41,9 +45,11 @@ const OrderView = () => {
       <>
         <div className="container">
           {permissions.includes("role:admin") ? (
-            <h4 className="mb-3 text-secondary">Orders Dashboard</h4>
+            <h4 className="mb-4 text-secondary text-center">
+              Orders Dashboard
+            </h4>
           ) : (
-            <h4 className="mb-3 text-secondary">My Orders</h4>
+            <h4 className="mb-4 text-secondary text-center">My Orders</h4>
           )}
           <table className="table mb-3">
             <thead className="table-secondary">
@@ -71,7 +77,7 @@ const OrderView = () => {
                   <td>{item.status}</td>
                   <td className="text-center">{item.items_count}</td>
                   <td className="text-center">
-                    ${item.total_amount.toFixed(2)}
+                    ⌑{item.total_amount.toFixed(2)}
                   </td>
                   <td>{item.updated_at}</td>
                   <td>{item.created_at}</td>

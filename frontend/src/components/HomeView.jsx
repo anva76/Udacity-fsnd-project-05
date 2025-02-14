@@ -22,9 +22,9 @@ function HomeView() {
   return (
     products.length !== 0 && (
       <>
-        <div className="container">
+        <div className="container-xxl">
           <h4 className="mb-3 text-secondary">Latest products</h4>
-          <div className="d-flex flex-row flex-wrap">
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
             {products &&
               products.map((p) => (
                 <ProductCard

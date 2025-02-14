@@ -29,9 +29,7 @@ class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     auth_user_id = db.Column(db.String(150), unique=True, nullable=False)
-    created_at = db.Column(
-        db.DateTime(timezone=True), server_default=func.now()
-    )
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     cart_items = db.relationship(
         "CartItem", back_populates="user", cascade="all,delete-orphan"
@@ -63,9 +61,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
 
-    created_at = db.Column(
-        db.DateTime(timezone=True), server_default=func.now()
-    )
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(
         db.DateTime(timezone=True),
         server_default=func.now(),
@@ -110,23 +106,19 @@ class Product(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
-    notes = db.Column(db.String(255))
+    notes = db.Column(db.String(1500))
     price = db.Column(db.Float(2), nullable=False)
     discounted_price = db.Column(db.Float(2))
     image_link = db.Column(db.String(500))
 
-    created_at = db.Column(
-        db.DateTime(timezone=True), server_default=func.now()
-    )
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(
         db.DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
     )
 
-    category_id = db.Column(
-        db.Integer, db.ForeignKey("category.id"), nullable=False
-    )
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     category = db.relationship("Category", back_populates="products")
 
     def save(self):
@@ -187,9 +179,7 @@ class Order(db.Model):
     postal_code = db.Column(db.String(50))
     country = db.Column(db.String(50), nullable=False)
 
-    created_at = db.Column(
-        db.DateTime(timezone=True), server_default=func.now()
-    )
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(
         db.DateTime(timezone=True),
         server_default=func.now(),
@@ -285,14 +275,10 @@ class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float(2), nullable=False)
-    product_id = db.Column(
-        db.Integer, db.ForeignKey("product.id", ondelete="CASCADE")
-    )
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id", ondelete="CASCADE"))
     product = db.relationship("Product")
 
-    order_id = db.Column(
-        db.Integer, db.ForeignKey("order.id", ondelete="CASCADE")
-    )
+    order_id = db.Column(db.Integer, db.ForeignKey("order.id", ondelete="CASCADE"))
     order = db.relationship("Order", back_populates="order_items")
 
     def save(self):
@@ -319,14 +305,10 @@ class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
 
-    user_id = db.Column(
-        db.Integer, db.ForeignKey("user.id", ondelete="CASCADE")
-    )
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"))
     user = db.relationship("User", back_populates="cart_items")
 
-    product_id = db.Column(
-        db.Integer, db.ForeignKey("product.id", ondelete="CASCADE")
-    )
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id", ondelete="CASCADE"))
     product = db.relationship("Product")
 
     def save(self):

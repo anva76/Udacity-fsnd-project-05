@@ -17,6 +17,7 @@ import SearchView from "./components/SearchView"
 import { useAuth0 } from "@auth0/auth0-react"
 import { Auth0RouteGuard } from "./components/Auth0RouteGuard"
 import Page404 from "./components/Page404"
+import About from "./components/About"
 
 const App = () => {
   const { isLoading } = useAuth0()
@@ -30,10 +31,22 @@ const App = () => {
       <FlashMessage />
       <Header />
       <Routes>
-        <Route path="*" element={<Page404 />} />
-        <Route path="/" element={<HomeView />} />
-        <Route path="/home" element={<HomeView />} />
-        <Route path="/products/:id" element={<ProductDetailView />} />
+        <Route
+          path="*"
+          element={<Page404 />}
+        />
+        <Route
+          path="/"
+          element={<HomeView />}
+        />
+        <Route
+          path="/home"
+          element={<HomeView />}
+        />
+        <Route
+          path="/products/:id"
+          element={<ProductDetailView />}
+        />
         <Route
           path="/cart"
           element={<Auth0RouteGuard component={CartView} />}
@@ -50,10 +63,26 @@ const App = () => {
           path="/orders/:id"
           element={<Auth0RouteGuard component={OrderDetailView} />}
         />
-        <Route path="/catalog" element={<CatalogView />} />
-        <Route path="/catalog/:categoryId" element={<CatalogView />} />
-        <Route path="/callback" element={<CallbackPage />} />
-        <Route path="/search" element={<SearchView />} />
+        <Route
+          path="/catalog"
+          element={<CatalogView />}
+        />
+        <Route
+          path="/catalog/:categoryId"
+          element={<CatalogView />}
+        />
+        <Route
+          path="/callback"
+          element={<CallbackPage />}
+        />
+        <Route
+          path="/search"
+          element={<SearchView />}
+        />
+        <Route
+          path="/about"
+          element={<About />}
+        />
       </Routes>
       <Footer />
     </div>

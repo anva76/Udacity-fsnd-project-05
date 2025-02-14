@@ -91,19 +91,33 @@ const CartView = () => {
   if (cart && Object.keys(cart).length === 0)
     return (
       <>
-        <div className="container">
-          <h4 className="text-secondary">No items in the cart</h4>
+        <div className="container-lg">
+          <div className="row justify-content-center">
+            <h4 className="text-secondary text-center mt-5">
+              No items in the cart
+            </h4>
+          </div>
         </div>
       </>
     )
 
   return (
     <>
-      <div className="container">
-        <div className="d-flex flex-row">
-          <h4 className="mb-3 text-secondary me-2">Cart</h4>
+      <div className="container-xxl">
+        <button
+          className="btn btn-outline-secondary btn mb-3"
+          onClick={() => navigate("/catalog")}
+        >
+          Back to catalog
+        </button>
+
+        <div className="d-flex flex-row justify-content-center mb-4">
+          <h4 className="text-secondary me-2 text-center">Cart</h4>
           {dataLoading && (
-            <div className="spinner-grow text-warning" role="status">
+            <div
+              className="spinner-grow text-danger"
+              role="status"
+            >
               <span className="visually-hidden">Loading...</span>
             </div>
           )}
@@ -116,7 +130,7 @@ const CartView = () => {
           onItemDecrease={decCartItem}
           onItemDelete={handleDelCartItem}
         />
-        <div className="d-flex flex-row align-items-start justify-content-end">
+        <div className="d-flex flex-row align-items-center justify-content-end mb-3">
           <button
             type="submit"
             className="btn btn-warning btn-lg "

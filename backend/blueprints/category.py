@@ -86,12 +86,10 @@ def add_new_category(**kwargs):
     error = False
     new_data = CategoryValidator.validate_post(request)
     if new_data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
     if not confirm_category_unique(new_data["name"]):
-        return format_err_response("Category name is not unique", 400)
+        return format_err_response("Category name is not unique", 422)
 
     try:
         category = Category(**new_data)
@@ -120,14 +118,10 @@ def update_category(category_id, **kwargs):
 
     new_data = CategoryValidator.validate_patch(request)
     if new_data is None:
-        return format_err_response(
-            "JSON schema or parameters are not valid.", 400
-        )
+        return format_err_response("JSON schema or parameters are not valid.", 422)
 
-    if not confirm_category_unique(
-        new_data["name"], category.name, patched=True
-    ):
-        return format_err_response("Category name is not unique", 400)
+    if not confirm_category_unique(new_data["name"], category.name, patched=True):
+        return format_err_response("Category name is not unique", 422)
 
     try:
         category.update_from_dict(new_data)
@@ -163,9 +157,7 @@ def delete_category(category_id, **kwargs):
         abort(404)
 
     if not confirm_category_empty(category):
-        return format_err_response(
-            "Category is not empty.", 400, "category_not_empty"
-        )
+        return format_err_response("Category is not empty.", 422, "category_not_empty")
 
     try:
         category.delete()
