@@ -32,7 +32,10 @@ class User(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     cart_items = db.relationship(
-        "CartItem", back_populates="user", cascade="all,delete-orphan"
+        "CartItem",
+        back_populates="user",
+        cascade="all,delete-orphan",
+        order_by="asc(CartItem.id)",
     )
     orders = db.relationship("Order", back_populates="user")
 
@@ -194,7 +197,10 @@ class Order(db.Model):
     user = db.relationship("User", back_populates="orders")
 
     order_items = db.relationship(
-        "OrderItem", back_populates="order", cascade="all,delete-orphan"
+        "OrderItem",
+        back_populates="order",
+        cascade="all,delete-orphan",
+        order_by="asc(OrderItem.product_id)",
     )
 
     def save(self):
